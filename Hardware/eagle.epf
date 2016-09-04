@@ -1,0 +1,13 @@
+[Eagle]
+Version="07 05 00"
+Platform="Mac OS X"
+Serial="732A01D473-LSR-WLM-1SM"
+Globals="Globals"
+Desktop="Desktop"
+
+[Globals]
+AutoSaveProject=1
+UsedLibrary="/Applications/EAGLE-7.5.0/lbr/con-lumberg.lbr"
+
+[Desktop]
+Screen="2560 1440"
