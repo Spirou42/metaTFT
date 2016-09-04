@@ -6,7 +6,7 @@
 #define __USEREVENT_H__
 #include "Arduino.h"
 #include "Streaming.h"
-#define DEBUG_USEREVENT 0
+#define DEBUG_USEREVENT 1
 class UserEventQueue;
 
 /** at the moment we have only Key and Encoder Events */

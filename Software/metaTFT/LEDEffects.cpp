@@ -155,7 +155,7 @@ void minelon(){
 
 /** tine a studiy in blob motion */
 static int16_t fadeOutAmount = 5;
-static int16_t numberOfBlobs = 3;
+static int16_t numberOfBlobs = 4;
 static int16_t startBlobSpeed = 1; ///< in beats/min
 static elapsedMillis lastCall = 0;
 void tinelon()
@@ -168,27 +168,28 @@ void tinelon()
 		uint16_t rangewidth = NUM_LEDS - 0;
     uint16_t scaledbeat = scale16( pos+ 32768, rangewidth);
     uint16_t result = 0 + scaledbeat;
-		int hue = gHue + hueStep*(blob)
-		;
+		int hue = gHue + hueStep*(blob);
 		CRGB pcolor = ColorFromPalette((*currentSystemPalette)->second,hue,fadeOutAmount/2);
 		CRGB bcolor = ColorFromPalette((*currentSystemPalette)->second,hue,255);
+		Serial << result << endl;
 		leds[result]+=pcolor;
 
 
 		if((result-blobLength)<0){
-			// int flen = result;
-      // int elen = (blobLength-1) - flen;
-      // const CRGBSet p(&leds[result],flen);
-      // const CRGBSet q(&leds[0],elen);
-      // blendColor(p,bcolor);
-      // blendColor(q,bcolor);
+			int flen = result;
+      int elen = (blobLength-1) - flen;
+      const CRGBSet p(&leds[result-flen],flen);
+      const CRGBSet q(&leds[NUM_LEDS-1 -elen],elen);
+      blendColor(p,bcolor);
+      blendColor(q,bcolor);
 
     }else{
 			const CRGBSet p(&leds[result-(blobLength-1)],blobLength-1);
       blendColor(p,bcolor);
-    }
+  	}
 
 	}
+	Serial<<"<<"<<endl;
 	lastCall = 0;
 }
 
@@ -198,9 +199,10 @@ void sinelon()
   // a colored dot sweeping back and forth, with fading trails
   fadeToBlackBy( leds, NUM_LEDS, 1);
 
-  int pos = beatsin16((2<<8),5,NUM_LEDS);
+  uint16_t pos = beatsin16((2<<8),5,NUM_LEDS);
   CRGB color = ColorFromPalette((*currentSystemPalette)->second,gHue,255);
   leds[pos] += color;
+	Serial << pos << endl;
 }
 
 void bpm()
@@ -220,7 +222,8 @@ void juggle() {
   for( int i = 0; i < 8; i++) {
 		//+ random8(64)
     CRGB color = ColorFromPalette((*currentSystemPalette)->second,dothue ,255);
-    leds[beatsin16(i+7,0,NUM_LEDS)] |= color;
+		uint16_t pos = beatsin16(i+7,0,NUM_LEDS);
+    leds[pos] |= color;
     dothue += 32;
   }
 }

@@ -5,7 +5,7 @@
 #include "Encoders.h"
 
 Encoder encoders[] = {
-  Encoder(EncoderID::Encoder0,&eventQueue,19,20,0,2),
+  Encoder(EncoderID::Encoder0,&eventQueue,15,14,0,2),
 };
 size_t numberOfEncoders = sizeof(encoders) / sizeof(Encoder);
 

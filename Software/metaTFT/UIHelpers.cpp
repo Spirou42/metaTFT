@@ -841,7 +841,7 @@ void metaList::redraw(){
 		_lastSelectedView = sv;
 	}
 	resetFlags();
-	//Serial << "<<<<<metaList"<<endl;
+	Serial << "<<<<<metaList"<<endl;
 }
 
 vector<metaView*>::iterator metaList::onIterator(){

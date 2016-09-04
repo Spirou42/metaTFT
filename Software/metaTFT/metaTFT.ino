@@ -31,7 +31,7 @@
 #include "LEDEffects.h"
 #include "metaTFT.h"
 
-CRGB leds[NUM_LEDS];
+CRGB leds[NUM_LEDS+1];
 
 metaTFT tft = metaTFT(TFT_CS, TFT_DC,TFT_RST,TFT_MOSI,TFT_SCK,TFT_MISO,TFT_LED,3);
 UserEventQueue eventQueue = UserEventQueue();
@@ -568,10 +568,15 @@ void setup() {
 }
 
 
-
+elapsedMillis markerTime = 0;
 void loop() {
 	static bool skipMask = false;
-
+  bool p = false;
+  if(markerTime > 1000){
+    markerTime = 0;
+    p=true;
+    Serial << "k"<<endl;
+  }
 	if(!skipMask){
 		tft.fillScreen(ILI9341_BLACK);
 		responderStack.push(&SystemMenu);
@@ -588,5 +593,8 @@ void loop() {
 
 	/** run all sequence tasks */
 	taskQueue.Run(millis());
-
+  if(p){
+    p = false;
+    Serial << "."<<endl;
+  }
 }

@@ -58,7 +58,7 @@ EventData Switch::buttonData(ButtonState state)
   data.id = this->_id;
   data.state = state;
   result.buttonData = data;
-//  Serial << data<<endl;
+  Serial << data<<endl;
   return result;
 }
 

@@ -1,1 +1,1 @@
-../metaPixel/Parameter.h
+../../../metaPixel/Software/metaPixel/Parameter.h
