@@ -2,7 +2,7 @@
 * implementation of the UIHelper classes
 */
 
-#include "UIHelpers.h"
+#include "UIHelpers.hpp"
 #include "metaTFTDisplay.h"
 #include "font_Arial.h"
 #include "UserEvent.h"

@@ -1,5 +1,5 @@
 /**
-* definition for metaPixel TFT interface a subclass of ILI9341_t3 
+* definition for metaPixel TFT interface a subclass of ILI9341_t3
 */
 
 #ifndef __METATFTDISPLAY_H__

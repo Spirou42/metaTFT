@@ -1,7 +1,7 @@
 /**
 * definition for metaPixel TFT interface
 */
-#include "metaTFTDisplay.h"
+#include "metaTFTDisplay.hpp"
 #include "Streaming.h"
 //#include "UIHelpers.h"  ///<< i need the metaView definition
 void metaTFT::start()

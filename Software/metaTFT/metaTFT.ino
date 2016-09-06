@@ -12,12 +12,12 @@
 #include "Streaming.h"
 #include "FastLED.h"
 
-#include "UserEvent.h"
-#include "metaTFTDisplay.h"
-#include "Switch.h"
-#include "Parameter.h"
+#include "UserEvent.hpp"
+#include "metaTFTDisplay.hpp"
+#include "Switch.hpp"
+//#include "Parameter.h"
 #include "Switches.h"
-#include "Encoder.h"
+#include "Encoder.hpp"
 #include "Encoders.h"
 #include "FastLED.h"
 #include "Palettes.h"
@@ -26,7 +26,7 @@
 #include "font_GillSans.h"
 #include "font_GillSans_SemiBold.h"
 #include "GraphicTests.h"
-#include "UIHelpers.h"
+#include "UIHelpers.hpp"
 //#include "font_Montserrat_Regular.h"
 #include "LEDEffects.h"
 #include "metaTFT.h"
@@ -39,7 +39,8 @@ using namespace std;
 class TFTBrightnessWrapper : public ValueWrapper{
  public:
 	TFTBrightnessWrapper(int16_t *val):ValueWrapper(val,0,20,"TFT Brightness"){}
-	virtual void setValue(int16_t k){
+
+  virtual void setValue(int16_t k){
 		int16_t old = *_value;
 		ValueWrapper::setValue(k);
 		if(*_value!=old){
@@ -575,7 +576,7 @@ void loop() {
   if(markerTime > 1000){
     markerTime = 0;
     p=true;
-    Serial << "k"<<endl;
+//    Serial << "k"<<endl;
   }
 	if(!skipMask){
 		tft.fillScreen(ILI9341_BLACK);
@@ -595,6 +596,6 @@ void loop() {
 	taskQueue.Run(millis());
   if(p){
     p = false;
-    Serial << "."<<endl;
+//    Serial << "."<<endl;
   }
 }

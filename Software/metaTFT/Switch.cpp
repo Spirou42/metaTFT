@@ -2,7 +2,7 @@
 * Implementation of Switch
 */
 
-#include "Switch.h"
+#include "Switch.hpp"
 #include "UserEvent.h"
 #include "Switches.h"
 

@@ -6,11 +6,8 @@
 #include "metaTFT.h"
 #include "LEDEffects.h"
 
-//SimplePatternList patterns = { rainbow, rainbowWithGlitter, confetti, sinelon, juggle, bpm };
-//const char* patternNames[]={"Rainbow","Rainbow glitter", "Confetti", "Sinelon", "Juggle", "BPM"};
-//uint8_t currentPatternNumber = 0; // Index number of which pattern is current
-//size_t numberOfPatterns = ARRAY_SIZE(patterns);
 uint8_t gHue = 0;
+
 CHSV rgb2hsv(const CRGB& rgb)
 {
 	CHSV result = CHSV();
@@ -54,7 +51,7 @@ void rainbow()
   if(NUM_LEDS < 255){
     step = 255/NUM_LEDS;
   }
-
+	//Serial << "Step: "<< step << endl;
   fill_palette(leds,NUM_LEDS,gHue,step,p,255,LINEARBLEND);
   //fill_rainbow( leds, NUM_LEDS, gHue, 7);
 }
@@ -156,7 +153,7 @@ void minelon(){
 /** tine a studiy in blob motion */
 static int16_t fadeOutAmount = 5;
 static int16_t numberOfBlobs = 4;
-static int16_t startBlobSpeed = 1; ///< in beats/min
+static int16_t startBlobSpeed = 10; ///< in beats/min
 static elapsedMillis lastCall = 0;
 void tinelon()
 {
@@ -171,7 +168,7 @@ void tinelon()
 		int hue = gHue + hueStep*(blob);
 		CRGB pcolor = ColorFromPalette((*currentSystemPalette)->second,hue,fadeOutAmount/2);
 		CRGB bcolor = ColorFromPalette((*currentSystemPalette)->second,hue,255);
-		Serial << result << endl;
+		//Serial << result << endl;
 		leds[result]+=pcolor;
 
 
@@ -189,7 +186,7 @@ void tinelon()
   	}
 
 	}
-	Serial<<"<<"<<endl;
+	//Serial<<"<<"<<endl;
 	lastCall = 0;
 }
 

@@ -1,5 +1,5 @@
 /**
-* a here the ui elements go
+* a here are the ui elements
 */
 
 #ifndef __UIHELPERS_H__
@@ -32,7 +32,7 @@
 #define VALLIGN_BOTTOM  (1<<6)
 
 using namespace std;
-/** baseclass for EventResponding */
+
 
 class UserEvent;
 class metaView;
@@ -49,7 +49,7 @@ typedef enum _responderResult{
   ResponderExit   = -4,
 }ResponderResult;
 
-/** simple wrapper for values */
+/** simple wrapper for int16_t values */
 class ValueWrapper{
  public:
   ValueWrapper(int16_t* val, int16_t min, int16_t max, String name):_value(val),_min(min),_max(max),_name(name){}
@@ -101,7 +101,7 @@ class metaAction{
    ValueWrapper *_value;                          /// pointer to a concrete int16_t
 };
 
-
+/** baseclass for EventResponding */
 class metaResponder{
  public:
 
