@@ -5,7 +5,7 @@
 #ifndef __GRAPHICTEST_H__
 #define __GRAPHICTEST_H__
 
-#include "metaTFTDisplay.h"
+#include "metaTFTDisplay.hpp"
 extern metaTFT tft;
 unsigned long testFillScreen();
 unsigned long testText();

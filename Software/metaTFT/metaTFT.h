@@ -11,7 +11,7 @@
 #include <tuple>
 #include <list>
 #include <deque>
-#include "UIHelpers.h"
+#include "UIHelpers.hpp"
 
 #include "FastLED.h"
 
@@ -45,7 +45,6 @@ typedef std::vector<PalettePair*> PaletteList;
 
 typedef std::pair<const String, effectHandler> EffectPair;
 typedef std::vector<EffectPair*> EffectList;
-
 
 extern PaletteList systemPalettes;
 extern PaletteList::iterator currentSystemPalette;

@@ -4,7 +4,7 @@
 
 #include "Input_Encoder.hpp"
 #include "Streaming.h"
-#include "Encoders.h"
+#include "Input_Encoders.h"
 void Encoder::enable()
 {
   initialState();

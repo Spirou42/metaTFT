@@ -3,9 +3,9 @@
 */
 
 #include "UIHelpers.hpp"
-#include "metaTFTDisplay.h"
+#include "metaTFTDisplay.hpp"
 #include "font_Arial.h"
-#include "UserEvent.h"
+#include "UserEvent.hpp"
 
 #define DEBUG_LAYOUT_COLOR_BACKGROUND_INNER ILI9341_DARKGREY
 #define DEBUG_LAYOUT_COLOR_BACKGROUND_MIDDLE ILI9341_LIGHTGREY

@@ -7,7 +7,7 @@
 #include "Arduino.h"
 #include <vector>
 #include <stack>
-#include "metaTFTDisplay.h"
+#include "metaTFTDisplay.hpp"
 #include "font_Arial.h"
 
 #define DEBUG_LAYOUT                  (0)
