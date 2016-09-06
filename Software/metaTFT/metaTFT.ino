@@ -485,7 +485,7 @@ int processUserEvents(unsigned long now, void * userdata){
 		#endif
 		return 0;
 	}
-	metaView *resp = responderStack.top();
+	metaView *resp = responderStack.back();
 	while(eventQueue.length()){
 		UserEvent *evnt = eventQueue.popEvent();
 		//uint16_t l = evnt->eventMask();
@@ -546,7 +546,7 @@ int processUserEvents(unsigned long now, void * userdata){
 										if(val){
 											aView->setValueWrapper(val);
 										}
-										responderStack.push(aView);
+										responderStack.push_back(aView);
 										aView->prepareForDisplay();
 										aView->redraw();
 									}
@@ -565,10 +565,10 @@ int processUserEvents(unsigned long now, void * userdata){
 						#if DEBUG_RESPONDER
 						Serial << "Responder has exited"<< endl;
 						#endif
-						responderStack.pop();
+						responderStack.pop_back();
 						resp->removeFromScreen();
 						if(responderStack.size()){
-							metaView * k=responderStack.top();
+							metaView * k=responderStack.back();
 							k->setNeedsRedraw();
 							k->redraw();
 						}
@@ -622,14 +622,14 @@ void loop() {
   }
 	if(!skipMask){
 		tft.fillScreen(ILI9341_BLACK);
-		responderStack.push(&SystemMenu);
-		responderStack.top()->redraw();
+		responderStack.push_back(&SystemMenu);
+		responderStack.back()->redraw();
 		Serial << "Draw"<<endl;
 		Serial.flush();
 		skipMask = true;
 	}
 	if(responderStack.empty()){ // this is not good
-		responderStack.push(&SystemMenu);
+		responderStack.push_back(&SystemMenu);
 		SystemMenu.prepareForDisplay();
 		SystemMenu.redraw();
 	}

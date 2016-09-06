@@ -55,7 +55,7 @@ extern PaletteList::iterator currentSystemPalette;
 extern EffectList systemEffects;
 extern EffectList::iterator currentSystemEffect;
 
-typedef std::stack<metaView*,std::vector<metaView*>> ResponderStack;
+typedef std::vector<metaView*> ResponderStack;
 extern ResponderStack responderStack;
 
 extern int16_t numberOfBlobs;

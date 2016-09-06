@@ -37,7 +37,7 @@ using namespace std;
 class UserEvent;
 class metaView;
 class metaValue;
-typedef std::stack<metaView*,std::vector<metaView*>> ResponderStack;
+typedef std::vector<metaView*> ResponderStack;
 /**
 the Responder is the base class for all event processing related stuff
 */

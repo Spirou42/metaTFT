@@ -225,6 +225,18 @@ void metaView::prepareForDisplay(){_needsRedraw=true;}
 void metaView::removeFromScreen(){
 	setFillColor(_backgroundColor);
 	fillRect(GCPoint(0,0),_frame.size);
+	if(this->_responderStack){
+		ResponderStack::iterator iter = this->_responderStack->begin();
+
+		while(iter != this->_responderStack->end()){
+			metaView *v = *iter;
+			Serial << "Got: "<<_HEX((long int)v)<< endl;
+			v->redraw();
+			++iter;
+		}
+	}else{
+		Serial << "Nothing to redraw"<< endl;
+	}
 }
 /**********************************************
  *									metaLabel 								*
