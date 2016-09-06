@@ -4,7 +4,7 @@
 
 #ifndef __SWITCHES_H__
 #define __SWITCHES_H__
-#include "Switch.h"
+#include "Input_Switch.hpp"
 
 typedef void(*SwitchIRQHandler)();
 

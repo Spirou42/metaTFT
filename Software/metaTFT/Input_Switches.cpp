@@ -2,7 +2,7 @@
 * predefined Switches and IRQ handlers
 */
 
-#include "Switches.h"
+#include "Input_Switches.h"
 
 
 Switch switches[]={

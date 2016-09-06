@@ -2,7 +2,7 @@
 * encoder Implementation
 */
 
-#include "Encoder.hpp"
+#include "Input_Encoder.hpp"
 #include "Streaming.h"
 #include "Encoders.h"
 void Encoder::enable()

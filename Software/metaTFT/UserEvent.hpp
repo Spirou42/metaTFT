@@ -20,16 +20,11 @@ Print& operator<<(Print& out,EventType type);
 /** and we've got 5 Buttons */
 typedef enum _ButtonID{
   NoButton = -1,
-  Button0 = 0,
-  LeftButton    = Button0,
-  Button1,
-  DownButton    = Button1,
-  Button2,
-  RightButton   = Button2,
-  Button3,
-  UpButton      = Button3,
-  Button4,
-  CenterButton  = Button4,
+  Button0 = 0,    LeftButton    = Button0,
+  Button1,        DownButton    = Button1,
+  Button2,        RightButton   = Button2,
+  Button3,        UpButton      = Button3,
+  Button4,        CenterButton  = Button4,
   ButtonMax
 }ButtonID;
 Print& operator<<(Print& out, ButtonID id);

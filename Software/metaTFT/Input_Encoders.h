@@ -4,7 +4,7 @@
 
 #ifndef __ENCODERS_H__
 #define __ENCODERS_H__
-#include "Encoder.h"
+#include "Input_Encoder.hpp"
 
 typedef void(*EncoderIRQHandler)();
 

@@ -2,7 +2,7 @@
 * Encoder Implementation
 */
 
-#include "Encoders.h"
+#include "Input_Encoders.h"
 
 Encoder encoders[] = {
   Encoder(EncoderID::Encoder0,&eventQueue,15,14,0,2),

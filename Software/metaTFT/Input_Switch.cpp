@@ -2,9 +2,9 @@
 * Implementation of Switch
 */
 
-#include "Switch.hpp"
+#include "Input_Switch.hpp"
 #include "UserEvent.h"
-#include "Switches.h"
+#include "Input_Switches.h"
 
 void Switch::doSwitchDown()
 {

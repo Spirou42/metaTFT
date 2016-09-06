@@ -7,7 +7,7 @@
 #ifndef __Switch_H__
 #define __Switch_H__
 #include "Arduino.h"
-#include "UserEvent.h"
+#include "UserEvent.hpp"
 
 #define DOUBLE_CLICK_TIME 620
 #define LONG_CLICK_TIME   320
