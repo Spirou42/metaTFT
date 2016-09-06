@@ -687,9 +687,9 @@ uint16_t metaList::respondsToEvents(){
 	uint16_t result = EventMask::EncoderEvents | EventMask::ButtonEvents |
 										EventMask::ButtonEvent_Down | EventMask::ButtonEvent_Up |
 										EventMask::ButtonEvent_Center | EventMask::ButtonState_All;
-	if(_isSelectList){
+	//if(_isSelectList){
 		result |= EventMask::ButtonEvent_Left;
-	}
+	//}
 	return result;
 }
 void metaList::addSubview(metaView* aView){

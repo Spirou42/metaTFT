@@ -159,38 +159,62 @@ PaletteList::iterator currentSystemPalette = systemPalettes.begin();
 EffectList systemEffects = initializeSystemEffects();
 EffectList::iterator currentSystemEffect = systemEffects.begin();
 
+/**					Global UI Elements				**/
+metaList  SystemMenu;               ///<< The main Menu of the Application
+metaList  ParameterMenu;
+metaList	EffectsMenu;               ///<< Selection List for Effeects
+metaList 	PalettesMenu;             ///<< Selection List for Palettes
+metaValue ValueView;                ///<< View used for numerical value changes
+
+
 int16_t tftBrightness = 0;
 TFTBrightnessWrapper TFTBrightness(&tftBrightness);
+metaAction tftBrightnessAction(&ValueView,&TFTBrightness);
 
 int16_t ledBrightness = LED_BRIGHTNESS;
 LEDBrightnessWrapper ledBrightnessWrapper(&ledBrightness);
+metaAction ledBrightnessAction(&ValueView,&ledBrightnessWrapper);
 
 int16_t hueStep = 0;
 ValueWrapper hueStepWrapper(&hueStep,-10,10,"Hue Step");
+metaAction hueStepAction(&ValueView,&hueStepWrapper);
 
-int16_t programIndex = 0;
+int16_t numberOfBlobs 	= 4;
+ValueWrapper numberOfBlobsWrapper(&numberOfBlobs,1,10,"Blobs");
+metaAction blobsAction(&ValueView,&numberOfBlobsWrapper);
+
+int16_t fadeOutAmount 	= 5;
+ValueWrapper fadeAmountWrapper(&fadeOutAmount,1,128,"Fade");
+metaAction fadeAction(&ValueView,&fadeAmountWrapper);
+
+int16_t blobLength 		= 13;
+ValueWrapper blobLengthWrapper(&blobLength,1,20,"Length");
+metaAction lengthAction(&ValueView,&blobLengthWrapper);
+
+int16_t startBlobSpeed = 3; ///< in beats/min
+ValueWrapper blobSpeedWrapper(&startBlobSpeed,1,60,"Speed");
+metaAction speedAction(&ValueView,&blobSpeedWrapper);
+
 ProgramIndexWrapper programIndexWrapper(&systemEffects,&currentSystemEffect);
+metaAction programAction(&EffectsMenu,&programIndexWrapper);
 
 PaletteIndexWrapper paletteIndexWrapper(&systemPalettes,&currentSystemPalette);
+metaAction paletteAction(&PalettesMenu,&paletteIndexWrapper);
 
-
-
+metaAction parameterAction(&ParameterMenu,NULL);
 ResponderStack responderStack;
 
 Queue taskQueue;
+ActionList initializeActionList(){
+	ActionList tmp;
+	tmp.push_back(&blobsAction);
+	tmp.push_back(&fadeAction);
+  tmp.push_back(&lengthAction);
+  tmp.push_back(&speedAction);
+	return tmp;
+}
 
-/**					Global UI Elements				**/
-metaList  SystemMenu;
-//metaView	SecondView;
-metaList	EffectsMenu;
-metaList 	PalettesMenu;
-metaValue ValueView;
-/** gloabal Actions */
-metaAction tftBrightnessAction(&ValueView,&TFTBrightness);
-metaAction hueStepAction(&ValueView,&hueStepWrapper);
-metaAction ledBrightnessAction(&ValueView,&ledBrightnessWrapper);
-metaAction programAction(&EffectsMenu,&programIndexWrapper);
-metaAction paletteAction(&PalettesMenu,&paletteIndexWrapper);
+ActionList actionList = initializeActionList();
 
 metaLabel::LabelLayout*  getListLayout(){
 	static metaView::ViewLayout viewLayout;
@@ -263,6 +287,9 @@ void initSystemMenu(){
 	l=SystemMenu.addEntry( String("Palette"));
 	l->setAction(&paletteAction);
 
+  l = SystemMenu.addEntry(String("Parameter"));
+  l->setAction(&parameterAction);
+
   SystemMenu.sizeToFit();
 	SystemMenu.layoutList();
 
@@ -293,6 +320,20 @@ void initPalettesMenu(){
   PalettesMenu.layoutList();
 }
 
+void initParameterMenu(){
+  ParameterMenu.initView(&tft,GCRect(2,12,tft.width()/2,tft.height()-4));
+  ParameterMenu.setIsSelectList(false);
+  initListVisual(ParameterMenu);
+  ActionList::iterator iter = actionList.begin();
+  while(iter != actionList.end()){
+    metaLabel* l =ParameterMenu.addEntry((*iter)->getValue()->getName());
+    l->setAction(*iter);
+    iter ++;
+  }
+  ParameterMenu.sizeToFit();
+  ParameterMenu.layoutList();
+}
+
 
 void initValueView(){
 	Serial <<"initValueView"<<endl;
@@ -317,6 +358,7 @@ void initUI(){
 	initSystemMenu();
 	initPalettesMenu();
 	initEffectsMenu();
+  initParameterMenu();
 	initValueView();
 }
 

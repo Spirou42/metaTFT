@@ -151,15 +151,12 @@ void minelon(){
 
 
 /** tine a studiy in blob motion */
-static int16_t fadeOutAmount = 5;
-static int16_t numberOfBlobs = 4;
-static int16_t startBlobSpeed = 10; ///< in beats/min
 static elapsedMillis lastCall = 0;
 void tinelon()
 {
 	fadeToBlackBy(leds, NUM_LEDS, fadeOutAmount);
-	float hueStep = 256.0/numberOfBlobs;
-	int16_t blobLength = 10;//NUM_LEDS / (numberOfBlobs*2);
+	float hueStep = 160/numberOfBlobs;
+//NUM_LEDS / (numberOfBlobs*2);
 	for(int16_t blob = 0;blob <numberOfBlobs;++blob){
 		uint16_t pos = beat88((blob+1)*(startBlobSpeed<<8),lastCall);
 		uint16_t rangewidth = NUM_LEDS - 0;
@@ -169,7 +166,7 @@ void tinelon()
 		CRGB pcolor = ColorFromPalette((*currentSystemPalette)->second,hue,fadeOutAmount/2);
 		CRGB bcolor = ColorFromPalette((*currentSystemPalette)->second,hue,255);
 		//Serial << result << endl;
-		leds[result]+=pcolor;
+		leds[result]+=bcolor;
 
 
 		if((result-blobLength)<0){
@@ -182,7 +179,7 @@ void tinelon()
 
     }else{
 			const CRGBSet p(&leds[result-(blobLength-1)],blobLength-1);
-      blendColor(p,bcolor);
+      blendColor(p,pcolor);
   	}
 
 	}

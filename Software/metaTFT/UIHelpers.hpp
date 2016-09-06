@@ -73,7 +73,11 @@ class ValueWrapper{
     return out;
   }
   friend Print& operator<<(Print& obj,ValueWrapper* v){
-    obj << "["<<v->_name<<"]{"<<*(v->_value)<<", "<<v->_min<<", "<<v->_max<<"}";
+    if(v){
+      obj << "["<<v->_name<<"]{"<<*(v->_value)<<", "<<v->_min<<", "<<v->_max<<"}";
+    }else{
+      obj << "[NONE]";
+    }
     return obj;
   }
 
@@ -91,7 +95,7 @@ class metaAction{
    void operator()(void)const;
    void operator()(int16_t value)const;
    friend Print& operator<<(Print& obj, metaAction* a){
-     Serial << "[Action]"<<(a->_value)<<_HEX((unsigned long)a->_mask);
+     Serial << "[Action]"<<a->_value<<_HEX((unsigned long)a->_mask);
      return obj;
    }
    metaView* getView(){return _mask;}

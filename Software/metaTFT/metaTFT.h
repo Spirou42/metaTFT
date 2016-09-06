@@ -46,6 +46,9 @@ typedef std::vector<PalettePair*> PaletteList;
 typedef std::pair<const String, effectHandler> EffectPair;
 typedef std::vector<EffectPair*> EffectList;
 
+typedef std::vector<metaAction*> ActionList;
+extern ActionList actionList;
+
 extern PaletteList systemPalettes;
 extern PaletteList::iterator currentSystemPalette;
 
@@ -55,5 +58,9 @@ extern EffectList::iterator currentSystemEffect;
 typedef std::stack<metaView*,std::vector<metaView*>> ResponderStack;
 extern ResponderStack responderStack;
 
+extern int16_t numberOfBlobs;
+extern int16_t fadeOutAmount;
+extern int16_t blobLength;
+extern int16_t startBlobSpeed;
 //extern CHSV rgb2hsv(const CRGB& rgb);
 #endif
