@@ -21,7 +21,7 @@
 
 #define DEBUG_VALUE_VALUE 0
 #define DEBUG_VALUE_REDRAW 0
-#define DEBUG_LIST_VALUE 1
+#define DEBUG_LIST_VALUE 0
 /** @todo: rework */
 /** AllignmentMasks terms*/
 #define HALLIGN_LEFT    (1<<1)

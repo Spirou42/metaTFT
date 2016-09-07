@@ -32,6 +32,7 @@ typedef struct _GCSize{
   bool operator!=(_GCSize s){return !(*this == s);}
   _GCSize operator+=(_GCSize s){w+=s.w;h+=s.h; return *this;};
   _GCSize operator+(_GCSize p){_GCSize r; r.w=p.w+w;r.h=p.h+h;return r;}
+  _GCPoint operator+(_GCPoint p){_GCPoint r; r.x =p.x+w; r.y = p.y+h; return r; }
   _GCSize operator+=(int t){w+=t;h+=t; return *this;};
   _GCSize operator*(int k){_GCSize l;l.w=k*w;l.h=k*h;return l;}
 }GCSize;
@@ -180,6 +181,19 @@ public:
   void setTextSize(uint8_t s){_display->setTextSize(s);};
 
   void setFont(const ILI9341_t3_font_t* font){if(font){_display->setFont(*font);}else{_display->setFontAdafruit();}};
+
+  void setClipRect(GCRect clipRect){
+    GCPoint P1 = clipRect.origin + getScreenOrigin();
+    GCPoint P2 = clipRect.size + getScreenOrigin();
+    Serial << "SetCliping ("<<P1<<") ("<<P2<<")"<<endl;
+    //_display->fillRect(P1.x,P1.y,clipRect.size.w,clipRect.size.h,ILI9341_RED);
+    _display->setClipRect(P1.x,P1.y,P2.x,P2.y);
+    //_display->fillRect(P1.x,P1.y,clipRect.size.w,clipRect.size.h,ILI9341_PURPLE);
+
+  }
+
+  void clearClipRect(){ _display->setClipRect();Serial << "ClearClipping"<<endl;}
+
 
   GCSize stringSize(const char* str){return _display->stringSize(str);};
 	virtual size_t write(uint8_t);

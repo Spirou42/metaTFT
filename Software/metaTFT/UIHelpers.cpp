@@ -14,6 +14,10 @@ int processUserEvents(unsigned long now, void * userdata){
 		Serial << "There is no top responder"<<endl;
 		#endif
 		return 0;
+	}else{
+		#if DEBUG_RESPONDER
+		//Serial << "Ther are "<< responderStack.size()<<" responders on the stack"<<endl;
+		#endif
 	}
 	metaView *resp = responderStack.back();
 	while(eventQueue.length()){
@@ -77,6 +81,7 @@ int processUserEvents(unsigned long now, void * userdata){
 											aView->setValueWrapper(val);
 										}
 										responderStack.push_back(aView);
+										aView->initResponder(&responderStack);
 										aView->prepareForDisplay();
 										aView->redraw();
 									}
@@ -97,6 +102,7 @@ int processUserEvents(unsigned long now, void * userdata){
 						#endif
 						responderStack.pop_back();
 						resp->removeFromScreen();
+						resp->initResponder(NULL);
 						if(responderStack.size()){
 							metaView * k=responderStack.back();
 							k->setNeedsRedraw();

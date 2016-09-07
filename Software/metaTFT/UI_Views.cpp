@@ -171,10 +171,13 @@ void metaView::drawDebug(){
 
 void metaView::redraw(){
 	if(!this->_visible)
+    return;
 	vector<metaView*>::iterator redrawIter = _subViews.begin();
 	bool cnl = childNeedsLayout();
 	if(_needsRedraw || cnl){
-	//		Serial << "Redraw: "<<_needsRedraw<<" "<<cnl<<endl;
+		GCRect p = getBounds();
+		p.origin += getScreenOrigin();
+			Serial << "Redraw: "<<_needsRedraw<<" "<<cnl<<"("<<p<<")\t"<<_HEX((unsigned long)this)<<endl;
 		GraphicsContext::setFillColor(_backgroundColor);
 		GraphicsContext::setStrokeColor(_outlineColor);
   	if(_cornerRadius==0){
@@ -202,17 +205,23 @@ void metaView::redraw(){
 void metaView::prepareForDisplay(){_needsRedraw=true;}
 
 void metaView::removeFromScreen(){
+
 	setFillColor(_backgroundColor);
 	fillRect(GCPoint(0,0),_frame.size);
+	//return;
+  Serial << "Frame: "<< _frame<<endl;
 	if(this->_responderStack){
 		ResponderStack::iterator iter = this->_responderStack->begin();
-
-		while(iter != this->_responderStack->end()){
+    //GraphicsContext::setClipRect(GCRect(0,0,_frame.size.w,_frame.size.h));
+		while(iter != this->_responderStack->end()-1){
 			metaView *v = *iter;
 			Serial << "Got: "<<_HEX((long int)v)<< endl;
+      v->setNeedsRedraw();
 			v->redraw();
 			++iter;
 		}
+    //GraphicsContext::clearClipRect();
+    Serial << "Redraw finished"<<endl;
 	}else{
 		Serial << "Nothing to redraw"<< endl;
 	}
@@ -822,7 +831,7 @@ void metaList::drawConnectionFor(metaView* v, uint16_t lineColor){
 }
 
 void metaList::redraw(){
-	Serial << endl<<">>>>>metaList"<<endl;
+//	Serial << endl<<">>>>>metaList"<<endl;
 	metaView::redraw();
 	metaView *sv = selectedSubview();
 	if(sv != _lastSelectedView){
@@ -833,7 +842,7 @@ void metaList::redraw(){
 		_lastSelectedView = sv;
 	}
 	resetFlags();
-	Serial << "<<<<<metaList"<<endl;
+//	Serial << "<<<<<metaList"<<endl;
 }
 
 vector<metaView*>::iterator metaList::onIterator(){

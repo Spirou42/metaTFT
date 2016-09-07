@@ -262,7 +262,7 @@ void initListVisual(metaList &k){
 	k.setBorderInset(GCSize(15,5));
 	k.setLabelLayout(getListLayout());
 	k.setDrawsOutline(true);
-	k.setCornerRadius(3);
+	k.setCornerRadius(0);
 	k.setOutlineColor(ILI9341_RED);
 	k.setOpaque(false);
 }
@@ -323,7 +323,7 @@ void initPalettesMenu(){
 }
 
 void initParameterMenu(){
-  ParameterMenu.initView(&tft,GCRect(2,12,tft.width()/2,tft.height()-4));
+  ParameterMenu.initView(&tft,GCRect(120,12,tft.width()/2,tft.height()-4));
   ParameterMenu.setIsSelectList(false);
   initListVisual(ParameterMenu);
   ActionList::iterator iter = actionList.begin();
