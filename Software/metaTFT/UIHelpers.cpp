@@ -26,7 +26,7 @@ int processUserEvents(unsigned long now, void * userdata){
 			if(result > ResponderResult::ChangedValue){
 				#if DEBUG_RESPONDER
 				Serial << "Responder changed Value x = "<<result<<endl;
-				metaAction *a = resp->getAction();
+				ValueEditor *a = resp->getAction();
 				if(a){
 					Serial << "Responder got a value action"<<endl;
 				}else{
@@ -55,22 +55,22 @@ int processUserEvents(unsigned long now, void * userdata){
 						int16_t idx =resp->activeIndex();
 						Serial << "Responder changed state selected "<<idx<<endl;
 						#endif
-						metaAction *a = resp->getAction();
+						ValueEditor *a = resp->getAction();
 						if(a){
 							#if DEBUG_RESPONDER
 							Serial << "Responder has a action for this"<< endl;
 							#endif
 						}else{
-							// check if the list entry has an metaAction added;
+							// check if the list entry has an ValueEditor added;
 							metaView * p = resp->activeElement();
 							if(p){
-								metaAction *a = p->getAction();
+								ValueEditor *a = p->getAction();
 								if(a){
 									#if DEBUG_RESPONDER
 									Serial << "got an action on the active Elements"<<endl;
 									Serial << a<<endl;
 									#endif
-									metaView* aView = a->getView();
+									metaView* aView = a->getEditor();
 									ValueWrapper* val = a->getValue();
 									if(aView){
 										if(val){

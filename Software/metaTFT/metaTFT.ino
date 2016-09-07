@@ -1,3 +1,4 @@
+
 #define FASTLED_INTERNAL
 
 #include <stack>
@@ -170,39 +171,39 @@ metaValue ValueView;                ///<< View used for numerical value changes
 
 int16_t tftBrightness = 0;
 TFTBrightnessWrapper TFTBrightness(&tftBrightness);
-metaAction tftBrightnessAction(&ValueView,&TFTBrightness);
+ValueEditor tftBrightnessAction(&ValueView,&TFTBrightness);
 
 int16_t ledBrightness = LED_BRIGHTNESS;
 LEDBrightnessWrapper ledBrightnessWrapper(&ledBrightness);
-metaAction ledBrightnessAction(&ValueView,&ledBrightnessWrapper);
+ValueEditor ledBrightnessAction(&ValueView,&ledBrightnessWrapper);
 
 int16_t hueStep = 0;
 ValueWrapper hueStepWrapper(&hueStep,-10,10,"Hue Step");
-metaAction hueStepAction(&ValueView,&hueStepWrapper);
+ValueEditor hueStepAction(&ValueView,&hueStepWrapper);
 
 int16_t numberOfBlobs 	= 4;
 ValueWrapper numberOfBlobsWrapper(&numberOfBlobs,1,10,"Blobs");
-metaAction blobsAction(&ValueView,&numberOfBlobsWrapper);
+ValueEditor blobsAction(&ValueView,&numberOfBlobsWrapper);
 
 int16_t fadeOutAmount 	= 5;
 ValueWrapper fadeAmountWrapper(&fadeOutAmount,1,128,"Fade");
-metaAction fadeAction(&ValueView,&fadeAmountWrapper);
+ValueEditor fadeAction(&ValueView,&fadeAmountWrapper);
 
 int16_t blobLength 		= 13;
 ValueWrapper blobLengthWrapper(&blobLength,1,20,"Length");
-metaAction lengthAction(&ValueView,&blobLengthWrapper);
+ValueEditor lengthAction(&ValueView,&blobLengthWrapper);
 
 int16_t startBlobSpeed = 3; ///< in beats/min
 ValueWrapper blobSpeedWrapper(&startBlobSpeed,1,60,"Speed");
-metaAction speedAction(&ValueView,&blobSpeedWrapper);
+ValueEditor speedAction(&ValueView,&blobSpeedWrapper);
 
 ProgramIndexWrapper programIndexWrapper(&systemEffects,&currentSystemEffect);
-metaAction programAction(&EffectsMenu,&programIndexWrapper);
+ValueEditor programAction(&EffectsMenu,&programIndexWrapper);
 
 PaletteIndexWrapper paletteIndexWrapper(&systemPalettes,&currentSystemPalette);
-metaAction paletteAction(&PalettesMenu,&paletteIndexWrapper);
+ValueEditor paletteAction(&PalettesMenu,&paletteIndexWrapper);
 
-metaAction parameterAction(&ParameterMenu,NULL);
+ValueEditor parameterAction(&ParameterMenu,NULL);
 
 
 Queue taskQueue;

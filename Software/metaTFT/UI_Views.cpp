@@ -432,8 +432,8 @@ void metaValue::setValue(String label){
 }
 
 void metaValue::redraw(){
-	bool cnl= childNeedsLayout();
 	#if DEBUG_VALUE_REDRAW
+	bool cnl= childNeedsLayout();
 	Serial << "[mV] redraw "<<_needsRedraw<<", "<<cnl<<endl;
 	#endif
 	if(_needsRedraw /*|| cnl*/){
@@ -528,9 +528,10 @@ void metaValue::sizeToFit(){
 	#if DEBUG_LAYOUT_VALUE
 	Serial << "valueSize: "<<valueSize<<endl;
 	#endif
+	#if DEBUG_LAYOUT_VALUE
 	int16_t baslineCorrection = calcBaselineCorrection();
 	//	baslineCorrection = 0;
-	#if DEBUG_LAYOUT_VALUE
+
 	Serial << "labelSize: "<<labelSize;
 	Serial << "baseLine Correction "<<baslineCorrection<<endl;
 	#endif

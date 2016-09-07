@@ -84,10 +84,10 @@ class ValueWrapper{
 };
 
 /** wraper for simple actions */
-class metaAction{
+class ValueEditor{
  public:
-   metaAction(metaView* view, ValueWrapper *value){
-   	_mask = view;
+   ValueEditor(metaView* editorView, ValueWrapper *value){
+   	_editor = editorView;
    	_value = value;
    };
    void operator()(void) const {
@@ -101,18 +101,18 @@ class metaAction{
    	}
    	return;
    };
-   friend Print& operator<<(Print& obj, metaAction* a){
-     Serial << "[Action]"<<a->_value<<_HEX((unsigned long)a->_mask);
+   friend Print& operator<<(Print& obj, ValueEditor* a){
+     Serial << "[Action]"<<a->_value<<_HEX((unsigned long)a->_editor);
      return obj;
    }
-   metaView* getView(){return _mask;}
+   metaView* getEditor(){return _editor;}
    ValueWrapper* getValue(){return _value;}
   protected:
-   metaView* _mask;                               /// this is the next responder
+   metaView* _editor;                               /// this is the next responder
    ValueWrapper *_value;                          /// pointer to a concrete int16_t
 };
 
-typedef std::vector<metaAction*> ActionList;
+typedef std::vector<ValueEditor*> ActionList;
 /** baseclass for EventResponding */
 class metaResponder{
  public:
@@ -127,8 +127,8 @@ class metaResponder{
   virtual uint16_t respondsToEvents(){
     return _respondsToEvents;}
 
-  void setAction(metaAction* action){_action = action;}
-  metaAction* getAction(){return _action;}
+  void setAction(ValueEditor* action){_action = action;}
+  ValueEditor* getAction(){return _action;}
 
   virtual int16_t selectedIndex(){return -1;}                             /// returns the index of the selected (outlined) entry
   virtual void selectIndex(int16_t){}
@@ -159,7 +159,7 @@ class metaResponder{
  protected:
     ResponderStack * _responderStack;
     uint16_t _respondsToEvents;
-    metaAction* _action;
+    ValueEditor* _action;
     ValueWrapper* _ValueWrapper;
 };
 
