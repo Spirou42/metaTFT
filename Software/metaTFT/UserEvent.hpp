@@ -171,4 +171,5 @@ protected:
   volatile size_t   _queueLength;
   bool     consolidateEvent(UserEvent* evnt);
 };
+extern UserEventQueue eventQueue;
 #endif

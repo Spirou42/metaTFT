@@ -3,6 +3,8 @@
 
 #include "UserEvent.hpp"
 
+UserEventQueue eventQueue = UserEventQueue();
+
 Print& operator<<(Print& out,EventType type){
   switch(type){
     case EventTypeButton: out << "Key";break;

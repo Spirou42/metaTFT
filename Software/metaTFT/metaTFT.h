@@ -12,6 +12,7 @@
 #include <list>
 #include <deque>
 #include "UIHelpers.hpp"
+#include "UI_Views.hpp"
 
 #include "FastLED.h"
 
@@ -34,7 +35,6 @@
 #define LED_PIN           4
 #define NUM_LEDS 158
 
-#define DEBUG_RESPONDER 1
 
 extern CRGB leds[];
 
@@ -46,7 +46,6 @@ typedef std::vector<PalettePair*> PaletteList;
 typedef std::pair<const String, effectHandler> EffectPair;
 typedef std::vector<EffectPair*> EffectList;
 
-typedef std::vector<metaAction*> ActionList;
 extern ActionList actionList;
 
 extern PaletteList systemPalettes;
@@ -54,9 +53,6 @@ extern PaletteList::iterator currentSystemPalette;
 
 extern EffectList systemEffects;
 extern EffectList::iterator currentSystemEffect;
-
-typedef std::vector<metaView*> ResponderStack;
-extern ResponderStack responderStack;
 
 extern int16_t numberOfBlobs;
 extern int16_t fadeOutAmount;

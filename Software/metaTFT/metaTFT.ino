@@ -27,6 +27,7 @@
 #include "font_GillSans_SemiBold.h"
 #include "GraphicTests.h"
 #include "UIHelpers.hpp"
+#include "UI_Views.hpp"
 //#include "font_Montserrat_Regular.h"
 #include "LEDEffects.h"
 #include "metaTFT.h"
@@ -34,7 +35,7 @@
 CRGB leds[NUM_LEDS+1];
 
 metaTFT tft = metaTFT(TFT_CS, TFT_DC,TFT_RST,TFT_MOSI,TFT_SCK,TFT_MISO,TFT_LED,3);
-UserEventQueue eventQueue = UserEventQueue();
+
 using namespace std;
 class TFTBrightnessWrapper : public ValueWrapper{
  public:
@@ -202,7 +203,7 @@ PaletteIndexWrapper paletteIndexWrapper(&systemPalettes,&currentSystemPalette);
 metaAction paletteAction(&PalettesMenu,&paletteIndexWrapper);
 
 metaAction parameterAction(&ParameterMenu,NULL);
-ResponderStack responderStack;
+
 
 Queue taskQueue;
 ActionList initializeActionList(){
@@ -475,112 +476,6 @@ void adjustBrightness()
 	}while(true/*lastg<5000*/);
 }
 
-
-
-/** todo: re-move this functionalityto a generic implementation */
-int processUserEvents(unsigned long now, void * userdata){
-	if(responderStack.size()==0){
-		#if DEBUG_RESPONDER
-		Serial << "There is no top responder"<<endl;
-		#endif
-		return 0;
-	}
-	metaView *resp = responderStack.back();
-	while(eventQueue.length()){
-		UserEvent *evnt = eventQueue.popEvent();
-		//uint16_t l = evnt->eventMask();
-		uint16_t k = resp->respondsToEvents();
-		//int16_t oldSelectedElement =resp->selectedIndex();
-		if((evnt->matchesMask(k)) ){
-			int16_t result = resp->processEvent(evnt);
-			if(result > ResponderResult::ChangedValue){
-				#if DEBUG_RESPONDER
-				Serial << "Responder changed Value x = "<<result<<endl;
-				metaAction *a = resp->getAction();
-				if(a){
-					Serial << "Responder got a value action"<<endl;
-				}else{
-					Serial << "Responder did not have a value action"<<endl;
-				}
-				#endif
-				resp->redraw();
-			}else{
-				switch(result){
-					case ResponderResult::ChangedNothing:
-					#if DEBUG_RESPONDER
-					Serial << "Responder did not change"<< endl;
-					#endif
-					break;
-
-					case ResponderResult::ChangedVisual:
-					#if DEBUG_RESPONDER
-					Serial << "Responder changed visualy"<< endl;
-					#endif
-					resp->redraw();
-					break;
-
-					case ResponderResult::ChangedState:			/// this only is send if there was a list select
-					{
-						#if DEBUG_RESPONDER
-						int16_t idx =resp->activeIndex();
-						Serial << "Responder changed state selected "<<idx<<endl;
-						#endif
-						metaAction *a = resp->getAction();
-						if(a){
-							#if DEBUG_RESPONDER
-							Serial << "Responder has a action for this"<< endl;
-							#endif
-						}else{
-							// check if the list entry has an metaAction added;
-							metaView * p = resp->activeElement();
-							if(p){
-								metaAction *a = p->getAction();
-								if(a){
-									#if DEBUG_RESPONDER
-									Serial << "got an action on the active Elements"<<endl;
-									Serial << a<<endl;
-									#endif
-									metaView* aView = a->getView();
-									ValueWrapper* val = a->getValue();
-									if(aView){
-										if(val){
-											aView->setValueWrapper(val);
-										}
-										responderStack.push_back(aView);
-										aView->prepareForDisplay();
-										aView->redraw();
-									}
-								}else{
-									#if DEBUG_RESPONDER
-									Serial << "on element does not have a action"<<endl;
-									#endif
-								}
-							}
-						}
-						resp->redraw();
-					}
-					break;
-
-					case ResponderResult::ResponderExit:
-						#if DEBUG_RESPONDER
-						Serial << "Responder has exited"<< endl;
-						#endif
-						responderStack.pop_back();
-						resp->removeFromScreen();
-						if(responderStack.size()){
-							metaView * k=responderStack.back();
-							k->setNeedsRedraw();
-							k->redraw();
-						}
-					break;
-
-				}
-			}
-		}
-		delete evnt;
-	}
-	return 0;
-}
 
 
 void setup() {
