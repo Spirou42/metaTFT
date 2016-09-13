@@ -33,8 +33,9 @@
 #define LED_BRIGHTNESS    180
 
 #define LED_PIN           4
-#define NUM_LEDS 158
+#define NUM_LEDS          158
 
+#define DEBUG_STARTUP     false
 
 extern CRGB leds[];
 

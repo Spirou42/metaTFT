@@ -269,7 +269,7 @@ void metaLabel::setLayout(LabelLayout ll){
 
 void metaLabel::redraw(){
 	//Serial << ">>>>>>Label Redraw "<<_frame<<_font->line_space<<endl;
-//		Serial << "Label: "<<(this->getLabel())<<" visible: "<<(this->_visible?"YES":"NO")<<endl;
+	//		Serial << "Label: "<<(this->getLabel())<<" visible: "<<(this->_visible?"YES":"NO")<<endl;
 	if(!this->_visible){
 		return;
 	}
@@ -487,6 +487,7 @@ void metaValue::prepareForDisplay(){
 	setSize(10,10);
 	sizeToFit();
 	allignInSuperView(HALLIGN_CENTER | VALLIGN_CENTER);
+	// remember the
 }
 GCSize metaValue::resizeLabel(){
 	_labelView.sizeToFit();
@@ -564,7 +565,7 @@ void metaValue::sizeToFit(){
 	{
 		GCPoint lo = GCPoint();
 		lo.x = _horizontalLabelInset;
-
+		//lo.y = 20;
 		_labelView.setOrigin(lo);
 	}
 	/*{
@@ -604,9 +605,11 @@ void metaValue::setLayout(ValueLayout definition){
 
 uint16_t metaValue::respondsToEvents(){
 	if(_processEvents){
-		return 	EventMask::ButtonEvents | EventMask::ButtonEvent_Up | EventMask::ButtonEvent_Down |
-						EventMask::ButtonEvent_Center | EventMask::ButtonEvent_Left | EventMask::ButtonEvent_Right |
-						EventMask::EncoderEvents | EventMask::ButtonState_Down | EventMask::ButtonState_Up;
+		uint16_t result = EventMask::ButtonEvents | EventMask::EncoderEvents |
+			EventMask::ButtonEvent_AllButtons |
+			EventMask::ButtonState_Up | EventMask::ButtonState_Down;
+
+		return result;
 	}
 	return 0;
 }
@@ -659,8 +662,9 @@ int16_t metaValue::processEvent(UserEvent *evnt){
 				switch(evnt->getButtonID()){
 					case ButtonID::UpButton: break;
 					case ButtonID::DownButton: break;
-					case ButtonID::LeftButton: break;
 					case ButtonID::RightButton: break;
+
+					case ButtonID::LeftButton:
 					case ButtonID::CenterButton:
 						if(evnt->getButtonState() == ButtonState::ButtonUp){
 							result = ResponderResult::ResponderExit;
@@ -686,11 +690,8 @@ void metaList::initView(metaTFT* tft, GCRect frame ){
 }
 uint16_t metaList::respondsToEvents(){
 	uint16_t result = EventMask::EncoderEvents | EventMask::ButtonEvents |
-										EventMask::ButtonEvent_Down | EventMask::ButtonEvent_Up |
-										EventMask::ButtonEvent_Center | EventMask::ButtonState_All;
-	//if(_isSelectList){
-		result |= EventMask::ButtonEvent_Left;
-	//}
+										EventMask::ButtonEvent_AllButtons |
+										EventMask::ButtonState_All;
 	return result;
 }
 void metaList::addSubview(metaView* aView){
@@ -835,11 +836,11 @@ void metaList::redraw(){
 	metaView::redraw();
 	metaView *sv = selectedSubview();
 	if(sv != _lastSelectedView){
-		// drawConnectionFor(_lastSelectedView,_backgroundColor);
-		// if(sv){
-		// 	drawConnectionFor(sv,sv->getOutlineColor());
-		// }
 		_lastSelectedView = sv;
+	}
+	if(_maxVisibleEntries<_subViews.size()){
+		// draw an indicator
+		GCSize indicatorSpace = GCSize();
 	}
 	resetFlags();
 //	Serial << "<<<<<metaList"<<endl;
@@ -981,6 +982,8 @@ int16_t metaList::processEvent(UserEvent* k){
 			case ButtonID::UpButton:
 			if(bData.state == ButtonState::ButtonDown){step = -1;} break;
 
+			case ButtonID::RightButton:
+			Serial << "RightButtonInList"<<endl;
 			case ButtonID::CenterButton:
 			if(bData.state == ButtonState::ButtonDown){
 				if(switchSelectedOn()){
@@ -994,9 +997,11 @@ int16_t metaList::processEvent(UserEvent* k){
 					result = ResponderResult::ChangedState;
 				}
 			} break;
+
 			case ButtonID::LeftButton:
 			if(k->getButtonState()==ButtonState::ButtonUp){result = ResponderResult::ResponderExit;}
 			break;
+
 			default: break;
 		}
 		if(step){
@@ -1024,4 +1029,15 @@ int16_t metaList::processEvent(UserEvent* k){
 		}
 	}
 	return result;
+}
+
+void metaList::prepareForDisplay()
+{
+	metaView::prepareForDisplay();
+	if(_isSelectList){
+		int16_t index = _ValueWrapper->getValue();
+		if(index < _subViews.size()-1){
+			_subViews[index]->setState(State::On);
+		}
+	}
 }

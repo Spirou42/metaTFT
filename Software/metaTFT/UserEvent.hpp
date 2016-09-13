@@ -97,6 +97,7 @@ typedef enum _EventMask{
   ButtonState_DoubleClick = (1 << 11),
   ButtonState_All         = (ButtonState_Down | ButtonState_Up | ButtonState_Click | ButtonState_LongClick | ButtonState_DoubleClick),
   ButtonState_AllClick    = (ButtonState_Click | ButtonState_DoubleClick | ButtonState_LongClick),
+  ButtonEvent_AllButtons  = (ButtonEvent_Up | ButtonEvent_Down | ButtonEvent_Right | ButtonEvent_Left | ButtonEvent_Center)
 }EventMask;
 
 

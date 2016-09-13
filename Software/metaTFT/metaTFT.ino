@@ -262,7 +262,7 @@ void initListVisual(metaList &k){
 	k.setBorderInset(GCSize(15,5));
 	k.setLabelLayout(getListLayout());
 	k.setDrawsOutline(true);
-	k.setCornerRadius(0);
+	k.setCornerRadius(5);
 	k.setOutlineColor(ILI9341_RED);
 	k.setOpaque(false);
 }
@@ -481,7 +481,9 @@ void adjustBrightness()
 
 void setup() {
 	Serial.begin(115200);
-	while(!Serial){}
+  #if DEBUG_STARTUP
+  while(!Serial){}
+  #endif
 	Serial << "Start"<<endl;
 	Serial << "Effects: "<<systemEffects.size()<<endl;
 	Serial << "Palettes: "<<systemPalettes.size()<<endl;
@@ -500,7 +502,8 @@ void setup() {
 
 	// draw mask
 	initUI();
-
+  programIndexWrapper.setValue(3);
+  paletteIndexWrapper.setValue(4);
 	// initialize tasks
 	taskQueue.scheduleFunction(processLEDEffects,NULL,"EFFC",0,1000/FRAMES_PER_SECOND);
 	taskQueue.scheduleFunction(processUserEvents,NULL,"USER",0,100);

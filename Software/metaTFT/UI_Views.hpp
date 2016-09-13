@@ -399,6 +399,7 @@ class metaList : public metaView{
   virtual void selectIndex(int16_t idx);
   virtual metaView* activeElement();
   virtual uint16_t respondsToEvents();
+  virtual void prepareForDisplay();
   void forgetSelection(){_lastSelectedView = NULL;}
   metaView* addEntry(const String *k);
   virtual void sizeToFit();
