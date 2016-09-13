@@ -22,6 +22,9 @@
 #define DEBUG_VALUE_VALUE 0
 #define DEBUG_VALUE_REDRAW 0
 #define DEBUG_LIST_VALUE 0
+#define DEBUG_LIST_REDRAW 0
+
+
 /** @todo: rework */
 /** AllignmentMasks terms*/
 #define HALLIGN_LEFT    (1<<1)
@@ -406,6 +409,12 @@ class metaList : public metaView{
   void setLabelLayout(metaLabel::LabelLayout *l){_ll = l;}
   void setIsSelectList(bool f){_isSelectList = f;}
   bool isSelectList(){return _isSelectList;}
+  void setScrollIndicatorInset(uint8_t inset){_scrollIndicatorInset = inset;setNeedsLayout();}
+  uint8_t scrollIndicatorInset(){return _scrollIndicatorInset;}
+  void setScrollIndicatorWidth(uint8_t width){_scrollIndicatorWidth = width;setNeedsLayout();}
+  uint8_t scrollIndicatorWidth(){return _scrollIndicatorWidth;}
+  void setScrollIndicatorColor(uint16_t color){_scrollIndicatorColor = color;setNeedsRedraw();}
+  uint16_t scrollIndicatorColor(){return _scrollIndicatorColor;}
  protected:
   void drawConnectionFor(metaView* view, uint16_t lineColor);
   metaView* selectedSubview();
@@ -421,5 +430,8 @@ class metaList : public metaView{
   bool _isSelectList;
   uint8_t _visibleStart;
   uint8_t _maxVisibleEntries;
+  uint8_t _scrollIndicatorInset;
+  uint8_t _scrollIndicatorWidth;
+  uint16_t _scrollIndicatorColor;
 };
 #endif

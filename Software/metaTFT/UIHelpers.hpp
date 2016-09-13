@@ -10,7 +10,7 @@
 #include "metaTFTDisplay.hpp"
 #include "font_Arial.h"
 
-#define DEBUG_RESPONDER 1
+#define DEBUG_RESPONDER 0
 /** @todo: rework */
 /** AllignmentMasks terms*/
 #define HALLIGN_LEFT    (1<<1)

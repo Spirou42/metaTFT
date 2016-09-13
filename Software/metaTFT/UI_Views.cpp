@@ -177,7 +177,7 @@ void metaView::redraw(){
 	if(_needsRedraw || cnl){
 		GCRect p = getBounds();
 		p.origin += getScreenOrigin();
-			Serial << "Redraw: "<<_needsRedraw<<" "<<cnl<<"("<<p<<")\t"<<_HEX((unsigned long)this)<<endl;
+			//Serial << "Redraw: "<<_needsRedraw<<" "<<cnl<<"("<<p<<")\t"<<_HEX((unsigned long)this)<<endl;
 		GraphicsContext::setFillColor(_backgroundColor);
 		GraphicsContext::setStrokeColor(_outlineColor);
   	if(_cornerRadius==0){
@@ -838,9 +838,33 @@ void metaList::redraw(){
 	if(sv != _lastSelectedView){
 		_lastSelectedView = sv;
 	}
-	if(_maxVisibleEntries<_subViews.size()){
+	if(_maxVisibleEntries < _subViews.size() ){
 		// draw an indicator
-		GCSize indicatorSpace = GCSize();
+		#if DEBUG_LIST_REDRAW
+		Serial << "Indicator needed in list"<<endl;
+		#endif
+		int16_t indicatorInset = _scrollIndicatorInset+_cornerRadius;
+		int16_t indicatorTrackHeight = _frame.size.h- 2*indicatorInset;
+		GCPoint indicatorOrigin = GCPoint(_frame.size.w-1-(_scrollIndicatorWidth/2),indicatorInset);
+		GCRect indicatorTrack = GCRect(indicatorOrigin,GCSize(_scrollIndicatorWidth,indicatorTrackHeight) );
+		setFillColor(_backgroundColor);
+		fillRect(indicatorTrack);
+		setStrokeColor(_outlineColor);
+		drawLine(indicatorTrack.origin.x,indicatorTrack.origin.y,indicatorTrack.origin.x-1+_scrollIndicatorWidth,indicatorTrack.origin.y);
+		drawLine(indicatorTrack.origin.x,_frame.size.h-indicatorTrack.origin.y,indicatorTrack.origin.x-1+_scrollIndicatorWidth,_frame.size.h-indicatorTrack.origin.y);
+
+		indicatorTrackHeight -=2;// remove the horizontal borders from the track
+		indicatorOrigin.y+=1;
+		float heightForEntry = indicatorTrackHeight / float(_subViews.size());
+		//int16_t fractHeightForEntry = indicatorTrackHeight % (_subViews.size());
+		int16_t heightForWindow = heightForEntry * _maxVisibleEntries;// + fractHeightForEntry*_maxVisibleEntries;
+		indicatorOrigin.y+= _visibleStart*(heightForEntry);// + fractHeightForEntry);
+		GCRect indicatorRect = GCRect(indicatorOrigin,GCSize(_scrollIndicatorWidth,heightForWindow));
+		setFillColor(_scrollIndicatorColor);
+		fillRoundRect(indicatorRect,_scrollIndicatorWidth/2);
+		#if DEBUG_LIST_REDRAW
+		Serial << "HFE:"<<heightForEntry<<" HFW:"<<heightForWindow<<" ITH:"<<indicatorTrackHeight<<" IIL:"<<_subViews.size()<<" MVE:"<<_maxVisibleEntries<<endl;
+		#endif
 	}
 	resetFlags();
 //	Serial << "<<<<<metaList"<<endl;
@@ -881,7 +905,9 @@ void metaList::selectIndex(int16_t idx){
 	if(idx <0){
 		return;
 	}
+	#if DEBUG_LIST_VALUE
 	Serial << "Select "<<idx<<endl;
+	#endif
 	vector<metaView*>::iterator subIter = _subViews.begin();
 	if(selectedIndex() != idx){
 		if(_lastSelectedView){
@@ -890,11 +916,15 @@ void metaList::selectIndex(int16_t idx){
 		subIter += idx;
 		if(idx > (this->_visibleStart + this->_maxVisibleEntries-1)){
 			this->_visibleStart = idx - (this->_maxVisibleEntries-1);
+			#if DEBUG_LIST_VALUE
 			Serial << "Scroll up "<<_visibleStart<<endl;
+			#endif
 			scrollList();
 		}else if(idx<this->_visibleStart){
 			this->_visibleStart = idx;
+			#if DEBUG_LIST_VALUE
 			Serial << "Scroll down "<<_visibleStart<<endl;
+			#endif
 			scrollList();
 		}
 		if(subIter != _subViews.end()){
@@ -1035,7 +1065,7 @@ void metaList::prepareForDisplay()
 {
 	metaView::prepareForDisplay();
 	if(_isSelectList){
-		int16_t index = _ValueWrapper->getValue();
+		uint16_t index = _ValueWrapper->getValue();
 		if(index < _subViews.size()-1){
 			_subViews[index]->setState(State::On);
 		}
