@@ -8,4 +8,3 @@ The UI unit consist of a hollow shaft encoder with a custom made 5 button cursor
 Nothing a special here. Only a bunch of adapter boards and a simple 7 channel R/C debouncer so the Software can handle the button and encoder signals as interrupts.
 
 ## Software
-The software basically

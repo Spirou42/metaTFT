@@ -116,15 +116,22 @@ class metaView : public GraphicsContext, public metaResponder{
     if(f != _visualizeState){_visualizeState = f; setNeedsLayout();}}
 
   void setState(State s){
-    if(s != _state){_state = s;setNeedsRedraw();}}
-  State getState(){return _state;}
+    if(s != _state){_state = s;setNeedsRedraw();}
+  }
+
+  State getState(){
+    return _state;
+  }
 
   virtual void addSubview(metaView* ptr);
+
   void removeSubview(metaView* subView);
 
   void removeFromSuperview();
 
-  metaView* getSuperview(){return _superView;}
+  metaView* getSuperview(){
+    return _superView;
+  }
 
   void setNeedsRedraw(){_needsRedraw = true;}
   void setNeedsLayout(){_needsLayout = true;};
@@ -132,7 +139,9 @@ class metaView : public GraphicsContext, public metaResponder{
   virtual GCSize intrinsicSize(){return GCSize();};
 
   virtual void redraw();
+
   virtual void removeFromScreen();
+
   virtual void prepareForDisplay();
 
   void allignInSuperView(uint8_t allignmentMask);
@@ -140,7 +149,6 @@ class metaView : public GraphicsContext, public metaResponder{
   void allignInRect(uint8_t allignmentMask,GCRect r);
 
   virtual void sizeToFit();
-
 
   #if DEBUG_LAYOUT
   bool drawDebugRect = false;

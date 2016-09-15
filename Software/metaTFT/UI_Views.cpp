@@ -1074,6 +1074,15 @@ void metaList::prepareForDisplay()
 	}
 }
 
-void metaList::removeFromScreen(){
-	
+void metaList::removeFromScreen()
+{
+	metaView::removeFromScreen();
+	if(_maxVisibleEntries < _subViews.size() ){
+		int16_t indicatorInset = _scrollIndicatorInset+_cornerRadius;
+		int16_t indicatorTrackHeight = _frame.size.h- 2*indicatorInset;
+		GCPoint indicatorOrigin = GCPoint(_frame.size.w-1-(_scrollIndicatorWidth/2),indicatorInset);
+		GCRect indicatorTrack = GCRect(indicatorOrigin,GCSize(_scrollIndicatorWidth,indicatorTrackHeight) );
+		setFillColor(_backgroundColor);
+		fillRect(indicatorTrack);
+	}
 }

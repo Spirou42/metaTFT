@@ -300,7 +300,7 @@ void initSystemMenu(){
 
 }
 void initEffectsMenu(){
-	EffectsMenu.initView(&tft,GCRect(2,12,tft.width()/2,tft.height()-4));
+	EffectsMenu.initView(&tft,GCRect(30,15,tft.width()/2,tft.height()-4));
 	EffectsMenu.setIsSelectList(true);
 	initListVisual(EffectsMenu);
 	EffectList::iterator iter = systemEffects.begin();
