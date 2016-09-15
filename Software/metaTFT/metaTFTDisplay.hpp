@@ -1,5 +1,10 @@
 /**
 * definition for metaPixel TFT interface a subclass of ILI9341_t3
+* here you'll find:
+* 1. Basic geometry structures as GCPoint, GCSize and GCRect and basic operators for them
+* 2. The metaFTF class enriching the ILI9341_t3 class with some backlight handling and string width calculation
+* 3. The abstract GraphicsContext class (baseclass for all drawing classes)
+* This class acts as a proxy for all drawing operations.
 */
 
 #ifndef __METATFTDISPLAY_H__
@@ -10,11 +15,15 @@
 #include "FastLED.h"
 #include "Streaming.h"
 
- /** a collection of structs for basic geometry  handling (int16_t)*/
+ /** a collection of structs for basic geometry handling (int16_t)*/
+/**
+  GCPoint
+  */
 typedef struct _GCPoint{
-  int16_t x,y;
-  _GCPoint(int16_t X,int16_t Y):x(X),y(Y){};
-  _GCPoint():x(0),y(0){};
+  int16_t x;              ///< x-part
+  int16_t y;              ///< y-part
+  _GCPoint(int16_t X,int16_t Y):x(X),y(Y){}; ///< Basic constructor
+  _GCPoint():x(0),y(0){};                     ///< empty constructor creates a (0,0)
   _GCPoint( const _GCPoint& k){x=k.x;y=k.y;};
   bool operator==(_GCPoint p){return (x==p.x)&&(y==p.y);}
   bool operator!=(_GCPoint p){return !(*this == p);}

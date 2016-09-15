@@ -403,6 +403,7 @@ class metaList : public metaView{
   virtual metaView* activeElement();
   virtual uint16_t respondsToEvents();
   virtual void prepareForDisplay();
+  virtual void removeFromScreen();
   void forgetSelection(){_lastSelectedView = NULL;}
   metaView* addEntry(const String *k);
   virtual void sizeToFit();
@@ -417,6 +418,7 @@ class metaList : public metaView{
   uint16_t scrollIndicatorColor(){return _scrollIndicatorColor;}
  protected:
   void drawConnectionFor(metaView* view, uint16_t lineColor);
+  void drawScrollIndicator();
   metaView* selectedSubview();
   vector<metaView*>::iterator selectedIterator();
   vector<metaView*>::iterator onIterator();

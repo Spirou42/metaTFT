@@ -313,7 +313,7 @@ void initEffectsMenu(){
 }
 
 void initPalettesMenu(){
-	PalettesMenu.initView(&tft,GCRect(2,12,tft.width()/2,tft.height()-4));
+	PalettesMenu.initView(&tft,GCRect(30,15,tft.width()/2,tft.height()-4));
 	PalettesMenu.setIsSelectList(true);
 	initListVisual(PalettesMenu);
 	PaletteList::iterator iter = systemPalettes.begin();
@@ -326,7 +326,7 @@ void initPalettesMenu(){
 }
 
 void initParameterMenu(){
-  ParameterMenu.initView(&tft,GCRect(120,12,tft.width()/2,tft.height()-4));
+  ParameterMenu.initView(&tft,GCRect(30,15,tft.width()/2,tft.height()-4));
   ParameterMenu.setIsSelectList(false);
   initListVisual(ParameterMenu);
   ActionList::iterator iter = actionList.begin();
