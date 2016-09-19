@@ -168,6 +168,7 @@ public:
     GCPoint l = frame.origin+getScreenOrigin();
     _display->drawRoundRect(l.x,l.y,frame.size.w,frame.size.h,r,_strokeColor);
   }
+  void strokeRoundRect(GCRect frame, int16_t r) ;
   void drawRoundRect(GCPoint p, GCSize s, int16_t r){drawRoundRect(GCRect(p,s),r);}
   void drawRoundRect(int16_t x, int16_t y, int16_t w, int16_t h, int16_t r){drawRoundRect(GCRect(x,y,w,h),r);}
 

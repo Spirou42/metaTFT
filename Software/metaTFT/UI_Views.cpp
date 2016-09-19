@@ -168,7 +168,15 @@ void metaView::drawDebug(){
 	#endif
 }
 #endif
-
+void metaView::drawOutline()
+{
+	GraphicsContext::setStrokeColor(_outlineColor);
+	if(_cornerRadius==0){
+		GraphicsContext::drawRect(getBounds());
+	}else{
+		GraphicsContext::drawRoundRect(getBounds(),_cornerRadius);
+	}
+}
 void metaView::redraw(){
 	if(!this->_visible)
     return;
@@ -179,18 +187,13 @@ void metaView::redraw(){
 		p.origin += getScreenOrigin();
 			//Serial << "Redraw: "<<_needsRedraw<<" "<<cnl<<"("<<p<<")\t"<<_HEX((unsigned long)this)<<endl;
 		GraphicsContext::setFillColor(_backgroundColor);
-		GraphicsContext::setStrokeColor(_outlineColor);
   	if(_cornerRadius==0){
     	GraphicsContext::fillRect(getBounds());
   	}else{
     	GraphicsContext::fillRoundRect(getBounds(),_cornerRadius);
   	}
   	if(_drawsOutline){
-    	if(_cornerRadius==0){
-      	GraphicsContext::drawRect(getBounds());
-    	}else{
-      	GraphicsContext::drawRoundRect(getBounds(),_cornerRadius);
-    	}
+			this->drawOutline();
   	}
 		redrawChildren(true);
 		resetFlags();
@@ -858,8 +861,20 @@ void metaList::drawScrollIndicator(){
 	Serial << "HFE:"<<heightForEntry<<" HFW:"<<heightForWindow<<" ITH:"<<indicatorTrackHeight<<" IIL:"<<_subViews.size()<<" MVE:"<<_maxVisibleEntries<<endl;
 	#endif
 }
+
+void metaList::drawOutline()
+{
+#if 0
+	metaView::drawOutline();
+#else
+	GraphicsContext::setStrokeColor(_outlineColor);
+	GraphicsContext::strokeRoundRect(getBounds(),_cornerRadius);
+#endif
+
+}
 void metaList::redraw(){
-//	Serial << endl<<">>>>>metaList"<<endl;
+	//	Serial << endl<<">>>>>metaList"<<endl;
+
 	metaView::redraw();
 	metaView *sv = selectedSubview();
 	if(sv != _lastSelectedView){
@@ -868,7 +883,7 @@ void metaList::redraw(){
 	if(_maxVisibleEntries < _subViews.size() ){
 		drawScrollIndicator();
 	}
-	resetFlags();
+
 //	Serial << "<<<<<metaList"<<endl;
 }
 

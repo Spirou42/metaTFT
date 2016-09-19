@@ -139,7 +139,7 @@ class metaView : public GraphicsContext, public metaResponder{
   virtual GCSize intrinsicSize(){return GCSize();};
 
   virtual void redraw();
-
+  virtual void drawOutline();
   virtual void removeFromScreen();
 
   virtual void prepareForDisplay();
@@ -402,6 +402,7 @@ class metaList : public metaView{
   virtual void addSubview(metaView* view);
   metaLabel* addEntry(const String);
   virtual void redraw();
+  virtual void drawOutline();
   virtual void initView(metaTFT* tft, GCRect frame);
   virtual int16_t processEvent(UserEvent* k);
   virtual int16_t selectedIndex();
