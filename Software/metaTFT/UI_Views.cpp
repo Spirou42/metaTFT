@@ -857,6 +857,7 @@ void metaList::drawScrollIndicator(){
 	GCRect indicatorRect = GCRect(indicatorOrigin,GCSize(_scrollIndicatorWidth,heightForWindow));
 	setFillColor(_scrollIndicatorColor);
 	fillRoundRect(indicatorRect,_scrollIndicatorWidth/2);
+	drawRect(indicatorTrack);
 	#if DEBUG_LIST_REDRAW
 	Serial << "HFE:"<<heightForEntry<<" HFW:"<<heightForWindow<<" ITH:"<<indicatorTrackHeight<<" IIL:"<<_subViews.size()<<" MVE:"<<_maxVisibleEntries<<endl;
 	#endif

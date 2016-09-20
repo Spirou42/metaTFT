@@ -266,7 +266,7 @@ void initListVisual(metaList &k){
 	k.setOutlineColor(ILI9341_RED);
 	k.setOpaque(false);
   k.setScrollIndicatorInset(10);
-  k.setScrollIndicatorWidth(5);
+  k.setScrollIndicatorWidth(7);
   k.setScrollIndicatorColor(ILI9341_ORANGE/*0xFBE0*/);
 }
 
