@@ -395,7 +395,7 @@ class metaList : public metaView{
  public:
   metaList():metaView(),_cellInset(2,2),_borderInset(10,10),_lastSelectedView(NULL),_maxElementSize(){};
   void setBorderInset(GCSize i){_borderInset = i;setNeedsLayout();}
-  GCSize getBorderInset(){return _borderInset;}
+  GCSize getBorderInset(){return _borderInset;};
 
   void layoutList();
   void scrollList();
@@ -419,6 +419,7 @@ class metaList : public metaView{
   void setLabelLayout(metaLabel::LabelLayout *l){_ll = l;}
   void setIsSelectList(bool f){_isSelectList = f;}
   bool isSelectList(){return _isSelectList;}
+  bool isScrollList(){return _maxVisibleEntries < _subViews.size();};
   void setScrollIndicatorInset(uint8_t inset){_scrollIndicatorInset = inset;setNeedsLayout();}
   uint8_t scrollIndicatorInset(){return _scrollIndicatorInset;}
   void setScrollIndicatorWidth(uint8_t width){_scrollIndicatorWidth = width;setNeedsLayout();}
@@ -428,6 +429,7 @@ class metaList : public metaView{
  protected:
   void drawConnectionFor(metaView* view, uint16_t lineColor);
   void drawScrollIndicator();
+  void strokeRoundOutline();
   metaView* selectedSubview();
   vector<metaView*>::iterator selectedIterator();
   vector<metaView*>::iterator onIterator();

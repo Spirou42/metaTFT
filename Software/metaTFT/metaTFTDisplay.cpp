@@ -155,20 +155,3 @@ size_t GraphicsContext::write(uint8_t c){
 void GraphicsContext::initGraphicsContext(metaTFT* display){
   _display = display;
 }
-
-// Draw a rounded rectangle
-void GraphicsContext::strokeRoundRect(GCRect frame, int16_t r) {
-  GCRect rect = frame;
-  GCPoint l = frame.origin+getScreenOrigin();
-  rect.origin = l;
-  // smarter version
-  _display->drawFastHLine(rect.origin.x+r            , rect.origin.y              , rect.size.w-2*r, _strokeColor); // Top
-  _display->drawFastHLine(rect.origin.x+r            , rect.origin.y+rect.size.h-1, rect.size.w-2*r, _strokeColor); // Bottom
-  _display->drawFastVLine(rect.origin.x              , rect.origin.y+r            , rect.size.h-2*r, _strokeColor); // Left
-  _display->drawFastVLine(rect.origin.x+rect.size.w-1, rect.origin.y+r            , rect.size.h-2*r, _strokeColor); // Right
-  // draw four corners
-  _display->drawCircleHelper(rect.origin.x+r              , rect.origin.y+r              , r, 1, _strokeColor);
-  _display->drawCircleHelper(rect.origin.x+rect.size.w-r-1, rect.origin.y+r              , r, 2, _strokeColor);
-  _display->drawCircleHelper(rect.origin.x+rect.size.w-r-1, rect.origin.y+rect.size.h-r-1, r, 4, _strokeColor);
-  _display->drawCircleHelper(rect.origin.x+r              , rect.origin.y+rect.size.h-r-1, r, 8, _strokeColor);
-}

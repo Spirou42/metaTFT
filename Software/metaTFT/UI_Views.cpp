@@ -868,10 +868,31 @@ void metaList::drawOutline()
 	metaView::drawOutline();
 #else
 	GraphicsContext::setStrokeColor(_outlineColor);
-	GraphicsContext::strokeRoundRect(getBounds(),_cornerRadius);
+	strokeRoundOutline();
 #endif
-
 }
+
+// Draw a rounded rectangle
+void metaList::strokeRoundOutline() {
+  GCRect rect = getBounds();
+  rect.origin += getScreenOrigin();
+  // smarter version
+  _display->drawFastHLine(rect.origin.x+_cornerRadius, rect.origin.y              , rect.size.w-2*_cornerRadius, _strokeColor); // Top
+  _display->drawFastHLine(rect.origin.x+_cornerRadius, rect.origin.y+rect.size.h-1, rect.size.w-2*_cornerRadius, _strokeColor); // Bottom
+  _display->drawFastVLine(rect.origin.x              , rect.origin.y+_cornerRadius, rect.size.h-2*_cornerRadius, _strokeColor); // Left
+	if(isScrollList()){
+		_display->drawFastVLine(rect.origin.x+rect.size.w-1,rect.size.h-2*_cornerRadius+_scrollIndicatorInset,_scrollIndicatorInset,_strokeColor);
+		_display->drawFastVLine(rect.origin.x+rect.size.w-1, rect.origin.y+_cornerRadius, _scrollIndicatorInset,_strokeColor);
+	}else{
+  	_display->drawFastVLine(rect.origin.x+rect.size.w-1, rect.origin.y+_cornerRadius, rect.size.h-2*_cornerRadius, _strokeColor); // Right
+	}
+  // draw four corners
+  _display->drawCircleHelper(rect.origin.x+_cornerRadius              , rect.origin.y+_cornerRadius              , _cornerRadius, 1, _strokeColor);
+  _display->drawCircleHelper(rect.origin.x+rect.size.w-_cornerRadius-1, rect.origin.y+_cornerRadius              , _cornerRadius, 2, _strokeColor);
+  _display->drawCircleHelper(rect.origin.x+rect.size.w-_cornerRadius-1, rect.origin.y+rect.size.h-_cornerRadius-1, _cornerRadius, 4, _strokeColor);
+  _display->drawCircleHelper(rect.origin.x+_cornerRadius              , rect.origin.y+rect.size.h-_cornerRadius-1, _cornerRadius, 8, _strokeColor);
+}
+
 void metaList::redraw(){
 	//	Serial << endl<<">>>>>metaList"<<endl;
 
@@ -880,11 +901,24 @@ void metaList::redraw(){
 	if(sv != _lastSelectedView){
 		_lastSelectedView = sv;
 	}
-	if(_maxVisibleEntries < _subViews.size() ){
+	if(isScrollList() ){
 		drawScrollIndicator();
 	}
 
 //	Serial << "<<<<<metaList"<<endl;
+}
+
+void metaList::removeFromScreen()
+{
+	metaView::removeFromScreen();
+	if(_maxVisibleEntries < _subViews.size() ){
+		int16_t indicatorInset = _scrollIndicatorInset+_cornerRadius;
+		int16_t indicatorTrackHeight = _frame.size.h- 2*indicatorInset+1;
+		GCPoint indicatorOrigin = GCPoint(_frame.size.w-1-(_scrollIndicatorWidth/2),indicatorInset);
+		GCRect indicatorTrack = GCRect(indicatorOrigin,GCSize(_scrollIndicatorWidth,indicatorTrackHeight) );
+		setFillColor(_backgroundColor);
+		fillRect(indicatorTrack);
+	}
 }
 
 vector<metaView*>::iterator metaList::onIterator(){
@@ -1086,18 +1120,5 @@ void metaList::prepareForDisplay()
 		if(index < _subViews.size()-1){
 			_subViews[index]->setState(State::On);
 		}
-	}
-}
-
-void metaList::removeFromScreen()
-{
-	metaView::removeFromScreen();
-	if(_maxVisibleEntries < _subViews.size() ){
-		int16_t indicatorInset = _scrollIndicatorInset+_cornerRadius;
-		int16_t indicatorTrackHeight = _frame.size.h- 2*indicatorInset;
-		GCPoint indicatorOrigin = GCPoint(_frame.size.w-1-(_scrollIndicatorWidth/2),indicatorInset);
-		GCRect indicatorTrack = GCRect(indicatorOrigin,GCSize(_scrollIndicatorWidth,indicatorTrackHeight) );
-		setFillColor(_backgroundColor);
-		fillRect(indicatorTrack);
 	}
 }
