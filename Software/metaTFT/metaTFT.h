@@ -27,13 +27,31 @@
 //A14 || 6
 
 /** FastLed**/
-#define COLOR_ORDER       GRB
-#define CHIPSET           WS2812
-#define COLOR_CORRECTION  0xffeeff
-#define LED_BRIGHTNESS    180
 
-#define LED_PIN           4
-#define NUM_LEDS          158
+/** switchen between WS2812 and APA102 **/
+#define USE_APA102 0
+
+#define LED_PIN           8
+
+#if USE_APA102
+  #warning APA102
+  #define CHIPSET           APA102
+  #define COLOR_ORDER       BGR
+  #define COLOR_CORRECTION  0xffeeff
+  #define CLOCK_PIN         14
+  #define NUM_LEDS          4*60
+#else
+  #warning WS2812
+  #define CHIPSET           WS2812
+  #define COLOR_ORDER       GRB
+  #define COLOR_CORRECTION  0xffeeff
+  #define NUM_LEDS          158
+#endif
+
+
+#define LED_BRIGHTNESS    50
+
+
 
 #define DEBUG_STARTUP     false
 

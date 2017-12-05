@@ -177,11 +177,11 @@ int16_t ledBrightness = LED_BRIGHTNESS;
 LEDBrightnessWrapper ledBrightnessWrapper(&ledBrightness);
 ValueEditor ledBrightnessAction(&ValueView,&ledBrightnessWrapper);
 
-int16_t hueStep = 0;
+int16_t hueStep = 1;
 ValueWrapper hueStepWrapper(&hueStep,-10,10,"Hue Step");
 ValueEditor hueStepAction(&ValueView,&hueStepWrapper);
 
-int16_t numberOfBlobs 	= 4;
+int16_t numberOfBlobs 	= 3;
 ValueWrapper numberOfBlobsWrapper(&numberOfBlobs,1,10,"Blobs");
 ValueEditor blobsAction(&ValueView,&numberOfBlobsWrapper);
 
@@ -373,9 +373,15 @@ void initializeTFT(){
 }
 
 void initializeLEDs(){
-	FastLED.addLeds<CHIPSET, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(COLOR_CORRECTION);
+  #if USE_APA102
+  FastLED.addLeds<CHIPSET, LED_PIN, CLOCK_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(COLOR_CORRECTION);
+  #else
+	 FastLED.addLeds<CHIPSET, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(COLOR_CORRECTION);
+  #endif
 	FastLED.clear(true);
+  FastLED.show();
 	FastLED.setBrightness( LED_BRIGHTNESS );
+  fill_solid(leds,NUM_LEDS,CRGB::Red);
 	FastLED.show();
 }
 
@@ -388,7 +394,8 @@ int processLEDEffects(unsigned long now,void* data){
 		FastLED.show();
 		{ gHue+=hueStep; } // slowly cycle the "base color" through the rainbow
 		// EVERY_N_SECONDS( 120 ) { nextPattern(); } // change patterns periodically
-		// EVERY_N_SECONDS(30){nextPalette();}
+		// EVERY_N_SECONDS(30){nextPalette();
+  //}
 	return 0;
 }
 
@@ -505,8 +512,8 @@ void setup() {
 
 	// draw mask
 	initUI();
-  programIndexWrapper.setValue(3);
-  paletteIndexWrapper.setValue(4);
+  programIndexWrapper.setValue(0);
+  paletteIndexWrapper.setValue(0);
 	// initialize tasks
 	taskQueue.scheduleFunction(processLEDEffects,NULL,"EFFC",0,1000/FRAMES_PER_SECOND);
 	taskQueue.scheduleFunction(processUserEvents,NULL,"USER",0,100);
