@@ -3,7 +3,7 @@
 
 #include "Arduino.h"
 #include "Streaming.h"
-#include "metaTFT.h"
+#include "FastLED_Demo.h"
 #include "LEDEffects.h"
 
 uint8_t gHue = 0;
@@ -48,7 +48,7 @@ void rainbow()
   // FastLED's built-in rainbow generator
   CRGBPalette16 p = (*currentSystemPalette)->second;
   uint16_t step = 1;
-  
+
   fill_palette(leds,NUM_LEDS,gHue,step,p,255,LINEARBLEND);
   //fill_rainbow( leds, NUM_LEDS, gHue, 7);
 }

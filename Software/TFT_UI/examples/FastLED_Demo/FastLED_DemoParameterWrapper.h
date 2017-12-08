@@ -1,7 +1,7 @@
 /** a couple of ValueWrapper descendants handling special cases of parameters as:
 program/effect index, LED or TFT Brightness or HUE Step changes */
 
-#include "metaTFT.h"
+#include "FastLED_Demo.h"
 
 class HUEStepWrapper : public ValueWrapper{
 public:

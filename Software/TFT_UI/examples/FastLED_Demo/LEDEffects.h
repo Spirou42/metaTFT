@@ -4,7 +4,7 @@
 #define __LEDEFFECTS_H__
 
 #include "FastLED.h"
-#include "metaTFT.h"
+#include "FastLED_Demo.h"
 
 typedef void (*SimplePatternList[])();
 extern SimplePatternList patterns;
