@@ -5,8 +5,8 @@
 #ifndef __UIHELPERS_H__
 #define __UIHELPERS_H__
 
-#include "Arduino.h"
 #include <vector>
+#include "Arduino.h"
 #include "metaTFTDisplay.hpp"
 #include "font_Arial.h"
 

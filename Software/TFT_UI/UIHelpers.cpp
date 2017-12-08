@@ -5,6 +5,7 @@
 #include "UIHelpers.hpp"
 #include "UI_Views.hpp"
 #include "UserEvent.hpp"
+#include <vector>
 
 ResponderStack responderStack;
 

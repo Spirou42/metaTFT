@@ -1,0 +1,24 @@
+{
+    "name": "TFT_UI",
+    "description": "Highlevel UI Library for personal projects",
+    "keywords": "TFT, UI",
+    "authors": [
+        {
+            "name": "Carsten Müller",
+            "url": "https://github.com/spirou42",
+            "maintainer": true
+        },
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/spirou42/metaTFT.git"
+    },
+    "version": "0.1",
+    "license": "",
+    "homepage": "",
+    "frameworks": "arduino",
+    "platforms": "teensy",
+    "examples": [
+      "examples/*/*.ino"
+    ]
+}

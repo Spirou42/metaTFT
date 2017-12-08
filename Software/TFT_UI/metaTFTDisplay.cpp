@@ -13,7 +13,6 @@ void metaTFT::start()
   this->setTextWrap(true);
   this->updateBacklight();
   drawLogo();
-
   delay(800);
 }
 
