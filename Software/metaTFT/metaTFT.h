@@ -29,7 +29,7 @@
 /** FastLed**/
 
 /** switchen between WS2812 and APA102 **/
-#define USE_APA102 0
+#define USE_APA102 1
 
 #define LED_PIN           8
 
@@ -39,7 +39,7 @@
   #define COLOR_ORDER       BGR
   #define COLOR_CORRECTION  0xffeeff
   #define CLOCK_PIN         14
-  #define NUM_LEDS          4*60
+  #define NUM_LEDS          110
 #else
   #warning WS2812
   #define CHIPSET           WS2812
@@ -77,5 +77,7 @@ extern int16_t numberOfBlobs;
 extern int16_t fadeOutAmount;
 extern int16_t blobLength;
 extern int16_t startBlobSpeed;
+int sgn(float v) ;
 //extern CHSV rgb2hsv(const CRGB& rgb);
+
 #endif

@@ -32,98 +32,18 @@
 //#include "font_Montserrat_Regular.h"
 #include "LEDEffects.h"
 #include "metaTFT.h"
+#include "metaTFTWrapper.h"
 
 CRGB leds[NUM_LEDS+1];
 
 metaTFT tft = metaTFT(TFT_CS, TFT_DC,TFT_RST,TFT_MOSI,TFT_SCK,TFT_MISO,TFT_LED,3);
 
 using namespace std;
-class TFTBrightnessWrapper : public ValueWrapper{
- public:
-	TFTBrightnessWrapper(int16_t *val):ValueWrapper(val,0,20,"TFT Brightness"){}
 
-  virtual void setValue(int16_t k){
-		int16_t old = *_value;
-		ValueWrapper::setValue(k);
-		if(*_value!=old){
-			int8_t p = displayFromVal(*_value);
-			tft.setLuminance(p);
-		}
-	}
-	virtual int16_t getValue(){
-		//int16_t lum = tft.getLuminance();
-		//int16_t p =valFromDisplay(lum);
-		// if(p>_max){p=_max;}
-		// if(p<_min){p=_min;}
-		return *_value;
-	}
- protected:
-	int8_t displayFromVal(int16_t k){
-		int16_t p = mapInto(GCSize(_min,_max),GCSize(6,554),k);
-		uint8_t v= exp(p/100.0);
-		return 256 -v;
-	}
-	int16_t valFromDisplay(int16_t k){
-		int16_t uValue = log(256-k)*100.0;
-		int16_t p= mapInto(GCSize(6,554),GCSize(_min,_max),uValue);
-		return p;
-	}
-};
+int sgn(float v) {
+  return (v > 0) - (v < 0);
+}
 
-class LEDBrightnessWrapper : public ValueWrapper{
- public:
-	LEDBrightnessWrapper(int16_t * val):ValueWrapper(val,0,255,"LED Brightness"){}
-	virtual void setValue(int16_t k){
-		int16_t old = *_value;
-		ValueWrapper::setValue(k);
-		if(old!=*_value){
-			FastLED.setBrightness(*_value);
-		}
-	}
-};
-
-class ProgramIndexWrapper: public ValueWrapper{
-	public:
-		ProgramIndexWrapper(EffectList* list, EffectList::iterator *iter):ValueWrapper(0,0,list->size()-1,"Program"),
-											 _effectIter(iter),_effectList(list){}
-
-		virtual void setValue(int16_t k){
-			if(k>_max){
-				k=_max;
-			}else if(k<_min){
-				k=_min;
-			}
-			*_effectIter = _effectList->begin()+k;
-		}
-		virtual int16_t getValue(){
-			return (*_effectIter) - _effectList->begin();
-		}
-
-	protected:
-		EffectList::iterator *_effectIter;
-		EffectList 					 *_effectList;
-};
-class PaletteIndexWrapper: public ValueWrapper{
-	public:
-		PaletteIndexWrapper(PaletteList* list, PaletteList::iterator *iter):ValueWrapper(0,0,list->size()-1,"Program"),
-											 _paletteIter(iter),_paletteList(list){}
-
-		virtual void setValue(int16_t k){
-			if(k>_max){
-				k=_max;
-			}else if(k<_min){
-				k=_min;
-			}
-			*_paletteIter = _paletteList->begin()+k;
-		}
-		virtual int16_t getValue(){
-			return (*_paletteIter) - _paletteList->begin();
-		}
-
-	protected:
-		PaletteList::iterator *_paletteIter;
-		PaletteList 					*_paletteList;
-};
 
 PaletteList initializeSystemPalettes(){
 	PaletteList tmp;
@@ -178,8 +98,12 @@ LEDBrightnessWrapper ledBrightnessWrapper(&ledBrightness);
 ValueEditor ledBrightnessAction(&ValueView,&ledBrightnessWrapper);
 
 int16_t hueStep = 1;
-ValueWrapper hueStepWrapper(&hueStep,-10,10,"Hue Step");
+HUEStepWrapper hueStepWrapper(&hueStep);
 ValueEditor hueStepAction(&ValueView,&hueStepWrapper);
+
+ int16_t hueFrameDelay = 0;
+ ValueWrapper hueDelayWrapper(&hueFrameDelay,0,24,"Hue Delay");
+ ValueEditor hueDelayAction(&ValueView,&hueDelayWrapper);
 
 int16_t numberOfBlobs 	= 3;
 ValueWrapper numberOfBlobsWrapper(&numberOfBlobs,1,10,"Blobs");
@@ -286,6 +210,9 @@ void initSystemMenu(){
 	l=SystemMenu.addEntry( String("Hue Speed"));
 	l->setAction(&hueStepAction);
 
+  l=SystemMenu.addEntry(String("Hue Frames"));
+  l->setAction(&hueDelayAction);
+
 	l=SystemMenu.addEntry(String("Effect"));
 	l->setAction(&programAction);
 
@@ -386,16 +313,19 @@ void initializeLEDs(){
 }
 
 int processLEDEffects(unsigned long now,void* data){
-	//if(ledTimer > (1000/FRAMES_PER_SECOND)){
-		EffectPair *l = *currentSystemEffect;
-		effectHandler h = l->second;
-		h();
-		//patterns[currentPatternNumber]();
-		FastLED.show();
-		{ gHue+=hueStep; } // slowly cycle the "base color" through the rainbow
-		// EVERY_N_SECONDS( 120 ) { nextPattern(); } // change patterns periodically
-		// EVERY_N_SECONDS(30){nextPalette();
-  //}
+  static int hueDelay = 0;
+	EffectPair *l = *currentSystemEffect;
+	effectHandler h = l->second;
+	h();
+	FastLED.show();
+  int16_t hFD = hueStepWrapper.frameDelay() + hueFrameDelay*10;
+  int16_t hueStep = hueStepWrapper.hueStep();
+  if(hueDelay>=hFD) {
+    gHue+=hueStep;
+    hueDelay = 0;
+  }else{
+    hueDelay ++;
+  }
 	return 0;
 }
 
@@ -512,7 +442,7 @@ void setup() {
 
 	// draw mask
 	initUI();
-  programIndexWrapper.setValue(0);
+  programIndexWrapper.setValue(2);
   paletteIndexWrapper.setValue(0);
 	// initialize tasks
 	taskQueue.scheduleFunction(processLEDEffects,NULL,"EFFC",0,1000/FRAMES_PER_SECOND);
@@ -542,6 +472,8 @@ void loop() {
 		SystemMenu.prepareForDisplay();
 		SystemMenu.redraw();
 	}
+
+
 
 	/** run all sequence tasks */
 	taskQueue.Run(millis());

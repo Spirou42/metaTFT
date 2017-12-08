@@ -48,10 +48,7 @@ void rainbow()
   // FastLED's built-in rainbow generator
   CRGBPalette16 p = (*currentSystemPalette)->second;
   uint16_t step = 1;
-  // if(NUM_LEDS < 255){
-  //   step = 255.0 / NUM_LEDS;
-  // }
-	Serial << "Step: "<< step << "Leds: "<<NUM_LEDS<<endl;
+  
   fill_palette(leds,NUM_LEDS,gHue,step,p,255,LINEARBLEND);
   //fill_rainbow( leds, NUM_LEDS, gHue, 7);
 }

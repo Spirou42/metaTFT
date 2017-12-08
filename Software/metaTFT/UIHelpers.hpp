@@ -32,19 +32,9 @@ class metaView;
 typedef std::vector<metaView*> ResponderStack;
 extern ResponderStack responderStack;
 
-
-/**
-the Responder is the base class for all event processing related stuff
+/** simple wrapper for int16_t values. It gives the value a name and handles the basic min/max/value behaviour.
+It wrappes a simpleint16_t into a UI feasable container. In addition, the setValue method can be used by subclasses to trigger instatanious actions.
 */
-typedef enum _responderResult{
-  ChangedValue    = -1,
-  ChangedVisual   = -1,                          ///< this result from a processEvent call will remove this responder from the responder stack.
-  ChangedState    = -2,
-  ChangedNothing  = -3,
-  ResponderExit   = -4,
-}ResponderResult;
-
-/** simple wrapper for int16_t values */
 class ValueWrapper{
  public:
   ValueWrapper(int16_t* val, int16_t min, int16_t max, String name):_value(val),_min(min),_max(max),_name(name){}
@@ -83,7 +73,7 @@ class ValueWrapper{
    String _name;
 };
 
-/** wraper for simple actions */
+/** the editor takes a metaView and a ValueWrapper  and links them for user interaction*/
 class ValueEditor{
  public:
    ValueEditor(metaView* editorView, ValueWrapper *value){
@@ -113,6 +103,19 @@ class ValueEditor{
 };
 
 typedef std::vector<ValueEditor*> ActionList;
+
+
+/**
+the Responder is the base class for all event processing related stuff
+*/
+typedef enum _responderResult{
+  ChangedValue    = -1,
+  ChangedVisual   = -1,                          ///< this result from a processEvent call will remove this responder from the responder stack.
+  ChangedState    = -2,
+  ChangedNothing  = -3,
+  ResponderExit   = -4,
+}ResponderResult;
+
 /** baseclass for EventResponding */
 class metaResponder{
  public:

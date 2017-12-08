@@ -55,6 +55,7 @@ int processUserEvents(unsigned long now, void * userdata){
 
 					case ResponderResult::ChangedState:			/// this only is send if there was a list select
 					{
+						bool hasDrawn = false;
 						#if DEBUG_RESPONDER
 						int16_t idx =resp->activeIndex();
 						Serial << "Responder changed state selected "<<idx<<endl;
@@ -84,6 +85,7 @@ int processUserEvents(unsigned long now, void * userdata){
 										aView->initResponder(&responderStack);
 										aView->prepareForDisplay();
 										aView->redraw();
+										hasDrawn = true;
 									}
 								}else{
 									#if DEBUG_RESPONDER
@@ -92,7 +94,9 @@ int processUserEvents(unsigned long now, void * userdata){
 								}
 							}
 						}
-						resp->redraw();
+						if(!hasDrawn){
+							resp->redraw();
+						}
 					}
 					break;
 

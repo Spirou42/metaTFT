@@ -7,13 +7,13 @@
 #include "Arduino.h"
 #include "Streaming.h"
 #define DEBUG_USEREVENT 0
+
 class UserEventQueue;
 
 /** at the moment we have only Key and Encoder Events */
 typedef enum _EventType{
   EventTypeButton,
   EventTypeEncoder
-
 } EventType;
 Print& operator<<(Print& out,EventType type);
 
@@ -76,12 +76,13 @@ typedef struct _EncoderData{
 }EncoderData;
 Print& operator<<(Print& out, EncoderData data);
 
-/** and now the put them together into a union */
+/** and now the put them together into our EventData union */
 typedef union _EventData{
   ButtonData buttonData;
   EncoderData encoderData;
 }EventData;
 
+// a bit of masking has to be done too
 typedef enum _EventMask{
   ButtonEvents            = (1 << 0),
   EncoderEvents           = (1 << 1),
@@ -100,7 +101,7 @@ typedef enum _EventMask{
   ButtonEvent_AllButtons  = (ButtonEvent_Up | ButtonEvent_Down | ButtonEvent_Right | ButtonEvent_Left | ButtonEvent_Center)
 }EventMask;
 
-
+/** and now a little class to put it all together */
 class UserEvent
 {
   friend UserEventQueue;
@@ -109,17 +110,18 @@ public:
   UserEvent(EventType type):_type(type){};
 
   EventType getType(){
-    return _type;};
-
+    return _type;
+  }
   void setType(EventType t){
-    _type = t;}
+    _type = t;
+  }
 
   EventData getData(){
-    return _data;}
-
+    return _data;
+  }
   void setData(EventData d){
-    _data = d;}
-
+    _data = d;
+  }
 
   uint16_t eventMask();
   bool matchesMask(uint16_t mask);
@@ -128,7 +130,6 @@ public:
   int8_t getAbsEncoderSteps(){
     return _data.encoderData.absSteps;
   }
-
   float getEncoderSpeed(){
     return _data.encoderData.speed;
   }
@@ -150,6 +151,7 @@ protected:
   unsigned long timeStamp;
 };
 
+/** and creating a little queue for the events **/
 class UserEventQueue
 {
 public:
