@@ -1,34 +1,36 @@
 
 #define FASTLED_INTERNAL
+#include "TFT_UI.h"
 
-#include <stack>
-#include <vector>
-#include <tuple>
-#include <list>
 #include "Math.h"
 
 #include "SPI.h"
 #include "ILI9341_t3.h"
+
 #include "Queue.h"
 #include "Streaming.h"
 #include "FastLED.h"
 
-#include "UserEvent.hpp"
-#include "metaTFTDisplay.hpp"
-#include "Input_Switch.hpp"
+// #include "UserEvent.hpp"
+// #include "metaTFTDisplay.hpp"
+// #include "Input_Switch.hpp"
 //#include "Parameter.h"
-#include "Input_Switches.h"
-#include "Input_Encoder.hpp"
-#include "Input_Encoders.h"
-#include "FastLED.h"
+// #include "Input_Switches.h"
+// #include "Input_Encoder.hpp"
+// #include "Input_Encoders.h"
+// #include "GraphicTests.h"
+// #include "UIHelpers.hpp"
+// #include "UI_Views.hpp"
+
+
 #include "Palettes.h"
 #include "font_Arial.h"
 #include "font_ArialBold.h"
 #include "font_GillSans.h"
 #include "font_GillSans_SemiBold.h"
-#include "GraphicTests.h"
-#include "UIHelpers.hpp"
-#include "UI_Views.hpp"
+
+
+
 //#include "font_Montserrat_Regular.h"
 #include "LEDEffects.h"
 #include "metaTFT.h"
