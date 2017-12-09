@@ -122,98 +122,108 @@ DEFINE_GRADIENT_PALETTE( arctic_gp ) {
   252, 101, 91, 18,
   255,  94, 88, 18};
 
-  // Gradient palette "temperature_gp", originally from
-  // http://soliton.vm.bytemark.co.uk/pub/cpt-city/arendal/tn/temperature.png.index.html
-  // converted for FastLED with gammas (2.6, 2.2, 2.5)
-  // Size: 144 bytes of program space.
+// Gradient palette "temperature_gp", originally from
+// http://soliton.vm.bytemark.co.uk/pub/cpt-city/arendal/tn/temperature.png.index.html
+// converted for FastLED with gammas (2.6, 2.2, 2.5)
+// Size: 144 bytes of program space.
+DEFINE_GRADIENT_PALETTE( temperature_gp ) {
+    0,   1, 27,105,
+   14,   1, 27,105,
+   14,   1, 40,127,
+   28,   1, 40,127,
+   28,   1, 70,168,
+   42,   1, 70,168,
+   42,   1, 92,197,
+   56,   1, 92,197,
+   56,   1,119,221,
+   70,   1,119,221,
+   70,   3,130,151,
+   84,   3,130,151,
+   84,  23,156,149,
+   99,  23,156,149,
+   99,  67,182,112,
+  113,  67,182,112,
+  113, 121,201, 52,
+  127, 121,201, 52,
+  127, 142,203, 11,
+  141, 142,203, 11,
+  141, 224,223,  1,
+  155, 224,223,  1,
+  155, 252,187,  2,
+  170, 252,187,  2,
+  170, 247,147,  1,
+  184, 247,147,  1,
+  184, 237, 87,  1,
+  198, 237, 87,  1,
+  198, 229, 43,  1,
+  212, 229, 43,  1,
+  212, 220, 15,  1,
+  226, 220, 15,  1,
+  226, 171,  2,  2,
+  240, 171,  2,  2,
+  240,  80,  3,  3,
+  255,  80,  3,  3};
+// Gradient palette "colombia_gp", originally from
+// http://soliton.vm.bytemark.co.uk/pub/cpt-city/wkp/shadowxfox/tn/colombia.png.index.html
+// converted for FastLED with gammas (2.6, 2.2, 2.5)
+// Size: 112 bytes of program space.
+DEFINE_GRADIENT_PALETTE( colombia_gp ) {
+    0,   0,  2, 14,
+   28,   0,  2, 14,
+   28,   0,  7, 25,
+   56,   0,  7, 25,
+   56,   0, 33, 71,
+   84,   0, 33, 71,
+   84,   0, 82,147,
+   99,   0, 82,147,
+   99,  22,149,255,
+  107,  22,149,255,
+  107, 132,215,255,
+  113, 132,215,255,
+  113,  61,105, 49,
+  116,  61,105, 49,
+  116,  91,135, 55,
+  119,  91,135, 55,
+  119, 117,156, 67,
+  127, 117,156, 67,
+  127, 190,189, 99,
+  141, 190,189, 99,
+  141, 194,152, 65,
+  170, 194,152, 65,
+  170, 144,105, 48,
+  198, 144,105, 48,
+  198, 104, 81, 45,
+  226, 104, 81, 45,
+  226,  69, 51, 23,
+  255,  69, 51, 23};
 
-  DEFINE_GRADIENT_PALETTE( temperature_gp ) {
-      0,   1, 27,105,
-     14,   1, 27,105,
-     14,   1, 40,127,
-     28,   1, 40,127,
-     28,   1, 70,168,
-     42,   1, 70,168,
-     42,   1, 92,197,
-     56,   1, 92,197,
-     56,   1,119,221,
-     70,   1,119,221,
-     70,   3,130,151,
-     84,   3,130,151,
-     84,  23,156,149,
-     99,  23,156,149,
-     99,  67,182,112,
-    113,  67,182,112,
-    113, 121,201, 52,
-    127, 121,201, 52,
-    127, 142,203, 11,
-    141, 142,203, 11,
-    141, 224,223,  1,
-    155, 224,223,  1,
-    155, 252,187,  2,
-    170, 252,187,  2,
-    170, 247,147,  1,
-    184, 247,147,  1,
-    184, 237, 87,  1,
-    198, 237, 87,  1,
-    198, 229, 43,  1,
-    212, 229, 43,  1,
-    212, 220, 15,  1,
-    226, 220, 15,  1,
-    226, 171,  2,  2,
-    240, 171,  2,  2,
-    240,  80,  3,  3,
-    255,  80,  3,  3};
+// Gradient palette "cequal_gp", originally from
+// http://soliton.vm.bytemark.co.uk/pub/cpt-city/imagej/tn/cequal.png.index.html
+// converted for FastLED with gammas (2.6, 2.2, 2.5)
+// Size: 1860 bytes of program space.
+DEFINE_GRADIENT_PALETTE( cequal_gp ) {
+    0,   1,  1,  1,
+   36,   1,  3,  1,
+   76,   1, 41,123,
+  112,  59,  1,252,
+  127, 117,  1,180,
+  172, 239, 81,  1,
+  195, 252,180,  1,
+  222, 252,250,147,
+  255, 252,252,252};
+// Gradient palette "Another_Sunset_gp", originally from
+// http://soliton.vm.bytemark.co.uk/pub/cpt-city/nd/atmospheric/tn/Another_Sunset.png.index.html
+// converted for FastLED with gammas (2.6, 2.2, 2.5)
+// Size: 32 bytes of program space.
+DEFINE_GRADIENT_PALETTE( Another_Sunset_gp ) {
+  0, 110, 49, 11,
+  29,  55, 34, 10,
+  68,  22, 22,  9,
+  68, 239,124,  8,
+  97, 220,156, 27,
+  124, 203,193, 61,
+  178,  33, 53, 56,
+  255,   0,  1, 52};
 
-    // Gradient palette "colombia_gp", originally from
-    // http://soliton.vm.bytemark.co.uk/pub/cpt-city/wkp/shadowxfox/tn/colombia.png.index.html
-    // converted for FastLED with gammas (2.6, 2.2, 2.5)
-    // Size: 112 bytes of program space.
-
-    DEFINE_GRADIENT_PALETTE( colombia_gp ) {
-        0,   0,  2, 14,
-       28,   0,  2, 14,
-       28,   0,  7, 25,
-       56,   0,  7, 25,
-       56,   0, 33, 71,
-       84,   0, 33, 71,
-       84,   0, 82,147,
-       99,   0, 82,147,
-       99,  22,149,255,
-      107,  22,149,255,
-      107, 132,215,255,
-      113, 132,215,255,
-      113,  61,105, 49,
-      116,  61,105, 49,
-      116,  91,135, 55,
-      119,  91,135, 55,
-      119, 117,156, 67,
-      127, 117,156, 67,
-      127, 190,189, 99,
-      141, 190,189, 99,
-      141, 194,152, 65,
-      170, 194,152, 65,
-      170, 144,105, 48,
-      198, 144,105, 48,
-      198, 104, 81, 45,
-      226, 104, 81, 45,
-      226,  69, 51, 23,
-      255,  69, 51, 23};
-
-      // Gradient palette "cequal_gp", originally from
-      // http://soliton.vm.bytemark.co.uk/pub/cpt-city/imagej/tn/cequal.png.index.html
-      // converted for FastLED with gammas (2.6, 2.2, 2.5)
-      // Size: 1860 bytes of program space.
-
-      DEFINE_GRADIENT_PALETTE( cequal_gp ) {
-          0,   1,  1,  1,
-         36,   1,  3,  1,
-         76,   1, 41,123,
-        112,  59,  1,252,
-        127, 117,  1,180,
-        172, 239, 81,  1,
-        195, 252,180,  1,
-        222, 252,250,147,
-        255, 252,252,252};
 
 #endif

@@ -1,20 +1,22 @@
 /**
 */
 
-#ifndef __METATFT_H__
-#define __METATFT_H__
+#ifndef __FastLED_Demo_H__
+#define __FastLED_Demo_H__
+
 #define FASTLED_INTERNAL
+
 //#define FASTLED_ALLOW_INTERRUPTS 0
+
 #include <stack>
 #include <deque>
 #include <vector>
 #include <tuple>
 #include <list>
 #include <deque>
-#include "UIHelpers.hpp"
-#include "UI_Views.hpp"
 
 #include "FastLED.h"
+#include "TFT_UI.h"
 
 /** TFT Configuration **/
 #define TFT_RST   2

@@ -1,7 +1,14 @@
 /** a couple of ValueWrapper descendants handling special cases of parameters as:
 program/effect index, LED or TFT Brightness or HUE Step changes */
 
+#ifndef __FastLED_DemoParameterWrapper__
+#define __FastLED_DemoParameterWrapper__
+
 #include "FastLED_Demo.h"
+
+int sgn(float v) {
+  return (v > 0) - (v < 0);
+}
 
 class HUEStepWrapper : public ValueWrapper{
 public:
@@ -117,3 +124,4 @@ class PaletteIndexWrapper: public ValueWrapper{
 		PaletteList::iterator *_paletteIter;
 		PaletteList 					*_paletteList;
 };
+#endif

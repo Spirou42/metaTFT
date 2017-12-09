@@ -1,4 +1,8 @@
-
+/**
+ The Demo sketch
+ This Demo is intended for the teensy3.2 enviroment together with APA102 or WS2811/12 LED Stripes
+ The configuration for PINS number of LEDS is Strip etc. are located in the FastLED_Demo.h file
+ **/
 #include <TFT_UI.h>
 #include "Math.h"
 
@@ -20,15 +24,10 @@
 #include "FastLED_Demo.h"
 #include "FastLED_DemoParameterWrapper.h"
 
-CRGB leds[NUM_LEDS+1];
-
-metaTFT tft = metaTFT(TFT_CS, TFT_DC,TFT_RST,TFT_MOSI,TFT_SCK,TFT_MISO,TFT_LED,3);
-
 using namespace std;
-
-int sgn(float v) {
-  return (v > 0) - (v < 0);
-}
+// the LEDs frame buffer and the display instance
+CRGB leds[NUM_LEDS+1];
+metaTFT tft = metaTFT(TFT_CS, TFT_DC,TFT_RST,TFT_MOSI,TFT_SCK,TFT_MISO,TFT_LED,3);
 
 
 PaletteList initializeSystemPalettes(){
@@ -45,6 +44,7 @@ PaletteList initializeSystemPalettes(){
   tmp.push_back(new PalettePair("Temperature",temperature_gp));
   tmp.push_back(new PalettePair("Colombia",colombia_gp));
   tmp.push_back(new PalettePair("Cequal",cequal_gp));
+  tmp.push_back(new PalettePair("Sunset",Another_Sunset_gp));
   return tmp;
 }
 
