@@ -6,13 +6,7 @@
 #include "FastLED.h"
 #include "FastLED_Demo.h"
 
-typedef void (*SimplePatternList[])();
-extern SimplePatternList patterns;
-extern size_t numberOfPatterns;
-extern const char* patternNames[];
-extern uint8_t currentPatternNumber;
 extern uint8_t gHue;
-
 
 void rainbow();
 void rainbowWithGlitter();
