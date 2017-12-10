@@ -126,7 +126,6 @@ uint16_t metaTFT::stringHeight(const char * str){
   return stringSize(str).h;
 }
 
-
 void metaTFT::drawLogo()
 {
   this->setTextSize(5);

@@ -4,22 +4,12 @@
  The configuration for PINS number of LEDS is Strip etc. are located in the FastLED_Demo.h file
  **/
 #include <TFT_UI.h>
-#include "Math.h"
 
-#include "SPI.h"
-#include "ILI9341_t3.h"
-
-#include "Queue.h"
-#include "Streaming.h"
-#include "FastLED.h"
+#include <Queue.h>
+#include <Streaming.h>
+#include <FastLED.h>
 
 #include "Palettes.h"
-#include "font_Arial.h"
-#include "font_ArialBold.h"
-#include "font_GillSans.h"
-#include "font_GillSans_SemiBold.h"
-
-//#include "font_Montserrat_Regular.h"
 #include "LEDEffects.h"
 #include "FastLED_Demo.h"
 #include "FastLED_DemoParameterWrapper.h"

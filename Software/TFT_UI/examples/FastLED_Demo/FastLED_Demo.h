@@ -1,4 +1,5 @@
 /**
+  FastLED Demo Configuration 
 */
 
 #ifndef __FastLED_Demo_H__
