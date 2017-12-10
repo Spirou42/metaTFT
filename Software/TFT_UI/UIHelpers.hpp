@@ -102,9 +102,6 @@ class ValueEditor{
    ValueWrapper *_value;                          /// pointer to a concrete int16_t
 };
 
-typedef std::vector<ValueEditor*> ActionList;
-
-
 /**
 the Responder is the base class for all event processing related stuff
 */

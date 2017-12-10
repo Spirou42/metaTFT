@@ -55,7 +55,7 @@ static uint32_t fetchbits_signed(const uint8_t *p, uint32_t index, uint32_t requ
 	return (int32_t)val;
 }
 
-GCSize metaTFT::fontCharDimentions(unsigned int c)
+GCSize metaTFT::fontCharDimensions(unsigned int c)
 {
   uint32_t bitoffset;
   const uint8_t *data;
@@ -107,7 +107,7 @@ GCSize metaTFT::stringSize(const char* str){
     int32_t height = 0;
     //uint32_t height= 0;
     while(str[i]!= 0x00){
-      GCSize k = fontCharDimentions(str[i]);
+      GCSize k = fontCharDimensions(str[i]);
       width += k.w;
       height=(height < k.h)?k.h:height;
       ++i;

@@ -29,15 +29,15 @@ using namespace std;
 CRGB leds[NUM_LEDS+1];
 metaTFT tft = metaTFT(TFT_CS, TFT_DC,TFT_RST,TFT_MOSI,TFT_SCK,TFT_MISO,TFT_LED,3);
 
-
+// A pair of routines to static initialise the Palette and Effects lists of pairs
 PaletteList initializeSystemPalettes(){
   PaletteList tmp;
   tmp.push_back(new PalettePair("Rainbow",RainbowColors_p));
+  tmp.push_back(new PalettePair("Rainbow Stripes",RainbowStripeColors_p));
   tmp.push_back(new PalettePair("Clouds",CloudColors_p));
   tmp.push_back(new PalettePair("Ocean",OceanColors_p));
   tmp.push_back(new PalettePair("Forest",ForestColors_p));
   tmp.push_back(new PalettePair("Party",PartyColors_p));
-  tmp.push_back(new PalettePair("Rainbow Stripes",RainbowStripeColors_p));
   tmp.push_back(new PalettePair("Lava",LavaColors_p));
   tmp.push_back(new PalettePair("Heat",HeatColors_p));
   tmp.push_back(new PalettePair("Arctic",arctic_gp));
@@ -45,6 +45,7 @@ PaletteList initializeSystemPalettes(){
   tmp.push_back(new PalettePair("Colombia",colombia_gp));
   tmp.push_back(new PalettePair("Cequal",cequal_gp));
   tmp.push_back(new PalettePair("Sunset",Another_Sunset_gp));
+  tmp.push_back(new PalettePair("Yellow Sunset",Sunset_Yellow_gp));
   return tmp;
 }
 
@@ -69,10 +70,18 @@ EffectList::iterator currentSystemEffect = systemEffects.begin();
 
 /**         Global UI Elements        **/
 metaList  SystemMenu;               ///<< The main Menu of the Application
-metaList  ParameterMenu;
 metaList  EffectsMenu;               ///<< Selection List for Effeects
 metaList  PalettesMenu;             ///<< Selection List for Palettes
 metaValue ValueView;                ///<< View used for numerical value changes
+
+metaList  ParameterMenu;            ///<< and a menu for simple parameters used by the tinelon effect
+
+/** User controlable parameters of the Demo
+  Those come in little triplets
+  1. the real concreate parameter, a int16_t in this case
+  2. a wrapper class for the parameter used by the UI-System to access to parameter
+  3. an editor, that connects a view, sending edit events, to the wrapper
+  **/
 
 
 int16_t tftBrightness = 0;
@@ -87,10 +96,17 @@ int16_t hueStep = 1;
 HUEStepWrapper hueStepWrapper(&hueStep);
 ValueEditor hueStepAction(&ValueView,&hueStepWrapper);
 
- int16_t hueFrameDelay = 0;
- ValueWrapper hueDelayWrapper(&hueFrameDelay,0,24,"Hue Daylay");
- ValueEditor hueDelayAction(&ValueView,&hueDelayWrapper);
+int16_t hueFrameDelay = 0;
+ValueWrapper hueDelayWrapper(&hueFrameDelay,0,24,"Hue Daylay");
+ValueEditor hueDelayAction(&ValueView,&hueDelayWrapper);
 
+ProgramIndexWrapper programIndexWrapper(&systemEffects,&currentSystemEffect);
+ValueEditor programAction(&EffectsMenu,&programIndexWrapper);
+
+PaletteIndexWrapper paletteIndexWrapper(&systemPalettes,&currentSystemPalette);
+ValueEditor paletteAction(&PalettesMenu,&paletteIndexWrapper);
+
+/** test parameters */
 int16_t numberOfBlobs   = 3;
 ValueWrapper numberOfBlobsWrapper(&numberOfBlobs,1,10,"Blobs");
 ValueEditor blobsAction(&ValueView,&numberOfBlobsWrapper);
@@ -107,16 +123,8 @@ int16_t startBlobSpeed = 3; ///< in beats/min
 ValueWrapper blobSpeedWrapper(&startBlobSpeed,1,60,"Speed");
 ValueEditor speedAction(&ValueView,&blobSpeedWrapper);
 
-ProgramIndexWrapper programIndexWrapper(&systemEffects,&currentSystemEffect);
-ValueEditor programAction(&EffectsMenu,&programIndexWrapper);
-
-PaletteIndexWrapper paletteIndexWrapper(&systemPalettes,&currentSystemPalette);
-ValueEditor paletteAction(&PalettesMenu,&paletteIndexWrapper);
-
 ValueEditor parameterAction(&ParameterMenu,NULL);
 
-
-Queue taskQueue;
 ActionList initializeActionList(){
   ActionList tmp;
   tmp.push_back(&blobsAction);
@@ -127,6 +135,8 @@ ActionList initializeActionList(){
 }
 
 ActionList actionList = initializeActionList();
+
+Queue taskQueue;
 
 metaLabel::LabelLayout*  getListLayout(){
   static metaView::ViewLayout viewLayout;
@@ -314,95 +324,6 @@ int processLEDEffects(unsigned long now,void* data){
   }
   return 0;
 }
-
-void adjustBrightness()
-{
-  int8_t uValue = log(256-tft.getLuminance())*10;
-  tft.fillScreen(ILI9341_BLACK);
-
-  String labelStr = String("Brightness");
-  String valueStr = String("-55 ");
-  String blubberStr = String ("-UU ");
-  metaValue bla = metaValue();
-  metaValue::ValueLayout brightnessTheme;
-  brightnessTheme.labelFont = &Arial_16;
-  brightnessTheme.valueFont = &Arial_40;
-  brightnessTheme.labelOutlineCornerRadius = 10;
-  brightnessTheme.labelOutlineInset = 8;
-  brightnessTheme.labelDrawOutline=false;
-  brightnessTheme.verticalValueInset=20;
-  brightnessTheme.horizontalLabelInset=10;
-  brightnessTheme.horizontalValueInset=30;
-  brightnessTheme.valueColor = ILI9341_DARKGREEN;
-
-  bla.setLayout(brightnessTheme);
-  bla.initValue(&tft,GCRect(100,00,13,8), labelStr, valueStr);
-  bla.sizeToFit();
-  Serial << "Allign Now"<<endl;
-  bla.allignInSuperView(HALLIGN_CENTER | VALLIGN_CENTER);
-  valueStr.remove(0);
-  valueStr+=String()+uValue;
-  bla.setValue(valueStr);
-  bla.redraw();
-
-  static elapsedMillis lastAdjust = elapsedMillis(0);
-
-  lastAdjust =0;
-
-  do{
-    taskQueue.Run(millis());
-    if(eventQueue.length()){
-      int8_t kValue = uValue;
-      UserEvent *evnt = eventQueue.popEvent();
-      if(evnt->getType()==EventType::EventTypeButton){
-        ButtonData data = evnt->getData().buttonData;
-        if(data.id==ButtonID::CenterButton &&
-          data.state == ButtonState::ButtonClick){
-          break;
-        }
-        if(data.id == ButtonID::UpButton &&
-          (data.state == ButtonState::ButtonClick ||
-            data.state == ButtonState::ButtonLongClick)){
-          uValue = 55;
-          lastAdjust=0;
-        }
-        if(data.id == ButtonID::DownButton &&
-          (data.state == ButtonState::ButtonClick ||
-            data.state == ButtonState::ButtonLongClick)){
-          uValue = 0;
-          lastAdjust=0;
-        }
-
-      }else if(evnt->getType() ==EventType::EventTypeEncoder){
-        EncoderData data = evnt->getData().encoderData;
-        int8_t steps = data.absSteps;
-        uValue +=steps;
-        lastAdjust=0;
-      }
-      if(uValue > 55){
-        uValue = 55;
-      }else if(uValue <0){
-        uValue = 0;
-      }
-      if(uValue != kValue){
-        uint8_t k= exp(uValue/10.0);
-        k = 256 -k;
-        tft.setLuminance(k);
-        valueStr.remove(0);
-        valueStr += String(uValue);
-        Serial << "ValueStr: "<<valueStr<<endl;
-        bla.setValue(valueStr);
-        bla.valueUpdate();
-        bla.redraw();
-      //  tft.setCursor(20,20);
-      //  tft.fillRect(20,80,16*6*tft.getTextSize(),7*tft.getTextSize(),ILI9341_BLUE);
-      //  tft << "Brightness: "<<tft.getLuminance();
-        //Serial <<"Brightness: "<<tft.getLuminance()<<"    "<<endl;
-      }
-    }
-  }while(true/*lastg<5000*/);
-}
-
 
 
 void setup() {

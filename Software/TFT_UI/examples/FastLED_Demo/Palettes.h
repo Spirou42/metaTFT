@@ -223,7 +223,26 @@ DEFINE_GRADIENT_PALETTE( Another_Sunset_gp ) {
   97, 220,156, 27,
   124, 203,193, 61,
   178,  33, 53, 56,
-  255,   0,  1, 52};
+  255,   0,  1, 52
+};
 
+  // Gradient palette "Sunset_Yellow_gp", originally from
+  // http://soliton.vm.bytemark.co.uk/pub/cpt-city/nd/atmospheric/tn/Sunset_Yellow.png.index.html
+  // converted for FastLED with gammas (2.6, 2.2, 2.5)
+  // Size: 44 bytes of program space.
+
+DEFINE_GRADIENT_PALETTE( Sunset_Yellow_gp ) {
+    0,  10, 62,123,
+    36,  56,130,103,
+    87, 153,225, 85,
+   100, 199,217, 68,
+   107, 255,207, 54,
+   115, 247,152, 57,
+   120, 239,107, 61,
+   128, 247,152, 57,
+   180, 255,207, 54,
+   223, 255,227, 48,
+   255, 255,248, 42
+};
 
 #endif

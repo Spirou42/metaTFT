@@ -26,9 +26,8 @@
 #define TFT_MOSI  11
 #define TFT_SCK   13
 #define TFT_LED   6
-//A14 || 6
 
-/** FastLed**/
+/** FastLED **/
 
 /** switchen between WS2812 and APA102 **/
 #define USE_APA102 1
@@ -41,7 +40,7 @@
   #define COLOR_ORDER       BGR
   #define COLOR_CORRECTION  0xffeeff
   #define CLOCK_PIN         14
-  #define NUM_LEDS          110
+  #define NUM_LEDS          130
 #else
   #warning WS2812
   #define CHIPSET           WS2812
@@ -53,27 +52,30 @@
 
 #define LED_BRIGHTNESS    50
 
-
-
 #define DEBUG_STARTUP     false
 
+// ** some stuff other modules has to know about */
 extern CRGB leds[];
 
 typedef void(*effectHandler)(void);
 
+// some datatype to map Names(Strings) palettes or Effects
 typedef std::pair<const String,CRGBPalette16> PalettePair;
 typedef std::vector<PalettePair*> PaletteList;
 
 typedef std::pair<const String, effectHandler> EffectPair;
 typedef std::vector<EffectPair*> EffectList;
 
-extern ActionList actionList;
+typedef std::vector<ValueEditor*> ActionList;
 
+// after the types we also need some declarations for those
 extern PaletteList systemPalettes;
 extern PaletteList::iterator currentSystemPalette;
 
 extern EffectList systemEffects;
 extern EffectList::iterator currentSystemEffect;
+
+extern ActionList actionList;
 
 extern int16_t numberOfBlobs;
 extern int16_t fadeOutAmount;

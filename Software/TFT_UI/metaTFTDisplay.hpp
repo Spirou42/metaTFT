@@ -100,7 +100,7 @@ protected:
   uint8_t _luminance ;                    //< valaue for backlight
 
   void updateBacklight();
-  GCSize fontCharDimentions(unsigned int c);
+  GCSize fontCharDimensions(unsigned int c);
 
 };
 
