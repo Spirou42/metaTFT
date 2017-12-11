@@ -1,5 +1,5 @@
 /**
-* definition of a predefined switches
+* definition of the predefined switches
 */
 
 #ifndef __SWITCHES_H__
