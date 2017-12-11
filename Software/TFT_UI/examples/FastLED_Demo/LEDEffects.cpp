@@ -69,11 +69,16 @@ void rainbowWithGlitter()
 
 void confetti()
 {
+	static int8_t frameCounter=0;
   // random colored speckles that blink in and fade smoothly
-  fadeToBlackBy( leds, NUM_LEDS, 10);
-  int pos = random16(NUM_LEDS);
-  CRGB color = ColorFromPalette((*currentSystemPalette)->second,gHue + random8(64),255);
-  leds[pos] += color;
+  fadeToBlackBy( leds, NUM_LEDS, 5);
+	// if(frameCounter>3){
+  	int pos = random16(NUM_LEDS);
+  	CRGB color = ColorFromPalette((*currentSystemPalette)->second,gHue + random8(64),255);
+  	leds[pos] += color;
+	//	frameCounter = 0;
+	//	}
+	// frameCounter++;
 }
 
 #define ADD_COLOR 0
