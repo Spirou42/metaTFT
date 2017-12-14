@@ -5,7 +5,7 @@
 
 #include "Arduino.h"
 #include "UI_Views.hpp"
-#include "UserEvent.hpp"
+#include "UI_UserEvent.hpp"
 
 #define DEBUG_LAYOUT_COLOR_BACKGROUND_INNER ILI9341_DARKGREY
 #define DEBUG_LAYOUT_COLOR_BACKGROUND_MIDDLE ILI9341_LIGHTGREY
@@ -16,7 +16,7 @@
  *									metaView									*
  **********************************************/
 
-void metaView::initView(metaTFT* tft, GCRect frame){
+void metaView::initView(TFTDisplay* tft, GCRect frame){
 	initGraphicsContext(tft);
 	_frame = frame;
 	_needsRedraw = true;
@@ -36,11 +36,11 @@ GCPoint metaView::getScreenOrigin(){
   return result;
 }
 
-void metaView::initView(metaTFT* tft, GCPoint origin, GCSize size){
+void metaView::initView(TFTDisplay* tft, GCPoint origin, GCSize size){
 	initView(tft,GCRect(origin,size));
 }
 
-void metaView::initView(metaTFT* tft, int16_t x, int16_t y, int16_t w, int16_t h){
+void metaView::initView(TFTDisplay* tft, int16_t x, int16_t y, int16_t w, int16_t h){
 	initView(tft,GCRect(x,y,w,h));
 }
 
@@ -355,7 +355,7 @@ void metaLabel::redraw(){
  *									metaValue 								*
  **********************************************/
 
-void metaValue::initValue(metaTFT* tft, GCRect frame){
+void metaValue::initValue(TFTDisplay* tft, GCRect frame){
 	metaView::initView(tft, frame);
 	setBackgroundColor(ILI9341_BLACK);
 	#if DEBUG_LAYOUT_VALUE
@@ -400,7 +400,7 @@ void metaValue::initValue(metaTFT* tft, GCRect frame){
 
 }
 
-void metaValue::initValue(metaTFT* tft, GCRect frame, String label, String value){
+void metaValue::initValue(TFTDisplay* tft, GCRect frame, String label, String value){
 	_labelView.setLabel(label);
 	_valueView.setLabel(value);
 	initValue(tft,frame);
@@ -686,7 +686,7 @@ int16_t metaValue::processEvent(UserEvent *evnt){
  *									metaList 									*
  **********************************************/
 
-void metaList::initView(metaTFT* tft, GCRect frame ){
+void metaList::initView(TFTDisplay* tft, GCRect frame ){
 	metaView::initView(tft,frame);
 	this->_maxVisibleEntries = 6;
 	this->_visibleStart = 0;

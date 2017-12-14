@@ -9,6 +9,7 @@
 #define DEBUG_USEREVENT 0
 
 class UserEventQueue;
+class metaView;
 
 /** at the moment we have only Key and Encoder Events */
 typedef enum _EventType{
@@ -175,4 +176,5 @@ protected:
   bool     consolidateEvent(UserEvent* evnt);
 };
 extern UserEventQueue eventQueue;
+
 #endif

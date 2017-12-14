@@ -1,12 +1,12 @@
 /**
-* GraphicTests - a collection of simple test routines for the metaTFTDisplay enviroment
+* GraphicTests - a collection of simple test routines for the TFTDisplay enviroment
 */
 
 #ifndef __GRAPHICTEST_H__
 #define __GRAPHICTEST_H__
 
-#include "metaTFTDisplay.hpp"
-extern metaTFT tft;
+#include "TFTDisplay.hpp"
+extern TFTDisplay tft;
 unsigned long testFillScreen();
 unsigned long testText();
 unsigned long testLines(uint16_t color);

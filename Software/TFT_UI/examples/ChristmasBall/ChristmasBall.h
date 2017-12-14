@@ -31,9 +31,10 @@
 #define CHIPSET           APA102
 #define COLOR_ORDER       BGR
 #define COLOR_CORRECTION  0xffeeff
-#define LED_PIN 8
+#define LED_PIN           8
 #define CLOCK_PIN         14
 #define NUM_LEDS          130
+#define LED_BRIGHTNESS    80
 
 
 

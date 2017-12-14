@@ -4,12 +4,12 @@
  The configuration for PINS number of LEDS is Strip etc. are located in the FastLED_Demo.h file
  **/
 #include <TFT_UI.h>
+#include <TFT_UI_Highlevel.h>
 
 #include <Queue.h>
 #include <Streaming.h>
 #include <FastLED.h>
 #include <IRremote.h>
-
 
 #include "Palettes.h"
 #include "LEDEffects.h"
@@ -20,7 +20,7 @@
 using namespace std;
 // the LEDs frame buffer and the display instance
 CRGB leds[NUM_LEDS+1];
-metaTFT tft = metaTFT(TFT_CS, TFT_DC,TFT_RST,TFT_MOSI,TFT_SCK,TFT_MISO,TFT_LED,3);
+TFTDisplay tft = TFTDisplay(TFT_CS, TFT_DC,TFT_RST,TFT_MOSI,TFT_SCK,TFT_MISO,TFT_LED,3);
 
 IRrecv irrecv(IR_IN);
 decode_results results;
@@ -81,7 +81,7 @@ metaList  ParameterMenu;            ///<< and a menu for simple parameters used 
 
 
 int16_t tftBrightness = 0;
-TFTBrightnessWrapper TFTBrightness(&tftBrightness);
+TFTBrightnessWrapper TFTBrightness(&tftBrightness,&tft);
 ValueEditor tftBrightnessAction(&ValueView,&TFTBrightness);
 
 int16_t ledBrightness = LED_BRIGHTNESS;

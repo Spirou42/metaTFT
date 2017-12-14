@@ -4,7 +4,7 @@
 
 #ifndef __ENCODER_H__
 #define __ENCODER_H__
-#include "UserEvent.hpp"
+#include "UI_UserEvent.hpp"
 
 
 class Encoder

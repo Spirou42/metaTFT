@@ -2,12 +2,15 @@
 * implementation of the UIHelper classes
 */
 
-#include "UIHelpers.hpp"
+#include "UI_Helpers.hpp"
 #include "UI_Views.hpp"
-#include "UserEvent.hpp"
+#include "UI_UserEvent.hpp"
 #include <vector>
 
 ResponderStack responderStack;
+int sgn(float v) {
+  return (v > 0) - (v < 0);
+}
 
 int processUserEvents(unsigned long now, void * userdata){
 	if(responderStack.size()==0){

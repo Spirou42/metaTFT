@@ -7,7 +7,7 @@
 
 #include <vector>
 #include "Arduino.h"
-#include "metaTFTDisplay.hpp"
+#include "TFTDisplay.hpp"
 #include "font_Arial.h"
 
 #define DEBUG_RESPONDER 0
@@ -25,12 +25,12 @@ using namespace std;
 class UserEvent;
 class metaView;
 
-
 /** the Responder Stack, actually a std::vector, contains all views, that are on the screen.
 
   */
 typedef std::vector<metaView*> ResponderStack;
 extern ResponderStack responderStack;
+int sgn(float v);
 
 /** simple wrapper for int16_t values. It gives the value a name and handles the basic min/max/value behaviour.
 It wrappes a simpleint16_t into a UI feasable container. In addition, the setValue method can be used by subclasses to trigger instatanious actions.
@@ -162,6 +162,7 @@ class metaResponder{
     ValueEditor* _action;
     ValueWrapper* _ValueWrapper;
 };
+
 
 int processUserEvents(unsigned long now, void * userdata);
 

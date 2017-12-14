@@ -1,7 +1,8 @@
 /**
 * implmentation of UserEvents*/
 
-#include "UserEvent.hpp"
+#include "UI_UserEvent.hpp"
+#include "UI_Views.hpp"
 
 UserEventQueue eventQueue = UserEventQueue();
 

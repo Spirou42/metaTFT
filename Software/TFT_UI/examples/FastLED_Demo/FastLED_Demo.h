@@ -61,25 +61,25 @@
 // ** some stuff other modules has to know about */
 extern CRGB leds[];
 
-typedef void(*effectHandler)(void);
+// typedef void(*effectHandler)(void);
 
-// some datatype to map Names(Strings) palettes or Effects
-typedef std::pair<const String,CRGBPalette16> PalettePair;
-typedef std::vector<PalettePair*> PaletteList;
-
-typedef std::pair<const String, effectHandler> EffectPair;
-typedef std::vector<EffectPair*> EffectList;
-
-typedef std::vector<ValueEditor*> ActionList;
-
-// after the types we also need some declarations for those
-extern PaletteList systemPalettes;
-extern PaletteList::iterator currentSystemPalette;
-
-extern EffectList systemEffects;
-extern EffectList::iterator currentSystemEffect;
-
-extern ActionList actionList;
+// // some datatype to map Names(Strings) palettes or Effects
+// typedef std::pair<const String,CRGBPalette16> PalettePair;
+// typedef std::vector<PalettePair*> PaletteList;
+//
+// typedef std::pair<const String, effectHandler> EffectPair;
+// typedef std::vector<EffectPair*> EffectList;
+//
+// typedef std::vector<ValueEditor*> ActionList;
+//
+// // after the types we also need some declarations for those
+// extern PaletteList systemPalettes;
+// extern PaletteList::iterator currentSystemPalette;
+//
+// extern EffectList systemEffects;
+// extern EffectList::iterator currentSystemEffect;
+//
+// extern ActionList actionList;
 
 extern int16_t numberOfBlobs;
 extern int16_t fadeOutAmount;
