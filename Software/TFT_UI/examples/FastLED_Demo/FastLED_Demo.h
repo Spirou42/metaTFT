@@ -1,5 +1,5 @@
 /**
-  FastLED Demo Configuration 
+  FastLED Demo Configuration
 */
 
 #ifndef __FastLED_Demo_H__
@@ -28,8 +28,11 @@
 #define TFT_SCK   13
 #define TFT_LED   6
 
-/** FastLED **/
 
+#define SD_CS     21
+#define IR_IN     5
+
+/** FastLED **/
 /** switchen between WS2812 and APA102 **/
 #define USE_APA102 1
 

@@ -8,16 +8,22 @@
 #include <Queue.h>
 #include <Streaming.h>
 #include <FastLED.h>
+#include <IRremote.h>
+
 
 #include "Palettes.h"
 #include "LEDEffects.h"
 #include "FastLED_Demo.h"
 #include "FastLED_DemoParameterWrapper.h"
+#include "IRTest.h"
 
 using namespace std;
 // the LEDs frame buffer and the display instance
 CRGB leds[NUM_LEDS+1];
 metaTFT tft = metaTFT(TFT_CS, TFT_DC,TFT_RST,TFT_MOSI,TFT_SCK,TFT_MISO,TFT_LED,3);
+
+IRrecv irrecv(IR_IN);
+decode_results results;
 
 // A pair of routines to static initialise the Palette and Effects lists of pairs
 PaletteList initializeSystemPalettes(){
@@ -318,9 +324,9 @@ int processLEDEffects(unsigned long now,void* data){
 
 void setup() {
   Serial.begin(115200);
-  #if DEBUG_STARTUP
+#if DEBUG_STARTUP
   while(!Serial){}
-  #endif
+#endif
   Serial << "Start"<<endl;
   Serial << "Effects: "<<systemEffects.size()<<endl;
   Serial << "Palettes: "<<systemPalettes.size()<<endl;
@@ -337,6 +343,11 @@ void setup() {
   enableSwitches();
   enableEncoders();
 
+  // enable IR
+  Serial<<"Enabled IRin"<<endl;
+  irrecv.enableIRIn();
+
+
   // draw mask
   initUI();
   programIndexWrapper.setValue(2);
@@ -344,33 +355,32 @@ void setup() {
   // initialize tasks
   taskQueue.scheduleFunction(processLEDEffects,NULL,"EFFC",0,1000/FRAMES_PER_SECOND);
   taskQueue.scheduleFunction(processUserEvents,NULL,"USER",0,100);
+
+  tft.fillScreen(ILI9341_BLACK);
+  responderStack.push_back(&SystemMenu);
+  responderStack.back()->redraw();
+  Serial << "Draw"<<endl;
+  Serial.flush();
 }
 
-
-elapsedMillis markerTime = 0;
 void loop() {
-  static bool skipMask = false;
+
   bool p = false;
-  if(markerTime > 1000){
-    markerTime = 0;
-    p=true;
-//    Serial << "k"<<endl;
-  }
-  if(!skipMask){
-    tft.fillScreen(ILI9341_BLACK);
-    responderStack.push_back(&SystemMenu);
-    responderStack.back()->redraw();
-    Serial << "Draw"<<endl;
-    Serial.flush();
-    skipMask = true;
-  }
-  if(responderStack.empty()){ // this is not good
+  // the responderStack has to contain at least a single menu
+  if(responderStack.empty()){
     responderStack.push_back(&SystemMenu);
     SystemMenu.prepareForDisplay();
     SystemMenu.redraw();
+    Serial << "Instanciate the System Menu"<<endl;
   }
 
-
+  if (irrecv.decode(&results)) {
+    dumpInfo(&results);           // Output the results
+     //dumpRaw(&results);            // Output the results in RAW format
+     //dumpCode(&results);           // Output the results as source code
+     Serial.println("");           // Blank line between entries
+     irrecv.resume();              // Prepare for the next value
+ }
 
   /** run all sequence tasks */
   taskQueue.Run(millis());
