@@ -8,11 +8,12 @@ TFT_UI_HIGHLEVEL
 #include <UI_Helpers.hpp>
 #include <TFTDisplay.hpp>
 #include <UI_Views.hpp>
+#include <FastLEDAddOns.h>
 
 typedef void(*effectHandler)(void);
 // some datatype to map Names(Strings) palettes or Effects
-typedef std::pair<const String,CRGBPalette16> PalettePair;
-typedef std::vector<PalettePair*> PaletteList;
+//typedef std::pair<const String,CRGBPalette16> PalettePair;
+//typedef std::vector<PalettePair*> PaletteList;
 
 typedef std::pair<const String, effectHandler> EffectPair;
 typedef std::vector<EffectPair*> EffectList;
@@ -20,8 +21,8 @@ typedef std::vector<EffectPair*> EffectList;
 typedef std::vector<ValueEditor*> ActionList;
 
 // after the types we also need some declarations for those
-extern PaletteList systemPalettes;
-extern PaletteList::iterator currentSystemPalette;
+// extern PaletteList systemPalettes;
+// extern PaletteList::iterator currentSystemPalette;
 
 extern EffectList systemEffects;
 extern EffectList::iterator currentSystemEffect;
@@ -137,12 +138,17 @@ class PaletteIndexWrapper: public ValueWrapper{
 											 _paletteIter(iter),_paletteList(list){}
 
 		virtual void setValue(int16_t k){
+      Serial << "setValue("<<k<<") ("<< _paletteList->size()<<")"<<endl;
 			if(k>_max){
 				k=_max;
 			}else if(k<_min){
 				k=_min;
 			}
 			*_paletteIter = _paletteList->begin()+k;
+
+      Serial << "Position: "<<(*_paletteIter) - _paletteList->begin()<<endl;
+      Serial << "tPos: "<<currentSystemPalette - _paletteList->begin()<<endl; 
+
 		}
 		virtual int16_t getValue(){
 			return (*_paletteIter) - _paletteList->begin();

@@ -13,7 +13,7 @@
 
 #include "LEDEffects.h"
 #include "FastLED_Demo.h"
-#include "FastLED_DemoParameterWrapper.h"
+
 #include "IRTest.h"
 
 using namespace std;
@@ -59,6 +59,7 @@ EffectList initializeSystemEffects(){
 
 PaletteList systemPalettes = initializeSystemPalettes();
 PaletteList::iterator currentSystemPalette = systemPalettes.begin();
+
 
 EffectList systemEffects = initializeSystemEffects();
 EffectList::iterator currentSystemEffect = systemEffects.begin();
@@ -278,6 +279,8 @@ void initValueView(){
 }
 
 void initUI(){
+
+
   initSystemMenu();
   initPalettesMenu();
   initEffectsMenu();
@@ -374,11 +377,15 @@ void loop() {
   }
 
   if (irrecv.decode(&results)) {
-    dumpInfo(&results);           // Output the results
+    //dumpInfo(&results);           // Output the results
      //dumpRaw(&results);            // Output the results in RAW format
      //dumpCode(&results);           // Output the results as source code
      Serial.println("");           // Blank line between entries
      irrecv.resume();              // Prepare for the next value
+     Serial << "Palettes: "<<systemPalettes.size()<<endl;
+     void* p = &currentSystemPalette;
+     Serial.println( (long unsigned int)p);
+     Serial << "Current: "<<(*currentSystemPalette)->first<<endl;
  }
 
   /** run all sequence tasks */

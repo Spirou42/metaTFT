@@ -77,6 +77,7 @@ class ValueWrapper{
 /** the editor takes a metaView and a ValueWrapper and links them for user interaction */
 class ValueEditor{
  public:
+   ValueEditor(){}
    ValueEditor(metaView* editorView, ValueWrapper *value){
    	_editor = editorView;
    	_value = value;
