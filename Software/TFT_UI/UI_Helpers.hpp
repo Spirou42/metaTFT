@@ -25,15 +25,16 @@ using namespace std;
 class UserEvent;
 class metaView;
 
-/** the Responder Stack, actually a std::vector, contains all views, that are on the screen.
-
+/** the Responder Stack, actually a std::vector, contains all views, that are on the screen. The topOfStack will get the all user events
   */
 typedef std::vector<metaView*> ResponderStack;
 extern ResponderStack responderStack;
+
 int sgn(float v);
 
-/** simple wrapper for int16_t values. It gives the value a name and handles the basic min/max/value behaviour.
-It wrappes a simpleint16_t into a UI feasable container. In addition, the setValue method can be used by subclasses to trigger instatanious actions.
+/** simple wrapper for int16_t values. It gives the value a visual name and handles the basic min/max/value behaviour.
+It wrappes a simple int16_t into a UI feasable container. In addition, the setValue method can be used by subclasses to trigger instatanious actions.
+For an example have a look at TFTBrightnessWrapper below.
 */
 class ValueWrapper{
  public:
@@ -73,7 +74,7 @@ class ValueWrapper{
    String _name;
 };
 
-/** the editor takes a metaView and a ValueWrapper  and links them for user interaction*/
+/** the editor takes a metaView and a ValueWrapper and links them for user interaction */
 class ValueEditor{
  public:
    ValueEditor(metaView* editorView, ValueWrapper *value){
@@ -163,7 +164,7 @@ class metaResponder{
     ValueWrapper* _ValueWrapper;
 };
 
-
+/* this function processes the User events and passes them to the top most view in the responder stack */
 int processUserEvents(unsigned long now, void * userdata);
 
 #endif

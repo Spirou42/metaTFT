@@ -7,7 +7,7 @@ TFT_UI_HIGHLEVEL
 
 #include <UI_Helpers.hpp>
 #include <TFTDisplay.hpp>
-
+#include <UI_Views.hpp>
 
 typedef void(*effectHandler)(void);
 // some datatype to map Names(Strings) palettes or Effects
@@ -26,7 +26,11 @@ extern PaletteList::iterator currentSystemPalette;
 extern EffectList systemEffects;
 extern EffectList::iterator currentSystemEffect;
 
-extern ActionList actionList;
+metaLabel::LabelLayout*  defaultListLabelLayout();
+metaValue::ValueLayout defaultValueLayout();
+void initDefaultListVisual(metaList &k);
+//extern ActionList actionList;
+
 
 class TFTBrightnessWrapper : public ValueWrapper{
  public:
@@ -54,6 +58,10 @@ class TFTBrightnessWrapper : public ValueWrapper{
 private:
   TFTDisplay* _display;
 };
+
+extern int16_t tftBrightness;
+extern TFTBrightnessWrapper TFTBrightness;
+
 
 class LEDBrightnessWrapper : public ValueWrapper{
  public:
@@ -121,6 +129,28 @@ class ProgramIndexWrapper: public ValueWrapper{
 	protected:
 		EffectList::iterator *_effectIter;
 		EffectList 					 *_effectList;
+};
+
+class PaletteIndexWrapper: public ValueWrapper{
+	public:
+		PaletteIndexWrapper(PaletteList* list, PaletteList::iterator *iter):ValueWrapper(0,0,list->size()-1,"Program"),
+											 _paletteIter(iter),_paletteList(list){}
+
+		virtual void setValue(int16_t k){
+			if(k>_max){
+				k=_max;
+			}else if(k<_min){
+				k=_min;
+			}
+			*_paletteIter = _paletteList->begin()+k;
+		}
+		virtual int16_t getValue(){
+			return (*_paletteIter) - _paletteList->begin();
+		}
+
+	protected:
+		PaletteList::iterator *_paletteIter;
+		PaletteList 					*_paletteList;
 };
 
 #endif

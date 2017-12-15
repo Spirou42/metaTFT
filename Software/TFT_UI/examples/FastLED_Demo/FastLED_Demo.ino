@@ -5,13 +5,12 @@
  **/
 #include <TFT_UI.h>
 #include <TFT_UI_Highlevel.h>
-
+#include <FastLEDAddOns.h>
 #include <Queue.h>
 #include <Streaming.h>
 #include <FastLED.h>
 #include <IRremote.h>
 
-#include "Palettes.h"
 #include "LEDEffects.h"
 #include "FastLED_Demo.h"
 #include "FastLED_DemoParameterWrapper.h"

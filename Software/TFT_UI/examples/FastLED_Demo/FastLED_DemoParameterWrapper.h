@@ -27,25 +27,25 @@ program/effect index, LED or TFT Brightness or HUE Step changes */
 // 		EffectList 					 *_effectList;
 // };
 
-class PaletteIndexWrapper: public ValueWrapper{
-	public:
-		PaletteIndexWrapper(PaletteList* list, PaletteList::iterator *iter):ValueWrapper(0,0,list->size()-1,"Program"),
-											 _paletteIter(iter),_paletteList(list){}
-
-		virtual void setValue(int16_t k){
-			if(k>_max){
-				k=_max;
-			}else if(k<_min){
-				k=_min;
-			}
-			*_paletteIter = _paletteList->begin()+k;
-		}
-		virtual int16_t getValue(){
-			return (*_paletteIter) - _paletteList->begin();
-		}
-
-	protected:
-		PaletteList::iterator *_paletteIter;
-		PaletteList 					*_paletteList;
-};
+// class PaletteIndexWrapper: public ValueWrapper{
+// 	public:
+// 		PaletteIndexWrapper(PaletteList* list, PaletteList::iterator *iter):ValueWrapper(0,0,list->size()-1,"Program"),
+// 											 _paletteIter(iter),_paletteList(list){}
+//
+// 		virtual void setValue(int16_t k){
+// 			if(k>_max){
+// 				k=_max;
+// 			}else if(k<_min){
+// 				k=_min;
+// 			}
+// 			*_paletteIter = _paletteList->begin()+k;
+// 		}
+// 		virtual int16_t getValue(){
+// 			return (*_paletteIter) - _paletteList->begin();
+// 		}
+//
+// 	protected:
+// 		PaletteList::iterator *_paletteIter;
+// 		PaletteList 					*_paletteList;
+// };
 #endif

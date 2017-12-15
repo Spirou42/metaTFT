@@ -608,10 +608,9 @@ void metaValue::setLayout(ValueLayout definition){
 
 uint16_t metaValue::respondsToEvents(){
 	if(_processEvents){
-		uint16_t result = EventMask::ButtonEvents | EventMask::EncoderEvents |
-			EventMask::ButtonEvent_AllButtons |
-			EventMask::ButtonState_Up | EventMask::ButtonState_Down;
-
+		uint16_t result = EventMask::ButtonEvents | EventMask::EncoderEvents |			// we want button and encoder events
+			EventMask::ButtonEvent_AllButtons |																				// we want to know about all Buttons
+			EventMask::ButtonState_Up | EventMask::ButtonState_Down; 									// and if they are UP or Down
 		return result;
 	}
 	return 0;
