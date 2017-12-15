@@ -44,25 +44,24 @@ PaletteList initializeSystemPalettes(){
   return tmp;
 }
 
-EffectList initializeSystemEffects(){
-  EffectList tmp;
-  tmp.push_back(new EffectPair("Tine",&tinelon));
-  tmp.push_back(new EffectPair("Minelon",&minelon));
-  tmp.push_back(new EffectPair("Rainbow",rainbow));
-  tmp.push_back(new EffectPair("Rainbow Glitter",&rainbowWithGlitter));
-  tmp.push_back(new EffectPair("Confetti",&confetti));
-  tmp.push_back(new EffectPair("Sinelon",&sinelon));
-  tmp.push_back(new EffectPair("Juggle",&juggle));
-  tmp.push_back(new EffectPair("BPM",&bpm));
+SimpleEffectList initializeSystemEffects(){
+  SimpleEffectList tmp;
+  tmp.push_back(new SimpleEffectPair("Tine",&tinelon));
+  tmp.push_back(new SimpleEffectPair("Minelon",&minelon));
+  tmp.push_back(new SimpleEffectPair("Rainbow",rainbow));
+  tmp.push_back(new SimpleEffectPair("Rainbow Glitter",&rainbowWithGlitter));
+  tmp.push_back(new SimpleEffectPair("Confetti",&confetti));
+  tmp.push_back(new SimpleEffectPair("Sinelon",&sinelon));
+  tmp.push_back(new SimpleEffectPair("Juggle",&juggle));
+  tmp.push_back(new SimpleEffectPair("BPM",&bpm));
   return tmp;
 }
-
+// Initialise declarations for FastLEDAddOns
 PaletteList systemPalettes = initializeSystemPalettes();
 PaletteList::iterator currentSystemPalette = systemPalettes.begin();
 
-
-EffectList systemEffects = initializeSystemEffects();
-EffectList::iterator currentSystemEffect = systemEffects.begin();
+SimpleEffectList systemEffects = initializeSystemEffects();
+SimpleEffectList::iterator currentSystemEffect = systemEffects.begin();
 
 /**         Global UI Elements        **/
 metaList  SystemMenu;               ///<< The main Menu of the Application
@@ -96,7 +95,7 @@ int16_t hueFrameDelay = 0;
 ValueWrapper hueDelayWrapper(&hueFrameDelay,0,24,"Hue Daylay");
 ValueEditor hueDelayAction(&ValueView,&hueDelayWrapper);
 
-ProgramIndexWrapper programIndexWrapper(&systemEffects,&currentSystemEffect);
+SimpleProgramIndexWrapper programIndexWrapper(&systemEffects,&currentSystemEffect);
 ValueEditor programAction(&EffectsMenu,&programIndexWrapper);
 
 PaletteIndexWrapper paletteIndexWrapper(&systemPalettes,&currentSystemPalette);
@@ -222,7 +221,7 @@ void initEffectsMenu(){
   EffectsMenu.initView(&tft,GCRect(30,15,tft.width()/2,tft.height()-4));
   EffectsMenu.setIsSelectList(true);
   initListVisual(EffectsMenu);
-  EffectList::iterator iter = systemEffects.begin();
+  SimpleEffectList::iterator iter = systemEffects.begin();
   while(iter != systemEffects.end()){
     EffectsMenu.addEntry((*iter)->first );
     iter ++;
@@ -308,7 +307,7 @@ void initializeLEDs(){
 
 int processLEDEffects(unsigned long now,void* data){
   static int hueDelay = 0;
-  EffectPair *l = *currentSystemEffect;
+  SimpleEffectPair *l = *currentSystemEffect;
   effectHandler h = l->second;
   h();
   FastLED.show();

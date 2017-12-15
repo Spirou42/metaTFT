@@ -226,7 +226,7 @@ void juggle() {
 
 void nextPattern(){
   // add one to the current pattern number, and wrap around at the end
-  EffectList::iterator l = currentSystemEffect+1;
+  SimpleEffectList::iterator l = currentSystemEffect+1;
   if(l==systemEffects.end()){
     l=systemEffects.begin();
   }

@@ -15,8 +15,8 @@ typedef void(*effectHandler)(void);
 //typedef std::pair<const String,CRGBPalette16> PalettePair;
 //typedef std::vector<PalettePair*> PaletteList;
 
-typedef std::pair<const String, effectHandler> EffectPair;
-typedef std::vector<EffectPair*> EffectList;
+// typedef std::pair<const String, effectHandler> EffectPair;
+// typedef std::vector<EffectPair*> EffectList;
 
 typedef std::vector<ValueEditor*> ActionList;
 
@@ -24,8 +24,8 @@ typedef std::vector<ValueEditor*> ActionList;
 // extern PaletteList systemPalettes;
 // extern PaletteList::iterator currentSystemPalette;
 
-extern EffectList systemEffects;
-extern EffectList::iterator currentSystemEffect;
+extern SimpleEffectList systemEffects;
+extern SimpleEffectList::iterator currentSystemEffect;
 
 metaLabel::LabelLayout*  defaultListLabelLayout();
 metaValue::ValueLayout defaultValueLayout();
@@ -111,9 +111,9 @@ private:
   int16_t _hueStep;
 };
 
-class ProgramIndexWrapper: public ValueWrapper{
+class SimpleProgramIndexWrapper: public ValueWrapper{
 	public:
-		ProgramIndexWrapper(EffectList* list, EffectList::iterator *iter):ValueWrapper(0,0,list->size()-1,"Program"),
+		SimpleProgramIndexWrapper(SimpleEffectList* list, SimpleEffectList::iterator *iter):ValueWrapper(0,0,list->size()-1,"Program"),
 											 _effectIter(iter),_effectList(list){}
 
 		virtual void setValue(int16_t k){
@@ -128,8 +128,8 @@ class ProgramIndexWrapper: public ValueWrapper{
 			return (*_effectIter) - _effectList->begin();
 		}
 	protected:
-		EffectList::iterator *_effectIter;
-		EffectList 					 *_effectList;
+		SimpleEffectList::iterator *_effectIter;
+		SimpleEffectList 					 *_effectList;
 };
 
 class PaletteIndexWrapper: public ValueWrapper{
@@ -147,7 +147,7 @@ class PaletteIndexWrapper: public ValueWrapper{
 			*_paletteIter = _paletteList->begin()+k;
 
       Serial << "Position: "<<(*_paletteIter) - _paletteList->begin()<<endl;
-      Serial << "tPos: "<<currentSystemPalette - _paletteList->begin()<<endl; 
+      Serial << "tPos: "<<currentSystemPalette - _paletteList->begin()<<endl;
 
 		}
 		virtual int16_t getValue(){
