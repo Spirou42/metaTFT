@@ -676,6 +676,8 @@ int16_t metaValue::processEvent(UserEvent *evnt){
 				}
 			}
 			break;
+			case EventType::EventTypeIR:
+			break;
 		}
 	}
 

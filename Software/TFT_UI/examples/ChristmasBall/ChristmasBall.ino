@@ -7,6 +7,7 @@
 #include <FastLED.h>
 #include <FastLEDAddOns.h>
 #include "ChristmasBall.h"
+#include "EffectLineBounce.h"
 
 // queue for simple multitasking
 Queue taskQueue;
@@ -22,6 +23,7 @@ TFTDisplay tft = TFTDisplay(TFT_CS,TFT_DC,TFT_RST,TFT_MOSI,TFT_SCK,TFT_MISO,TFT_
 // the UI
 metaList  SystemMenu;               ///<< The main Menu of the Application
 metaList  PalettesMenu;             ///<< Selection List for Palettes
+metaList  EffectsMenu;              ///<< our Effects
 metaValue ValueView;                ///<< View used for numerical value changes
 
 // a couple of global parameters the action wrappers are defined in TFT_UI
@@ -43,6 +45,15 @@ ValueEditor hueDelayAction(&ValueView,&hueDelayWrapper);
 
 PaletteIndexWrapper paletteIndexWrapper(&systemPalettes,&currentSystemPalette);
 ValueEditor paletteAction(&PalettesMenu,&paletteIndexWrapper);
+
+EffectLineBounce lineBounceEffect = EffectLineBounce();
+
+EffectList initializeSystemEffects(){
+  EffectList tmp;
+  tmp.push_back(&lineBounceEffect);
+  tmp.push_back(&lineBounceEffect);
+  return tmp;
+}
 
 // A pair of routines to static initialise the Palette and Effects lists of pairs
 PaletteList initializeSystemPalettes(){
@@ -67,6 +78,8 @@ PaletteList initializeSystemPalettes(){
 PaletteList systemPalettes = initializeSystemPalettes();
 PaletteList::iterator currentSystemPalette = systemPalettes.begin();
 
+EffectList systemEffectList = initializeSystemEffects();
+EffectList::iterator currentRunningEffect = systemEffectList.begin();
 
 void initSystemMenu(){
   // visual them definition for a single list entry
@@ -137,6 +150,8 @@ void initUI(){
   initPalettesMenu();
   initValueView();
 }
+
+
 void initialiseLEDs(){
   FastLED.addLeds<CHIPSET, LED_PIN, CLOCK_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(COLOR_CORRECTION);
   FastLED.clear(true);
@@ -150,6 +165,35 @@ void initialiseTFT(){
   tft.start();
   TFTBrightness.setValue(13);
 }
+int backbufferBlender(unsigned long now, void *data){
+  uint8_t frac = 7;
+  static uint8_t lastFrac =0;
+  if(frac != lastFrac){
+  	//		Serial << "frac"<<frac<<endl;
+  	lastFrac = frac;
+  }
+
+  #if DEBUG_EFFECTS
+  Serial <<".";
+  #endif
+  // if(frac < 4){
+  // 	#if DEBUG_EFFECTS
+  // 	Serial << "Frac cliped to 4, was "<<frac<<endl;
+  // 	#endif
+  // 	frac = 4;
+  // }
+  for(uint16_t i=0;i<NUM_LEDS;i++){
+  	leds[i]=nblend(leds[i],backBuffer[i],frac);
+  }
+  // if( millis() < 5000 ) {
+  // 	FastLED.setBrightness( scale8( Brightness.currentValue(), (millis() * 256) / 5000));
+  // } else {
+  // 	FastLED.setBrightness(Brightness.currentValue());
+  // }
+  FastLED.show();
+  return 0;
+}
+
 
 void setup(){
   Serial.begin(115200);
@@ -169,10 +213,11 @@ void setup(){
   tft.fillScreen(ILI9341_BLACK);
 
   taskQueue.scheduleFunction(processUserEvents,NULL,"USER",0,100);
+  taskQueue.scheduleFunction(effectRunner,NULL,"EFCT",0, 1000/60);
+  taskQueue.scheduleFunction(backbufferBlender,NULL,"BBLD",0,1000/120);
 }
 
 void loop (){
-
   if(responderStack.empty()){
     responderStack.push_back(&SystemMenu);
     SystemMenu.prepareForDisplay();

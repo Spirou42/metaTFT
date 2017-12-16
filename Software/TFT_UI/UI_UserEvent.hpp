@@ -6,6 +6,7 @@
 #define __USEREVENT_H__
 #include "Arduino.h"
 #include "Streaming.h"
+#include "IRremote.h"
 #define DEBUG_USEREVENT 0
 
 class UserEventQueue;
@@ -14,7 +15,8 @@ class metaView;
 /** at the moment we have only Key and Encoder Events */
 typedef enum _EventType{
   EventTypeButton,
-  EventTypeEncoder
+  EventTypeEncoder,
+  EventTypeIR,
 } EventType;
 Print& operator<<(Print& out,EventType type);
 
@@ -77,26 +79,35 @@ typedef struct _EncoderData{
 }EncoderData;
 Print& operator<<(Print& out, EncoderData data);
 
+/** and the IR only has its code */
+typedef struct _IRData{
+  decode_type_t decoderType;
+  uint32_t      code;
+}IRData;
+Print& operator<<(Print& out, IRData data);
+
 /** and now the put them together into our EventData union */
 typedef union _EventData{
-  ButtonData buttonData;
+  ButtonData  buttonData;
   EncoderData encoderData;
+  IRData      irData;
 }EventData;
 
 // a bit of masking has to be done too
 typedef enum _EventMask{
   ButtonEvents            = (1 << 0),
   EncoderEvents           = (1 << 1),
-  ButtonEvent_Left        = (1 << 2),
-  ButtonEvent_Down        = (1 << 3),
-  ButtonEvent_Right       = (1 << 4),
-  ButtonEvent_Up          = (1 << 5),
-  ButtonEvent_Center      = (1 << 6),
-  ButtonState_Down        = (1 << 7),
-  ButtonState_Up          = (1 << 8),
-  ButtonState_Click       = (1 << 9),
-  ButtonState_LongClick   = (1 << 10),
-  ButtonState_DoubleClick = (1 << 11),
+  IREvents                = (1 << 2),
+  ButtonEvent_Left        = (1 << 3),
+  ButtonEvent_Down        = (1 << 4),
+  ButtonEvent_Right       = (1 << 5),
+  ButtonEvent_Up          = (1 << 6),
+  ButtonEvent_Center      = (1 << 7),
+  ButtonState_Down        = (1 << 8),
+  ButtonState_Up          = (1 << 9),
+  ButtonState_Click       = (1 << 10),
+  ButtonState_LongClick   = (1 << 11),
+  ButtonState_DoubleClick = (1 << 12),
   ButtonState_All         = (ButtonState_Down | ButtonState_Up | ButtonState_Click | ButtonState_LongClick | ButtonState_DoubleClick),
   ButtonState_AllClick    = (ButtonState_Click | ButtonState_DoubleClick | ButtonState_LongClick),
   ButtonEvent_AllButtons  = (ButtonEvent_Up | ButtonEvent_Down | ButtonEvent_Right | ButtonEvent_Left | ButtonEvent_Center)

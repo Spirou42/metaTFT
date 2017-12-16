@@ -9,6 +9,7 @@
 #include "Arduino.h"
 #include "TFTDisplay.hpp"
 #include "font_Arial.h"
+#include "UI_UserEvent.hpp"
 
 #define DEBUG_RESPONDER 0
 /** @todo: rework */
@@ -164,7 +165,7 @@ class metaResponder{
     ValueEditor* _action;
     ValueWrapper* _ValueWrapper;
 };
-
+typedef void(*IREventHandler)(UserEvent*);
 /* this function processes the User events and passes them to the top most view in the responder stack */
 int processUserEvents(unsigned long now, void * userdata);
 

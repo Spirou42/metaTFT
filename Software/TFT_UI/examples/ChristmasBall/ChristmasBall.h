@@ -36,6 +36,6 @@
 #define NUM_LEDS          130
 #define LED_BRIGHTNESS    80
 
-
+extern XYMatrix ledMatrix;
 
 #endif

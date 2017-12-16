@@ -1,10 +1,13 @@
+
 /**
  The Demo sketch
  This Demo is intended for the teensy3.2 enviroment together with APA102 or WS2811/12 LED Stripes
  The configuration for PINS number of LEDS is Strip etc. are located in the FastLED_Demo.h file
  **/
+
 #include <TFT_UI.h>
 #include <TFT_UI_Highlevel.h>
+
 #include <FastLEDAddOns.h>
 #include <Queue.h>
 #include <Streaming.h>
@@ -20,9 +23,7 @@ using namespace std;
 // the LEDs frame buffer and the display instance
 CRGB leds[NUM_LEDS+1];
 TFTDisplay tft = TFTDisplay(TFT_CS, TFT_DC,TFT_RST,TFT_MOSI,TFT_SCK,TFT_MISO,TFT_LED,3);
-
-IRrecv irrecv(IR_IN);
-decode_results results;
+Input_IR IRReciever(IR_IN);
 
 // A pair of routines to static initialise the Palette and Effects lists of pairs
 PaletteList initializeSystemPalettes(){
@@ -344,10 +345,6 @@ void setup() {
   enableSwitches();
   enableEncoders();
 
-  // enable IR
-  Serial<<"Enabled IRin"<<endl;
-  irrecv.enableIRIn();
-
 
   // draw mask
   initUI();
@@ -374,17 +371,17 @@ void loop() {
     SystemMenu.redraw();
     Serial << "Instanciate the System Menu"<<endl;
   }
-
-  if (irrecv.decode(&results)) {
-    //dumpInfo(&results);           // Output the results
-     //dumpRaw(&results);            // Output the results in RAW format
-     //dumpCode(&results);           // Output the results as source code
-     Serial.println("");           // Blank line between entries
-     irrecv.resume();              // Prepare for the next value
-     Serial << "Palettes: "<<systemPalettes.size()<<endl;
-     void* p = &currentSystemPalette;
-     Serial.println( (long unsigned int)p);
-     Serial << "Current: "<<(*currentSystemPalette)->first<<endl;
+  decode_results* irr =  IRReciever.decode();
+   if (irr) {
+     dumpInfo(irr);           // Output the results
+     //dumpRaw(irr);            // Output the results in RAW format
+     dumpCode(irr);           // Output the results as source code
+      Serial.println("");           // Blank line between entries
+ //     irrecv.resume();              // Prepare for the next value
+ //     Serial << "Palettes: "<<systemPalettes.size()<<endl;
+ //     void* p = &currentSystemPalette;
+ //     Serial.println( (long unsigned int)p);
+ //     Serial << "Current: "<<(*currentSystemPalette)->first<<endl;
  }
 
   /** run all sequence tasks */
