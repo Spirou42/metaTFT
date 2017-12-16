@@ -7,6 +7,8 @@
 #include "Arduino.h"
 #include "Streaming.h"
 #include "IRremote.h"
+#include "TFT_UI_Internal.h"
+
 #define DEBUG_USEREVENT 0
 
 class UserEventQueue;
@@ -186,6 +188,7 @@ protected:
   volatile size_t   _queueLength;
   bool     consolidateEvent(UserEvent* evnt);
 };
+TFTUI_NAMESPACE_BEGIN
 extern UserEventQueue eventQueue;
-
+TFTUI_NAMESPACE_END
 #endif

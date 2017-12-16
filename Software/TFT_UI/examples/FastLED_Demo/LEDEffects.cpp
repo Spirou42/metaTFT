@@ -226,12 +226,12 @@ void juggle() {
 
 void nextPattern(){
   // add one to the current pattern number, and wrap around at the end
-  SimpleEffectList::iterator l = currentSystemEffect+1;
-  if(l==systemEffects.end()){
-    l=systemEffects.begin();
+  SimpleEffectList::iterator l = TFT_UI::currentSystemEffect+1;
+  if(l==TFT_UI::systemEffects.end()){
+    l=TFT_UI::systemEffects.begin();
   }
-  currentSystemEffect = l;
-  Serial << "Pattern: "<<(currentSystemEffect - systemEffects.begin())<<" "<<((*currentSystemEffect)->first)<<endl;
+  TFT_UI::currentSystemEffect = l;
+  Serial << "Pattern: "<<(TFT_UI::currentSystemEffect - TFT_UI::systemEffects.begin())<<" "<<((*TFT_UI::currentSystemEffect)->first)<<endl;
 }
 
 void nextPalette(){

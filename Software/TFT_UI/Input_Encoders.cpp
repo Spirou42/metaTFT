@@ -5,7 +5,7 @@
 #include "Input_Encoders.h"
 
 Encoder encoders[] = {
-  Encoder(EncoderID::Encoder0,&eventQueue,15,22,0,2),
+  Encoder(EncoderID::Encoder0,&TFT_UI::eventQueue,15,22,0,2),
 };
 size_t numberOfEncoders = sizeof(encoders) / sizeof(Encoder);
 

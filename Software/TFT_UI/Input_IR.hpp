@@ -6,7 +6,7 @@ Input_IR.hpp
 #define __Input_IR_HPP__
 
 #include "IRremote.h"
-
+#include "TFT_UI_Internal.h"
 
 class Input_IR{
 public:
@@ -25,4 +25,7 @@ private:
   decode_results irResults;
 };
 
+TFTUI_NAMESPACE_BEGIN
+int decodeIR(unsigned long now, void * userdata);
+TFTUI_NAMESPACE_END
 #endif

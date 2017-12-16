@@ -10,6 +10,7 @@
 #include "TFTDisplay.hpp"
 #include "font_Arial.h"
 #include "UI_UserEvent.hpp"
+#include "TFT_UI_Internal.h"
 
 #define DEBUG_RESPONDER 0
 /** @todo: rework */
@@ -28,8 +29,11 @@ class metaView;
 
 /** the Responder Stack, actually a std::vector, contains all views, that are on the screen. The topOfStack will get the all user events
   */
+
+TFTUI_NAMESPACE_BEGIN
 typedef std::vector<metaView*> ResponderStack;
 extern ResponderStack responderStack;
+TFTUI_NAMESPACE_END
 
 int sgn(float v);
 
@@ -121,7 +125,7 @@ class metaResponder{
  public:
 
   metaResponder():_responderStack(NULL),_respondsToEvents(),_action(NULL){}
-  void initResponder(ResponderStack* rS){
+  void initResponder(TFT_UI::ResponderStack* rS){
     _responderStack = rS;}
 
   virtual void setRespondsToEvents(uint16_t m){
@@ -160,13 +164,14 @@ class metaResponder{
     }
   }
  protected:
-    ResponderStack * _responderStack;
+    TFT_UI::ResponderStack * _responderStack;
     uint16_t _respondsToEvents;
     ValueEditor* _action;
     ValueWrapper* _ValueWrapper;
 };
+TFTUI_NAMESPACE_BEGIN
 typedef void(*IREventHandler)(UserEvent*);
 /* this function processes the User events and passes them to the top most view in the responder stack */
 int processUserEvents(unsigned long now, void * userdata);
-
+TFTUI_NAMESPACE_END
 #endif

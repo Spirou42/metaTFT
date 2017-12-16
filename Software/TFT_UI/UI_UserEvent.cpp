@@ -4,7 +4,9 @@
 #include "UI_UserEvent.hpp"
 #include "UI_Views.hpp"
 
+TFTUI_NAMESPACE_BEGIN
 UserEventQueue eventQueue = UserEventQueue();
+TFTUI_NAMESPACE_END
 
 Print& operator<<(Print& out,EventType type){
   switch(type){
@@ -64,7 +66,6 @@ Print& operator<<(Print& out, IRData data){
   out << "IR: "<<data.code;
   return out;
 }
-
 
 uint16_t UserEvent::eventMask()
 {

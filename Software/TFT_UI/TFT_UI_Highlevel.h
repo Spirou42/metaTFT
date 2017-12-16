@@ -10,6 +10,7 @@ TFT_UI_HIGHLEVEL
 #include <UI_Views.hpp>
 #include <FastLEDAddOns.h>
 
+TFTUI_NAMESPACE_BEGIN
 typedef void(*effectHandler)(void);
 // some datatype to map Names(Strings) palettes or Effects
 //typedef std::pair<const String,CRGBPalette16> PalettePair;
@@ -31,7 +32,7 @@ metaLabel::LabelLayout*  defaultListLabelLayout();
 metaValue::ValueLayout defaultValueLayout();
 void initDefaultListVisual(metaList &k);
 //extern ActionList actionList;
-
+TFTUI_NAMESPACE_END
 
 class TFTBrightnessWrapper : public ValueWrapper{
  public:
@@ -60,9 +61,10 @@ private:
   TFTDisplay* _display;
 };
 
+TFTUI_NAMESPACE_BEGIN
 extern int16_t tftBrightness;
 extern TFTBrightnessWrapper TFTBrightness;
-
+TFTUI_NAMESPACE_END
 
 class LEDBrightnessWrapper : public ValueWrapper{
  public:

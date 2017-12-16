@@ -10,10 +10,11 @@ public:
 
   //virtual void startEffect();
   virtual void frame(unsigned long now) {
-    Serial << "Frame: "<<endl;
+    //Serial << "Frame: "<<endl;
     ledMatrix.clear();
     FLPoint s(0,line);
     FLPoint e(12,line);
+    //CRGB color = ColorFromPalette((*currentSystemPalette)->second,pixelHue);
     ledMatrix.line(s,e,CRGB::White);
     ledMatrix.flush();
 

@@ -22,6 +22,6 @@
 #include "UI_Helpers.hpp"
 #include "UI_UserEvent.hpp"
 #include "TFT_UI_Highlevel.h"
-
+#include "TFT_UI_Internal.h"
 
 #endif

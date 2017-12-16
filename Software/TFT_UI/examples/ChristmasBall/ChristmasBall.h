@@ -37,5 +37,9 @@
 #define LED_BRIGHTNESS    80
 
 extern XYMatrix ledMatrix;
+extern PaletteList systemPalettes;
+extern PaletteList::iterator currentSystemPalette;
 
+extern EffectList systemEffectList;
+extern EffectList::iterator currentRunningEffect;
 #endif

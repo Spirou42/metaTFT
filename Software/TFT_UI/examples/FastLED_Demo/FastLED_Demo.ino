@@ -23,7 +23,7 @@ using namespace std;
 // the LEDs frame buffer and the display instance
 CRGB leds[NUM_LEDS+1];
 TFTDisplay tft = TFTDisplay(TFT_CS, TFT_DC,TFT_RST,TFT_MOSI,TFT_SCK,TFT_MISO,TFT_LED,3);
-Input_IR IRReciever(IR_IN);
+//Input_IR IRReciever = Input_IR(IR_IN);
 
 // A pair of routines to static initialise the Palette and Effects lists of pairs
 PaletteList initializeSystemPalettes(){
@@ -79,7 +79,6 @@ metaList  ParameterMenu;            ///<< and a menu for simple parameters used 
   3. an editor, that connects a view, sending edit events, to the wrapper
   **/
 
-
 int16_t tftBrightness = 0;
 TFTBrightnessWrapper TFTBrightness(&tftBrightness,&tft);
 ValueEditor tftBrightnessAction(&ValueView,&TFTBrightness);
@@ -121,8 +120,8 @@ ValueEditor speedAction(&ValueView,&blobSpeedWrapper);
 
 ValueEditor parameterAction(&ParameterMenu,NULL);
 
-ActionList initializeActionList(){
-  ActionList tmp;
+TFT_UI::ActionList initializeActionList(){
+  TFT_UI::ActionList tmp;
   tmp.push_back(&blobsAction);
   tmp.push_back(&fadeAction);
   tmp.push_back(&lengthAction);
@@ -130,7 +129,7 @@ ActionList initializeActionList(){
   return tmp;
 }
 
-ActionList actionList = initializeActionList();
+TFT_UI::ActionList actionList = initializeActionList();
 
 Queue taskQueue;
 
@@ -248,7 +247,7 @@ void initParameterMenu(){
   ParameterMenu.initView(&tft,GCRect(30,15,tft.width()/2,tft.height()-4));
   ParameterMenu.setIsSelectList(false);
   initListVisual(ParameterMenu);
-  ActionList::iterator iter = actionList.begin();
+  TFT_UI::ActionList::iterator iter = actionList.begin();
   while(iter != actionList.end()){
     metaLabel* l =ParameterMenu.addEntry((*iter)->getValue()->getName());
     l->setAction(*iter);
@@ -279,8 +278,6 @@ void initValueView(){
 }
 
 void initUI(){
-
-
   initSystemMenu();
   initPalettesMenu();
   initEffectsMenu();
@@ -309,7 +306,7 @@ void initializeLEDs(){
 int processLEDEffects(unsigned long now,void* data){
   static int hueDelay = 0;
   SimpleEffectPair *l = *currentSystemEffect;
-  effectHandler h = l->second;
+  TFT_UI::effectHandler h = l->second;
   h();
   FastLED.show();
   int16_t hFD = hueStepWrapper.frameDelay() + hueFrameDelay*10;
@@ -326,9 +323,9 @@ int processLEDEffects(unsigned long now,void* data){
 
 void setup() {
   Serial.begin(115200);
-#if DEBUG_STARTUP
+  #if DEBUG_STARTUP
   while(!Serial){}
-#endif
+  #endif
   Serial << "Start"<<endl;
   Serial << "Effects: "<<systemEffects.size()<<endl;
   Serial << "Palettes: "<<systemPalettes.size()<<endl;
@@ -352,42 +349,37 @@ void setup() {
   paletteIndexWrapper.setValue(0);
   // initialize tasks
   taskQueue.scheduleFunction(processLEDEffects,NULL,"EFFC",0,1000/FRAMES_PER_SECOND);
-  taskQueue.scheduleFunction(processUserEvents,NULL,"USER",0,100);
+  taskQueue.scheduleFunction(TFT_UI::processUserEvents,NULL,"USER",0,100);
 
   tft.fillScreen(ILI9341_BLACK);
-  responderStack.push_back(&SystemMenu);
-  responderStack.back()->redraw();
+  TFT_UI::responderStack.push_back(&SystemMenu);
+  TFT_UI::responderStack.back()->redraw();
   Serial << "Draw"<<endl;
   Serial.flush();
 }
 
 void loop() {
 
-  bool p = false;
   // the responderStack has to contain at least a single menu
-  if(responderStack.empty()){
-    responderStack.push_back(&SystemMenu);
+  if(TFT_UI::responderStack.empty()){
+    TFT_UI::responderStack.push_back(&SystemMenu);
     SystemMenu.prepareForDisplay();
     SystemMenu.redraw();
     Serial << "Instanciate the System Menu"<<endl;
   }
-  decode_results* irr =  IRReciever.decode();
-   if (irr) {
-     dumpInfo(irr);           // Output the results
-     //dumpRaw(irr);            // Output the results in RAW format
-     dumpCode(irr);           // Output the results as source code
-      Serial.println("");           // Blank line between entries
+  // decode_results* irr =  IRReciever.decode();
+  //  if (irr) {
+  //    dumpInfo(irr);           // Output the results
+  //    //dumpRaw(irr);            // Output the results in RAW format
+  //    dumpCode(irr);           // Output the results as source code
+  //     Serial.println("");           // Blank line between entries
  //     irrecv.resume();              // Prepare for the next value
  //     Serial << "Palettes: "<<systemPalettes.size()<<endl;
  //     void* p = &currentSystemPalette;
  //     Serial.println( (long unsigned int)p);
  //     Serial << "Current: "<<(*currentSystemPalette)->first<<endl;
- }
+ //}
 
   /** run all sequence tasks */
   taskQueue.Run(millis());
-  if(p){
-    p = false;
-//    Serial << "."<<endl;
-  }
 }

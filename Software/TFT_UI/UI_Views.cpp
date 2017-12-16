@@ -214,7 +214,7 @@ void metaView::removeFromScreen(){
 	//return;
   Serial << "Frame: "<< _frame<<endl;
 	if(this->_responderStack){
-		ResponderStack::iterator iter = this->_responderStack->begin();
+		TFT_UI::ResponderStack::iterator iter = this->_responderStack->begin();
     //GraphicsContext::setClipRect(GCRect(0,0,_frame.size.w,_frame.size.h));
 		while(iter != this->_responderStack->end()-1){
 			metaView *v = *iter;

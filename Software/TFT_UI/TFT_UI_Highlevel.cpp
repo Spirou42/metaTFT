@@ -4,6 +4,7 @@ TFT_UI_Highlevel.cpp
 // a couple of global parameters
 
 #include <TFT_UI_Highlevel.h>
+TFTUI_NAMESPACE_BEGIN
 metaLabel::LabelLayout*  defaultListLabelLayout(){
   static metaView::ViewLayout viewLayout;
   static metaLabel::LabelLayout labelLayout;
@@ -55,3 +56,4 @@ void initDefaultListVisual(metaList &k){
   k.setScrollIndicatorWidth(7);
   k.setScrollIndicatorColor(ILI9341_ORANGE/*0xFBE0*/);
 }
+TFTUI_NAMESPACE_END

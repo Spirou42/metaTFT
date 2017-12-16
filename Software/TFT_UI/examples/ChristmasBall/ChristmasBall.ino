@@ -78,14 +78,14 @@ PaletteList initializeSystemPalettes(){
 PaletteList systemPalettes = initializeSystemPalettes();
 PaletteList::iterator currentSystemPalette = systemPalettes.begin();
 
-EffectList systemEffectList = initializeSystemEffects();
-EffectList::iterator currentRunningEffect = systemEffectList.begin();
+EffectList FastLEDAddOns::systemEffectList = initializeSystemEffects();
+EffectList::iterator FastLEDAddOns::currentRunningEffect = systemEffectList.begin();
 
 void initSystemMenu(){
   // visual them definition for a single list entry
 
   SystemMenu.initView(&tft,GCRect(30,15,tft.width()/2,tft.height()-4));
-  initDefaultListVisual(SystemMenu);
+  TFT_UI::initDefaultListVisual(SystemMenu);
   SystemMenu.setIsSelectList(false);
 
   metaLabel* l = SystemMenu.addEntry( String("TFT Brightness"));
@@ -117,7 +117,7 @@ void initSystemMenu(){
 void initPalettesMenu(){
   PalettesMenu.initView(&tft,GCRect(30,15,tft.width()/2,tft.height()-4));
   PalettesMenu.setIsSelectList(true);
-  initDefaultListVisual(PalettesMenu);
+  TFT_UI::initDefaultListVisual(PalettesMenu);
   PaletteList::iterator iter = systemPalettes.begin();
   while(iter != systemPalettes.end()){
     PalettesMenu.addEntry((*iter)->first);
@@ -130,7 +130,7 @@ void initValueView(){
   Serial <<"initValueView"<<endl;
   ValueView.initValue(&tft,GCRect(130,00,13,8));
 
-  metaValue::ValueLayout k = defaultValueLayout();
+  metaValue::ValueLayout k = TFT_UI::defaultValueLayout();
 
   ValueView.setLayout(k);
   ValueView.setValueWrapper(&TFTBrightness);
@@ -212,14 +212,14 @@ void setup(){
   initUI();
   tft.fillScreen(ILI9341_BLACK);
 
-  taskQueue.scheduleFunction(processUserEvents,NULL,"USER",0,100);
-  taskQueue.scheduleFunction(effectRunner,NULL,"EFCT",0, 1000/60);
+  taskQueue.scheduleFunction(TFT_UI::processUserEvents,NULL,"USER",0,100);
+  taskQueue.scheduleFunction(FastLEDAddOns::effectRunner,NULL,"EFCT",0, 1000/60);
   taskQueue.scheduleFunction(backbufferBlender,NULL,"BBLD",0,1000/120);
 }
 
 void loop (){
-  if(responderStack.empty()){
-    responderStack.push_back(&SystemMenu);
+  if(TFT_UI::responderStack.empty()){
+    TFT_UI::responderStack.push_back(&SystemMenu);
     SystemMenu.prepareForDisplay();
     SystemMenu.redraw();
     Serial << "Instanciate the System Menu"<<endl;
