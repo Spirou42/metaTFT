@@ -22,13 +22,14 @@ public:
     if(delayedFrame > 10){
       delayedFrame = 0;
       line +=step;
-      if (line >=9){
-        line = 9;
-        step = -1;
-      }else if (line <=0){
-        step = 1;
-        line = 0;
-      }
+      line = line % 9;
+      // if (line >=9){
+      //   line = 9;
+      //   step = -1;
+      // }else if (line <=0){
+      //   step = 1;
+      //   line = 0;
+      // }
     }
   }
 

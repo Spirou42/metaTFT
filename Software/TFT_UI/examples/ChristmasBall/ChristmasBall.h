@@ -36,6 +36,9 @@
 #define NUM_LEDS          130
 #define LED_BRIGHTNESS    80
 
+#define MATRIX_WIDTH      13
+#define MATRIX_HEIGHT     10
+
 extern XYMatrix ledMatrix;
 extern PaletteList systemPalettes;
 extern PaletteList::iterator currentSystemPalette;

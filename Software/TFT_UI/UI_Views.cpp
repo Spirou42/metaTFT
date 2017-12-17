@@ -792,7 +792,7 @@ void metaList::layoutList(){
 		}else{
 			(*subIter)->setState(metaView::State::Off);
 			(*subIter)->setDrawsOutline(true);
-			_lastSelectedView = NULL;
+			_lastSelectedView = (*subIter);
 		}
 		currentLine.y+=_maxElementSize.h+_cellInset.h;
 
@@ -1121,6 +1121,9 @@ void metaList::prepareForDisplay()
 		uint16_t index = _ValueWrapper->getValue();
 		if(index < _subViews.size()-1){
 			_subViews[index]->setState(State::On);
+			selectIndex(index);
 		}
+		//this->_visibleStart = index;
+		//scrollList();
 	}
 }

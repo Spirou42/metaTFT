@@ -8,50 +8,39 @@
 #include <FastLEDAddOns.h>
 #include "ChristmasBall.h"
 #include "EffectLineBounce.h"
+#include "EffectTorch.h"
 
+#define USE_BACKBUFFER 1
+#define FLIPPED true
+#define SERPENTIME true
+#define ROTATED true
 // queue for simple multitasking
 Queue taskQueue;
 
 // the buffer and backbuffer for the LEDS
 CRGB leds[NUM_LEDS+1];
 CRGB backBuffer[NUM_LEDS+1];
-XYMatrix ledMatrix(13,10,leds,backBuffer,true,true,true);
+XYMatrix ledMatrix(MATRIX_WIDTH,MATRIX_HEIGHT,leds,
+  #if USE_BACKBUFFER
+    backBuffer,
+  #else
+    NULL,
+  #endif
+  SERPENTIME,FLIPPED,ROTATED);
 
 // The TFT
 TFTDisplay tft = TFTDisplay(TFT_CS,TFT_DC,TFT_RST,TFT_MOSI,TFT_SCK,TFT_MISO,TFT_LED,3);
 
-// the UI
-metaList  SystemMenu;               ///<< The main Menu of the Application
-metaList  PalettesMenu;             ///<< Selection List for Palettes
-metaList  EffectsMenu;              ///<< our Effects
-metaValue ValueView;                ///<< View used for numerical value changes
 
-// a couple of global parameters the action wrappers are defined in TFT_UI
-int16_t tftBrightness = 0;
-TFTBrightnessWrapper TFTBrightness(&tftBrightness,&tft);
-ValueEditor tftBrightnessAction(&ValueView,&TFTBrightness);
-
-int16_t ledBrightness = LED_BRIGHTNESS;
-LEDBrightnessWrapper ledBrightnessWrapper(&ledBrightness);
-ValueEditor ledBrightnessAction(&ValueView,&ledBrightnessWrapper);
-
-int16_t hueStep = 1;
-HUEStepWrapper hueStepWrapper(&hueStep);
-ValueEditor hueStepAction(&ValueView,&hueStepWrapper);
-
-int16_t hueFrameDelay = 0;
-ValueWrapper hueDelayWrapper(&hueFrameDelay,0,24,"Hue Daylay");
-ValueEditor hueDelayAction(&ValueView,&hueDelayWrapper);
-
-PaletteIndexWrapper paletteIndexWrapper(&systemPalettes,&currentSystemPalette);
-ValueEditor paletteAction(&PalettesMenu,&paletteIndexWrapper);
 
 EffectLineBounce lineBounceEffect = EffectLineBounce();
+EffectTorch torchEffect = EffectTorch();
 
 EffectList initializeSystemEffects(){
   EffectList tmp;
-  tmp.push_back(&lineBounceEffect);
-  tmp.push_back(&lineBounceEffect);
+
+  tmp.push_back(&torchEffect);
+tmp.push_back(&lineBounceEffect);
   return tmp;
 }
 
@@ -80,7 +69,35 @@ PaletteList::iterator currentSystemPalette = systemPalettes.begin();
 
 EffectList FastLEDAddOns::systemEffectList = initializeSystemEffects();
 EffectList::iterator FastLEDAddOns::currentRunningEffect = systemEffectList.begin();
+// the UI
+metaList  SystemMenu;               ///<< The main Menu of the Application
+metaList  PalettesMenu;             ///<< Selection List for Palettes
+metaList  EffectsMenu;              ///<< our Effects
+metaValue ValueView;                ///<< View used for numerical value changes
 
+// a couple of global parameters the action wrappers are defined in TFT_UI
+int16_t tftBrightness = 0;
+TFTBrightnessWrapper TFTBrightness(&tftBrightness,&tft);
+ValueEditor tftBrightnessAction(&ValueView,&TFTBrightness);
+
+int16_t ledBrightness = LED_BRIGHTNESS;
+LEDBrightnessWrapper ledBrightnessWrapper(&ledBrightness);
+ValueEditor ledBrightnessAction(&ValueView,&ledBrightnessWrapper);
+
+int16_t hueStep = 1;
+HUEStepWrapper hueStepWrapper(&hueStep);
+ValueEditor hueStepAction(&ValueView,&hueStepWrapper);
+
+int16_t hueFrameDelay = 0;
+ValueWrapper hueDelayWrapper(&hueFrameDelay,0,24,"Hue Daylay");
+ValueEditor hueDelayAction(&ValueView,&hueDelayWrapper);
+#if USE_BACKBUFFER
+int16_t blendFactor = 30;
+ValueWrapper blendFactorWrapper(&blendFactor,1,255,"BlendFactor");
+ValueEditor blendFactorAction(&ValueView,&blendFactorWrapper);
+#endif
+PaletteIndexWrapper paletteIndexWrapper(&systemPalettes,&currentSystemPalette);
+ValueEditor paletteAction(&PalettesMenu,&paletteIndexWrapper);
 void initSystemMenu(){
   // visual them definition for a single list entry
 
@@ -105,7 +122,10 @@ void initSystemMenu(){
 
   l=SystemMenu.addEntry( String("Palette"));
   l->setAction(&paletteAction);
-
+#if USE_BACKBUFFER
+  l = SystemMenu.addEntry(String("Blend Factor"));
+  l->setAction(&blendFactorAction);
+#endif
   // l = SystemMenu.addEntry(String("Parameter"));
   // l->setAction(&parameterAction);
 
@@ -165,8 +185,10 @@ void initialiseTFT(){
   tft.start();
   TFTBrightness.setValue(13);
 }
+
+#if USE_BACKBUFFER
 int backbufferBlender(unsigned long now, void *data){
-  uint8_t frac = 7;
+  uint8_t frac = blendFactor;
   static uint8_t lastFrac =0;
   if(frac != lastFrac){
   	//		Serial << "frac"<<frac<<endl;
@@ -193,7 +215,7 @@ int backbufferBlender(unsigned long now, void *data){
   FastLED.show();
   return 0;
 }
-
+#endif
 
 void setup(){
   Serial.begin(115200);
@@ -213,8 +235,10 @@ void setup(){
   tft.fillScreen(ILI9341_BLACK);
 
   taskQueue.scheduleFunction(TFT_UI::processUserEvents,NULL,"USER",0,100);
-  taskQueue.scheduleFunction(FastLEDAddOns::effectRunner,NULL,"EFCT",0, 1000/60);
+  taskQueue.scheduleFunction(FastLEDAddOns::effectRunner,NULL,"EFCT",0, 1000/30);
+  #if USE_BACKBUFFER
   taskQueue.scheduleFunction(backbufferBlender,NULL,"BBLD",0,1000/120);
+  #endif
 }
 
 void loop (){
