@@ -16,7 +16,7 @@ public:
   byte flame_max = 220; // 0..255
 
   byte random_spark_probability = 1; // 0..100
-  byte spark_min = 2; // 0..255
+  byte spark_min = 220; // 0..255
   byte spark_max = 255; // 0..255
 
   byte spark_tfr = 20; // 0..256 how much energy is transferred up for a spark per cycle
@@ -83,6 +83,8 @@ public:
   void startEffect()
   {
     currentSystemPalette = systemPalettes.begin()+8;
+    blendFactor = 40;
+
     for (int i=0; i<numLeds; i++) {
       currentEnergy[i] = 0;
       nextEnergy[i] = 0;

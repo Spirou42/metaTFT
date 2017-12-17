@@ -235,7 +235,7 @@ void setup(){
   tft.fillScreen(ILI9341_BLACK);
 
   taskQueue.scheduleFunction(TFT_UI::processUserEvents,NULL,"USER",0,100);
-  taskQueue.scheduleFunction(FastLEDAddOns::effectRunner,NULL,"EFCT",0, 1000/30);
+  taskQueue.scheduleFunction(FastLEDAddOns::effectRunner,NULL,"EFCT",0, 1000/60);
   #if USE_BACKBUFFER
   taskQueue.scheduleFunction(backbufferBlender,NULL,"BBLD",0,1000/120);
   #endif

@@ -45,4 +45,6 @@ extern PaletteList::iterator currentSystemPalette;
 
 extern EffectList systemEffectList;
 extern EffectList::iterator currentRunningEffect;
+
+extern int16_t blendFactor;
 #endif
