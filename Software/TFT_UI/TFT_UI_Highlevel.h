@@ -10,6 +10,7 @@ TFT_UI_HIGHLEVEL
 #include <UI_Views.hpp>
 #include <FastLEDAddOns.h>
 
+
 TFTUI_NAMESPACE_BEGIN
 typedef void(*effectHandler)(void);
 // some datatype to map Names(Strings) palettes or Effects
@@ -132,6 +133,28 @@ class SimpleProgramIndexWrapper: public ValueWrapper{
 	protected:
 		SimpleEffectList::iterator *_effectIter;
 		SimpleEffectList 					 *_effectList;
+};
+
+class EffectProgramWrapper : public ValueWrapper {
+public:
+  EffectProgramWrapper(EffectList* effects, EffectList::iterator *iter):ValueWrapper(0,0,effects->size()-1,"Effect"),
+  _effectIter(iter),_effectList(effects){}
+
+  virtual void setValue(int16_t k){
+    if(k>_max){
+      k=_max;
+    }else if(k<_min){
+      k=_min;
+    }
+    *_effectIter = _effectList->begin()+k;
+    Serial <<"Selecting:" <<k<<endl;
+  }
+  virtual int16_t getValue(){
+    return (*_effectIter) - _effectList->begin();
+  }
+protected:
+  EffectList::iterator *_effectIter;
+  EffectList *_effectList;
 };
 
 class PaletteIndexWrapper: public ValueWrapper{

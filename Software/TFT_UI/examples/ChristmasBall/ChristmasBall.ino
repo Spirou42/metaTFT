@@ -2,6 +2,7 @@
   ChristmasBall simple APA102 Demo
 **/
 #include <TFT_UI.h>
+#include <TFT_UI_Highlevel.h>
 #include <Queue.h>
 #include <Streaming.h>
 #include <FastLED.h>
@@ -9,9 +10,10 @@
 #include "ChristmasBall.h"
 #include "EffectLineBounce.h"
 #include "EffectTorch.h"
+#include "EffectNoise.h"
 
 #define USE_BACKBUFFER 1
-#define FLIPPED true
+#define FLIPPED false
 #define SERPENTIME true
 #define ROTATED true
 // queue for simple multitasking
@@ -35,12 +37,14 @@ TFTDisplay tft = TFTDisplay(TFT_CS,TFT_DC,TFT_RST,TFT_MOSI,TFT_SCK,TFT_MISO,TFT_
 
 EffectLineBounce lineBounceEffect = EffectLineBounce();
 EffectTorch torchEffect = EffectTorch();
+EffectNoise noiseEffect=EffectNoise();
 
 EffectList initializeSystemEffects(){
   EffectList tmp;
-
+  tmp.push_back(&noiseEffect);
+  tmp.push_back(&lineBounceEffect);
   tmp.push_back(&torchEffect);
-tmp.push_back(&lineBounceEffect);
+
   return tmp;
 }
 
@@ -71,11 +75,14 @@ EffectList FastLEDAddOns::systemEffectList = initializeSystemEffects();
 EffectList::iterator FastLEDAddOns::currentRunningEffect = systemEffectList.begin();
 // the UI
 metaList  SystemMenu;               ///<< The main Menu of the Application
+metaList  GlobalParameter;          ///<< all global Parameters
 metaList  PalettesMenu;             ///<< Selection List for Palettes
 metaList  EffectsMenu;              ///<< our Effects
 metaValue ValueView;                ///<< View used for numerical value changes
 
 // a couple of global parameters the action wrappers are defined in TFT_UI
+uint8_t globalHue = 0;
+
 int16_t tftBrightness = 0;
 TFTBrightnessWrapper TFTBrightness(&tftBrightness,&tft);
 ValueEditor tftBrightnessAction(&ValueView,&TFTBrightness);
@@ -91,34 +98,33 @@ ValueEditor hueStepAction(&ValueView,&hueStepWrapper);
 int16_t hueFrameDelay = 0;
 ValueWrapper hueDelayWrapper(&hueFrameDelay,0,24,"Hue Daylay");
 ValueEditor hueDelayAction(&ValueView,&hueDelayWrapper);
+
 #if USE_BACKBUFFER
 int16_t blendFactor = 30;
 ValueWrapper blendFactorWrapper(&blendFactor,1,255,"BlendFactor");
 ValueEditor blendFactorAction(&ValueView,&blendFactorWrapper);
 #endif
+
 PaletteIndexWrapper paletteIndexWrapper(&systemPalettes,&currentSystemPalette);
 ValueEditor paletteAction(&PalettesMenu,&paletteIndexWrapper);
+
+
+EffectProgramWrapper programIndexWrapper(&FastLEDAddOns::systemEffectList,&FastLEDAddOns::currentRunningEffect);
+ValueEditor programAction(&EffectsMenu,&programIndexWrapper);
+
+ValueEditor globalParameterAction(&GlobalParameter,NULL);
+
 void initSystemMenu(){
   // visual them definition for a single list entry
 
   SystemMenu.initView(&tft,GCRect(30,15,tft.width()/2,tft.height()-4));
   TFT_UI::initDefaultListVisual(SystemMenu);
   SystemMenu.setIsSelectList(false);
+  metaLabel* l = SystemMenu.addEntry( String("Parameter"));
+  l->setAction(&globalParameterAction);
 
-  metaLabel* l = SystemMenu.addEntry( String("TFT Brightness"));
-  l->setAction(&tftBrightnessAction);
-
-  l = SystemMenu.addEntry(String("LED Brightness"));
-  l->setAction(&ledBrightnessAction);
-
-  l=SystemMenu.addEntry( String("Hue Speed"));
-  l->setAction(&hueStepAction);
-
-  l=SystemMenu.addEntry(String("Hue Frames"));
-  l->setAction(&hueDelayAction);
-
-  // l=SystemMenu.addEntry(String("Effect"));
-  // l->setAction(&programAction);
+  l=SystemMenu.addEntry(String("Effect"));
+  l->setAction(&programAction);
 
   l=SystemMenu.addEntry( String("Palette"));
   l->setAction(&paletteAction);
@@ -134,6 +140,26 @@ void initSystemMenu(){
 
 }
 
+void initGlobalParameterMenu(){
+  GlobalParameter.initView(&tft,GCRect(30,15,tft.width()/2,tft.height()-4));
+  TFT_UI::initDefaultListVisual(GlobalParameter);
+  GlobalParameter.setIsSelectList(false);
+  metaLabel* l = GlobalParameter.addEntry( String("TFT Brightness"));
+  l->setAction(&tftBrightnessAction);
+
+  l = GlobalParameter.addEntry(String("LED Brightness"));
+  l->setAction(&ledBrightnessAction);
+
+  l=GlobalParameter.addEntry( String("Hue Speed"));
+  l->setAction(&hueStepAction);
+
+  l=GlobalParameter.addEntry(String("Hue Frames"));
+  l->setAction(&hueDelayAction);
+  GlobalParameter.sizeToFit();
+  GlobalParameter.layoutList();
+
+}
+
 void initPalettesMenu(){
   PalettesMenu.initView(&tft,GCRect(30,15,tft.width()/2,tft.height()-4));
   PalettesMenu.setIsSelectList(true);
@@ -146,6 +172,20 @@ void initPalettesMenu(){
   PalettesMenu.sizeToFit();
   PalettesMenu.layoutList();
 }
+
+void initEffectsMenu(){
+  EffectsMenu.initView(&tft,GCRect(30,15,tft.width()/2,tft.height()-4));
+  EffectsMenu.setIsSelectList(true);
+  TFT_UI::initDefaultListVisual(EffectsMenu);
+  EffectList::iterator iter = FastLEDAddOns::systemEffectList.begin();
+  while(iter != FastLEDAddOns::systemEffectList.end()){
+    EffectsMenu.addEntry((*iter)->name());
+    iter++;
+  }
+  EffectsMenu.sizeToFit();
+  EffectsMenu.layoutList();
+}
+
 void initValueView(){
   Serial <<"initValueView"<<endl;
   ValueView.initValue(&tft,GCRect(130,00,13,8));
@@ -169,6 +209,8 @@ void initUI(){
   initSystemMenu();
   initPalettesMenu();
   initValueView();
+  initEffectsMenu();
+  initGlobalParameterMenu();
 }
 
 
@@ -216,9 +258,22 @@ int backbufferBlender(unsigned long now, void *data){
   return 0;
 }
 #endif
+int16_t currentFrameRate;
+void postFrameCallback(unsigned long now){
+  static int hueDelay = 0;
+  int16_t hFD = hueStepWrapper.frameDelay() + hueFrameDelay*10;
+  int16_t hueStep = hueStepWrapper.hueStep();
+  if(hueDelay>=hFD) {
+    globalHue+=hueStep;
+    hueDelay = 0;
+  }else{
+    hueDelay ++;
+  }
+}
 
 void setup(){
   Serial.begin(115200);
+  delay(5000);
   initialiseLEDs();
 
   //init LED backlight
@@ -235,7 +290,8 @@ void setup(){
   tft.fillScreen(ILI9341_BLACK);
 
   taskQueue.scheduleFunction(TFT_UI::processUserEvents,NULL,"USER",0,100);
-  taskQueue.scheduleFunction(FastLEDAddOns::effectRunner,NULL,"EFCT",0, 1000/60);
+  taskQueue.scheduleFunction(FastLEDAddOns::effectRunner,(void*)postFrameCallback,"EFCT",0, 1000/60);
+  currentFrameRate = 1000/60;
   #if USE_BACKBUFFER
   taskQueue.scheduleFunction(backbufferBlender,NULL,"BBLD",0,1000/120);
   #endif
@@ -247,6 +303,14 @@ void loop (){
     SystemMenu.prepareForDisplay();
     SystemMenu.redraw();
     Serial << "Instanciate the System Menu"<<endl;
+  }
+  if(currentFrameRate != FastLEDAddOns::requestedFrameRate){
+    Serial << "Change FrameRate to "<<FastLEDAddOns::requestedFrameRate<<endl;
+    if(FastLEDAddOns::requestedFrameRate == 0)
+      FastLEDAddOns::requestedFrameRate = 1;
+    currentFrameRate = FastLEDAddOns::requestedFrameRate;
+    taskQueue.scheduleChangeFunction("EFCT", millis() , currentFrameRate);
+
   }
 
   taskQueue.Run(millis());

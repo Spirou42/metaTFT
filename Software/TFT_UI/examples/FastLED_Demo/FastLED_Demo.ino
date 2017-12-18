@@ -23,7 +23,7 @@ using namespace std;
 // the LEDs frame buffer and the display instance
 CRGB leds[NUM_LEDS+1];
 TFTDisplay tft = TFTDisplay(TFT_CS, TFT_DC,TFT_RST,TFT_MOSI,TFT_SCK,TFT_MISO,TFT_LED,3);
-//Input_IR IRReciever = Input_IR(IR_IN);
+Input_IR IRReciever = Input_IR(IR_IN);
 
 // A pair of routines to static initialise the Palette and Effects lists of pairs
 PaletteList initializeSystemPalettes(){
@@ -367,9 +367,9 @@ void loop() {
     SystemMenu.redraw();
     Serial << "Instanciate the System Menu"<<endl;
   }
-  // decode_results* irr =  IRReciever.decode();
-  //  if (irr) {
-  //    dumpInfo(irr);           // Output the results
+   decode_results* irr =  IRReciever.decode();
+    if (irr) {
+      dumpInfo(irr);           // Output the results
   //    //dumpRaw(irr);            // Output the results in RAW format
   //    dumpCode(irr);           // Output the results as source code
   //     Serial.println("");           // Blank line between entries
@@ -378,7 +378,7 @@ void loop() {
  //     void* p = &currentSystemPalette;
  //     Serial.println( (long unsigned int)p);
  //     Serial << "Current: "<<(*currentSystemPalette)->first<<endl;
- //}
+ }
 
   /** run all sequence tasks */
   taskQueue.Run(millis());

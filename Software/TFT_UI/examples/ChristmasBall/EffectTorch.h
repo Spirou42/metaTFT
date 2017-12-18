@@ -229,4 +229,6 @@ void calcNextColors()
     calcNextColors();
     ledMatrix.flush();
   }
+
+  virtual uint16_t frameRate(){return 1000/60;}
 };

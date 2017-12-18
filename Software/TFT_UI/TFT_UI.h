@@ -4,12 +4,14 @@
 
 #ifndef __TFT_UI_H__
 #define __TFT_UI_H__
-#include <stack>
-#include <deque>
-#include <vector>
-#include <tuple>
-#include <list>
-#include <deque>
+ #include <tuple>
+ #include <list>
+ #include <stack>
+ #include <deque>
+ #include <vector>
+
+
+// #include <deque>
 
 #include "GraphicTests.h"
 #include "Input_Encoder.hpp"
@@ -21,7 +23,7 @@
 #include "UI_Views.hpp"
 #include "UI_Helpers.hpp"
 #include "UI_UserEvent.hpp"
-#include "TFT_UI_Highlevel.h"
+//#include "TFT_UI_Highlevel.h"
 #include "TFT_UI_Internal.h"
 
 #endif

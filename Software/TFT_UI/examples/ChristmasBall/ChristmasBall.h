@@ -17,6 +17,7 @@
 
 #include "FastLED.h"
 #include "TFT_UI.h"
+#include "TFT_UI_Highlevel.h"
 
 /** TFT Configuration **/
 #define TFT_RST   2
@@ -47,4 +48,6 @@ extern EffectList systemEffectList;
 extern EffectList::iterator currentRunningEffect;
 
 extern int16_t blendFactor;
+extern uint8_t globalHue;
+extern CRGB leds[];
 #endif
