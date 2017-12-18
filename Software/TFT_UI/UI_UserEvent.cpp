@@ -1,14 +1,18 @@
 /**
 * implmentation of UserEvents*/
 
-#include "UserEvent.hpp"
+#include "UI_UserEvent.hpp"
+#include "UI_Views.hpp"
 
+TFTUI_NAMESPACE_BEGIN
 UserEventQueue eventQueue = UserEventQueue();
+TFTUI_NAMESPACE_END
 
 Print& operator<<(Print& out,EventType type){
   switch(type){
-    case EventTypeButton: out << "Key";break;
-    case EventTypeEncoder: out << "Enc";break;
+    case EventTypeButton:   out << "Key";break;
+    case EventTypeEncoder:  out << "Enc";break;
+    case EventTypeIR:       out << "IR"; break;
   }
   return out;
 }
@@ -58,7 +62,10 @@ Print& operator<<(Print& out, EncoderData data){
   out << data.id <<", "<<data.direction<<", "<<data.steps<<", "<<data.position<<", "<<data.speed;
   return out;
 }
-
+Print& operator<<(Print& out, IRData data){
+  out << "IR: "<<data.code;
+  return out;
+}
 
 uint16_t UserEvent::eventMask()
 {
@@ -89,6 +96,10 @@ uint16_t UserEvent::eventMask()
       }
     }
     break;
+    case EventType::EventTypeIR:{
+      result |= EventMask::IREvents;
+    }
+    break;
   }
 
   return result;
@@ -98,18 +109,27 @@ bool UserEvent::matchesMask(uint16_t mask){
   bool result = false;
   uint16_t myMask = eventMask();
   bool typeMatch=false,buttonMatch=false,stateMatch=false;
-  typeMatch = ((myMask & 0x3)&(mask & 0x3))!=0;
 
-  if(typeMatch && ((myMask & EventMask::EncoderEvents)!=0) ){
+  // match 3bit type
+  typeMatch = ((myMask & 0x7)&(mask & 0x7))!=0;
+
+  if(typeMatch && ( ((myMask & EventMask::EncoderEvents)  != 0) ||
+                    ((myMask & EventMask::IREvents)       != 0))
+                  ){
     return true;
   }
-  mask = mask >> 2;
-  myMask = myMask >> 2;
+  // shift out the type bits
+  mask = mask >> 3;
+  myMask = myMask >> 3;
 
-  buttonMatch = ((myMask & 0x1F)&(mask &0x1f))!= 0;
+  // match 5bit button mask
+  buttonMatch = ((myMask & 0x1F)&(mask &0x1F))!= 0;
 
+  // and away with the button bits
   mask = mask >> 5;
   myMask = myMask >> 5;
+
+  // and finaly match 5bit button state mask
   stateMatch = ((myMask & 0x1F)&(mask &0x1f))!= 0;
 
   result = typeMatch && buttonMatch && stateMatch;

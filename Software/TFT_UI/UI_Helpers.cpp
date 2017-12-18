@@ -2,13 +2,19 @@
 * implementation of the UIHelper classes
 */
 
-#include "UIHelpers.hpp"
+#include "UI_Helpers.hpp"
 #include "UI_Views.hpp"
-#include "UserEvent.hpp"
+#include "UI_UserEvent.hpp"
+#include "Input_IR.hpp"
 #include <vector>
 
-ResponderStack responderStack;
 
+int sgn(float v) {
+  return (v > 0) - (v < 0);
+}
+
+TFTUI_NAMESPACE_BEGIN
+ResponderStack responderStack;
 int processUserEvents(unsigned long now, void * userdata){
 	if(responderStack.size()==0){
 		#if DEBUG_RESPONDER
@@ -122,3 +128,4 @@ int processUserEvents(unsigned long now, void * userdata){
 	}
 	return 0;
 }
+TFTUI_NAMESPACE_END

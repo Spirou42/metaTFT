@@ -5,8 +5,8 @@
 #define __UI_VIEWS__
 
 #include "Arduino.h"
-#include "UIHelpers.hpp"
-#include "metaTFTDisplay.hpp"
+#include "UI_Helpers.hpp"
+#include "TFTDisplay.hpp"
 
 #include "font_Arial.h"
 
@@ -73,9 +73,9 @@ class metaView : public GraphicsContext, public metaResponder{
   metaView(GCRect frame):_frame(frame),_outlineColor(0),_backgroundColor(0),_opaque(true),
   _drawsOutline(false),_needsRedraw(true),_needsLayout(true),_superView(NULL),_visualizeState(false),_state(Off){}
 
-  virtual void initView(metaTFT* tft, GCRect frame);
-  virtual void initView(metaTFT* tft, GCPoint origin, GCSize size);
-  virtual void initView(metaTFT* tft, int16_t x, int16_t y, int16_t w, int16_t h);
+  virtual void initView(TFTDisplay* tft, GCRect frame);
+  virtual void initView(TFTDisplay* tft, GCPoint origin, GCSize size);
+  virtual void initView(TFTDisplay* tft, int16_t x, int16_t y, int16_t w, int16_t h);
 
   virtual GCPoint getScreenOrigin();
 
@@ -296,9 +296,9 @@ class metaValue : public metaView{
   metaValue(String label, String value):metaView(),_frameInset(),
   _labelOutlineInset(6){};
 
-  void initValue(metaTFT* tft, GCRect frame, String label, String value);
+  void initValue(TFTDisplay* tft, GCRect frame, String label, String value);
 
-  void initValue(metaTFT* tft, GCRect frame);
+  void initValue(TFTDisplay* tft, GCRect frame);
   void setLayout(ValueLayout definition);
 
   GCSize resizeValue( bool dontResize=false);
@@ -403,7 +403,7 @@ class metaList : public metaView{
   metaLabel* addEntry(const String);
   virtual void redraw();
   virtual void drawOutline();
-  virtual void initView(metaTFT* tft, GCRect frame);
+  virtual void initView(TFTDisplay* tft, GCRect frame);
   virtual int16_t processEvent(UserEvent* k);
   virtual int16_t selectedIndex();
   virtual int16_t activeIndex();

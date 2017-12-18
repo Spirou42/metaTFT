@@ -5,7 +5,7 @@
 
 #include "Arduino.h"
 #include "UI_Views.hpp"
-#include "UserEvent.hpp"
+#include "UI_UserEvent.hpp"
 
 #define DEBUG_LAYOUT_COLOR_BACKGROUND_INNER ILI9341_DARKGREY
 #define DEBUG_LAYOUT_COLOR_BACKGROUND_MIDDLE ILI9341_LIGHTGREY
@@ -16,7 +16,7 @@
  *									metaView									*
  **********************************************/
 
-void metaView::initView(metaTFT* tft, GCRect frame){
+void metaView::initView(TFTDisplay* tft, GCRect frame){
 	initGraphicsContext(tft);
 	_frame = frame;
 	_needsRedraw = true;
@@ -36,11 +36,11 @@ GCPoint metaView::getScreenOrigin(){
   return result;
 }
 
-void metaView::initView(metaTFT* tft, GCPoint origin, GCSize size){
+void metaView::initView(TFTDisplay* tft, GCPoint origin, GCSize size){
 	initView(tft,GCRect(origin,size));
 }
 
-void metaView::initView(metaTFT* tft, int16_t x, int16_t y, int16_t w, int16_t h){
+void metaView::initView(TFTDisplay* tft, int16_t x, int16_t y, int16_t w, int16_t h){
 	initView(tft,GCRect(x,y,w,h));
 }
 
@@ -214,7 +214,7 @@ void metaView::removeFromScreen(){
 	//return;
   Serial << "Frame: "<< _frame<<endl;
 	if(this->_responderStack){
-		ResponderStack::iterator iter = this->_responderStack->begin();
+		TFT_UI::ResponderStack::iterator iter = this->_responderStack->begin();
     //GraphicsContext::setClipRect(GCRect(0,0,_frame.size.w,_frame.size.h));
 		while(iter != this->_responderStack->end()-1){
 			metaView *v = *iter;
@@ -355,7 +355,7 @@ void metaLabel::redraw(){
  *									metaValue 								*
  **********************************************/
 
-void metaValue::initValue(metaTFT* tft, GCRect frame){
+void metaValue::initValue(TFTDisplay* tft, GCRect frame){
 	metaView::initView(tft, frame);
 	setBackgroundColor(ILI9341_BLACK);
 	#if DEBUG_LAYOUT_VALUE
@@ -400,7 +400,7 @@ void metaValue::initValue(metaTFT* tft, GCRect frame){
 
 }
 
-void metaValue::initValue(metaTFT* tft, GCRect frame, String label, String value){
+void metaValue::initValue(TFTDisplay* tft, GCRect frame, String label, String value){
 	_labelView.setLabel(label);
 	_valueView.setLabel(value);
 	initValue(tft,frame);
@@ -608,10 +608,9 @@ void metaValue::setLayout(ValueLayout definition){
 
 uint16_t metaValue::respondsToEvents(){
 	if(_processEvents){
-		uint16_t result = EventMask::ButtonEvents | EventMask::EncoderEvents |
-			EventMask::ButtonEvent_AllButtons |
-			EventMask::ButtonState_Up | EventMask::ButtonState_Down;
-
+		uint16_t result = EventMask::ButtonEvents | EventMask::EncoderEvents |			// we want button and encoder events
+			EventMask::ButtonEvent_AllButtons |																				// we want to know about all Buttons
+			EventMask::ButtonState_Up | EventMask::ButtonState_Down; 									// and if they are UP or Down
 		return result;
 	}
 	return 0;
@@ -677,6 +676,8 @@ int16_t metaValue::processEvent(UserEvent *evnt){
 				}
 			}
 			break;
+			case EventType::EventTypeIR:
+			break;
 		}
 	}
 
@@ -686,7 +687,7 @@ int16_t metaValue::processEvent(UserEvent *evnt){
  *									metaList 									*
  **********************************************/
 
-void metaList::initView(metaTFT* tft, GCRect frame ){
+void metaList::initView(TFTDisplay* tft, GCRect frame ){
 	metaView::initView(tft,frame);
 	this->_maxVisibleEntries = 6;
 	this->_visibleStart = 0;
@@ -791,7 +792,7 @@ void metaList::layoutList(){
 		}else{
 			(*subIter)->setState(metaView::State::Off);
 			(*subIter)->setDrawsOutline(true);
-			_lastSelectedView = NULL;
+			_lastSelectedView = (*subIter);
 		}
 		currentLine.y+=_maxElementSize.h+_cellInset.h;
 
@@ -1120,6 +1121,9 @@ void metaList::prepareForDisplay()
 		uint16_t index = _ValueWrapper->getValue();
 		if(index < _subViews.size()-1){
 			_subViews[index]->setState(State::On);
+			selectIndex(index);
 		}
+		//this->_visibleStart = index;
+		//scrollList();
 	}
 }

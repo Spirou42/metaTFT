@@ -1,10 +1,10 @@
 /**
 * definition for metaPixel TFT interface
 */
-#include "metaTFTDisplay.hpp"
+#include "TFTDisplay.hpp"
 #include "Streaming.h"
 //#include "UIHelpers.h"  ///<< i need the metaView definition
-void metaTFT::start()
+void TFTDisplay::start()
 {
   this->begin();
   //delay(1000);
@@ -16,7 +16,7 @@ void metaTFT::start()
   delay(800);
 }
 
-void metaTFT::updateBacklight()
+void TFTDisplay::updateBacklight()
 {
   if(_luminance==255){
     Serial << "Ping"<<endl;
@@ -55,7 +55,7 @@ static uint32_t fetchbits_signed(const uint8_t *p, uint32_t index, uint32_t requ
 	return (int32_t)val;
 }
 
-GCSize metaTFT::fontCharDimensions(unsigned int c)
+GCSize TFTDisplay::fontCharDimensions(unsigned int c)
 {
   uint32_t bitoffset;
   const uint8_t *data;
@@ -96,7 +96,7 @@ GCSize metaTFT::fontCharDimensions(unsigned int c)
   return k;
 }
 
-GCSize metaTFT::stringSize(const char* str){
+GCSize TFTDisplay::stringSize(const char* str){
   GCSize s=GCSize();
   if(!font){
     s.w = strlen(str)*6 * textsize;
@@ -118,15 +118,15 @@ GCSize metaTFT::stringSize(const char* str){
   return s;
 }
 
-uint16_t metaTFT::stringWidth(const char * str)
+uint16_t TFTDisplay::stringWidth(const char * str)
 {
   return stringSize(str).w;
 }
-uint16_t metaTFT::stringHeight(const char * str){
+uint16_t TFTDisplay::stringHeight(const char * str){
   return stringSize(str).h;
 }
 
-void metaTFT::drawLogo()
+void TFTDisplay::drawLogo()
 {
   this->setTextSize(5);
   this->setCursor(25,15);
@@ -150,6 +150,6 @@ size_t GraphicsContext::write(uint8_t c){
   return _display->write(c);
 }
 
-void GraphicsContext::initGraphicsContext(metaTFT* display){
+void GraphicsContext::initGraphicsContext(TFTDisplay* display){
   _display = display;
 }

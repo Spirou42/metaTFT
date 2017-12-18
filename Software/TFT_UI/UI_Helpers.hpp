@@ -7,8 +7,10 @@
 
 #include <vector>
 #include "Arduino.h"
-#include "metaTFTDisplay.hpp"
+#include "TFTDisplay.hpp"
 #include "font_Arial.h"
+#include "UI_UserEvent.hpp"
+#include "TFT_UI_Internal.h"
 
 #define DEBUG_RESPONDER 0
 /** @todo: rework */
@@ -25,15 +27,19 @@ using namespace std;
 class UserEvent;
 class metaView;
 
-
-/** the Responder Stack, actually a std::vector, contains all views, that are on the screen.
-
+/** the Responder Stack, actually a std::vector, contains all views, that are on the screen. The topOfStack will get the all user events
   */
+
+TFTUI_NAMESPACE_BEGIN
 typedef std::vector<metaView*> ResponderStack;
 extern ResponderStack responderStack;
+TFTUI_NAMESPACE_END
 
-/** simple wrapper for int16_t values. It gives the value a name and handles the basic min/max/value behaviour.
-It wrappes a simpleint16_t into a UI feasable container. In addition, the setValue method can be used by subclasses to trigger instatanious actions.
+int sgn(float v);
+
+/** simple wrapper for int16_t values. It gives the value a visual name and handles the basic min/max/value behaviour.
+It wrappes a simple int16_t into a UI feasable container. In addition, the setValue method can be used by subclasses to trigger instatanious actions.
+For an example have a look at TFTBrightnessWrapper below.
 */
 class ValueWrapper{
  public:
@@ -73,9 +79,10 @@ class ValueWrapper{
    String _name;
 };
 
-/** the editor takes a metaView and a ValueWrapper  and links them for user interaction*/
+/** the editor takes a metaView and a ValueWrapper and links them for user interaction */
 class ValueEditor{
  public:
+   ValueEditor(){}
    ValueEditor(metaView* editorView, ValueWrapper *value){
    	_editor = editorView;
    	_value = value;
@@ -118,7 +125,7 @@ class metaResponder{
  public:
 
   metaResponder():_responderStack(NULL),_respondsToEvents(),_action(NULL){}
-  void initResponder(ResponderStack* rS){
+  void initResponder(TFT_UI::ResponderStack* rS){
     _responderStack = rS;}
 
   virtual void setRespondsToEvents(uint16_t m){
@@ -157,12 +164,14 @@ class metaResponder{
     }
   }
  protected:
-    ResponderStack * _responderStack;
+    TFT_UI::ResponderStack * _responderStack;
     uint16_t _respondsToEvents;
     ValueEditor* _action;
     ValueWrapper* _ValueWrapper;
 };
-
+TFTUI_NAMESPACE_BEGIN
+typedef void(*IREventHandler)(UserEvent*);
+/* this function processes the User events and passes them to the top most view in the responder stack */
 int processUserEvents(unsigned long now, void * userdata);
-
+TFTUI_NAMESPACE_END
 #endif

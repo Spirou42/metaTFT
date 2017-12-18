@@ -3,7 +3,7 @@
 */
 
 #include "Input_Switch.hpp"
-#include "UserEvent.hpp"
+#include "UI_UserEvent.hpp"
 #include "Input_Switches.h"
 
 void Switch::doSwitchDown()

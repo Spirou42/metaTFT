@@ -7,8 +7,8 @@
 * This class acts as a proxy for all drawing operations.
 */
 
-#ifndef __METATFTDISPLAY_H__
-#define __METATFTDISPLAY_H__
+#ifndef __TFTDISPLAY_H__
+#define __TFTDISPLAY_H__
 #define FASTLED_INTERNAL
 #include "SPI.h"
 #include "ILI9341_t3.h"
@@ -73,9 +73,9 @@ inline Print& operator<<(Print& obj, GCRect &p){
 
 
 /** my display subclass */
-class metaTFT : public ILI9341_t3 {
+class TFTDisplay : public ILI9341_t3 {
 public:
-  metaTFT(uint8_t _CS, uint8_t _DC, uint8_t _RST = 255, uint8_t _MOSI=11, uint8_t _SCLK=13, uint8_t _MISO=12, uint8_t bkg_pin=A14,uint8_t rotation = 3):
+  TFTDisplay(uint8_t _CS, uint8_t _DC, uint8_t _RST = 255, uint8_t _MOSI=11, uint8_t _SCLK=13, uint8_t _MISO=12, uint8_t bkg_pin=A14,uint8_t rotation = 3):
   ILI9341_t3(_CS, _DC, _RST, _MOSI, _SCLK, _MISO),_backlight_pin(bkg_pin),defaultRotation(rotation),_luminance(80){
     updateBacklight();}
 
@@ -116,10 +116,10 @@ class GraphicsContext : public Print{
   friend class metaValue;
 public:
   GraphicsContext():_base(),_display(NULL),_fillColor(ILI9341_BLACK),_strokeColor(ILI9341_GREEN){};
-  GraphicsContext(metaTFT* display):_base(GCPoint(0,0)),_display(display),_fillColor(ILI9341_BLACK),_strokeColor(ILI9341_GREEN){};
+  GraphicsContext(TFTDisplay* display):_base(GCPoint(0,0)),_display(display),_fillColor(ILI9341_BLACK),_strokeColor(ILI9341_GREEN){};
   GraphicsContext(const GraphicsContext &gc);
 
-  void initGraphicsContext(metaTFT* display);
+  void initGraphicsContext(TFTDisplay* display);
   void setBaseCoord(GCPoint p){_base = p;}
   GCPoint getBaseCoord(){return _base;}
 
@@ -209,7 +209,7 @@ public:
   GCSize displaySize(){return GCSize(_display->width(),_display->height());};
 //protected:
   GCPoint _base;
-  metaTFT* _display;
+  TFTDisplay* _display;
   uint16_t _fillColor;
   uint16_t _strokeColor;
 };
