@@ -13,7 +13,7 @@
 #include "EffectNoise.h"
 
 #define USE_BACKBUFFER 1
-#define FLIPPED false
+#define FLIPPED true
 #define SERPENTIME true
 #define ROTATED true
 // queue for simple multitasking
@@ -41,8 +41,9 @@ EffectNoise noiseEffect=EffectNoise();
 
 EffectList initializeSystemEffects(){
   EffectList tmp;
-  tmp.push_back(&noiseEffect);
   tmp.push_back(&lineBounceEffect);
+  tmp.push_back(&noiseEffect);
+
   tmp.push_back(&torchEffect);
 
   return tmp;
@@ -273,7 +274,7 @@ void postFrameCallback(unsigned long now){
 
 void setup(){
   Serial.begin(115200);
-  delay(5000);
+  delay(3000);
   initialiseLEDs();
 
   //init LED backlight

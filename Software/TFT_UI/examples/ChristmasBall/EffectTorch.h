@@ -6,7 +6,7 @@ EffectTorch.h
 #define numLeds NUM_LEDS
 #define ledsPerLevel MATRIX_WIDTH
 #define levels MATRIX_HEIGHT
-
+#define USE_PALETTE 0
 class EffectTorch: public Effect {
 public:
   EffectTorch():Effect("Torch"){}
@@ -53,9 +53,9 @@ public:
   {
     int r = aByte-aAmount;
     if (r<aMin)
-      aByte = aMin;
+    aByte = aMin;
     else
-      aByte = (byte)r;
+    aByte = (byte)r;
   }
 
 
@@ -63,9 +63,9 @@ public:
   {
     int r = aByte+aAmount;
     if (r>aMax)
-      aByte = aMax;
+    aByte = aMax;
     else
-      aByte = (byte)r;
+    aByte = (byte)r;
   }
 
   uint16_t random2(uint16_t aMinOrMax, uint16_t aMax = 0)
@@ -134,7 +134,7 @@ public:
             (((int)currentEnergy[ledMatrix.XY(x,y-1)]*up_rad)>>8));
           }
           default:
-            break;
+          break;
         }
         nextEnergy[i] = e;
       }
@@ -143,70 +143,46 @@ public:
 
   const uint8_t energymap[32] = {0, 64, 96, 112, 128, 144, 152, 160, 168, 176, 184, 184, 192, 200, 200, 208, 208, 216, 216, 224, 224, 224, 232, 232, 232, 240, 240, 240, 240, 248, 248, 248};
 
-void calcNextColors()
-{
-  for(int x=0;x<MATRIX_WIDTH;x++){
-    for(int y=0;y<MATRIX_HEIGHT;y++){
-      uint16_t p = ledMatrix.XY(x,y);
-      uint16_t e = nextEnergy[p];
-      currentEnergy[p] = e;
-      CRGB color;
-      // if (e>250){
-      //   color = CRGB(170, 170, e); // blueish extra-bright spark
-      // } else {
-        if (e>0) {
-          color = ColorFromPalette((*currentSystemPalette)->second,e);
-          // energy to brightness is non-linear
-          // byte eb = energymap[e>>3];
-          // byte r = red_bias;
-          // byte g = green_bias;
-          // byte b = blue_bias;
-          // increase(r, (eb*red_energy)>>8);
-          // increase(g, (eb*green_energy)>>8);
-          // increase(b, (eb*blue_energy)>>8);
-          // color = CRGB(r, g, b);
+  void calcNextColors(){
+    for(int x=0;x<MATRIX_WIDTH;x++){
+      for(int y=0;y<MATRIX_HEIGHT;y++){
+        uint16_t p = ledMatrix.XY(x,y);
+        uint16_t e = nextEnergy[p];
+        currentEnergy[p] = e;
+        CRGB color;
+        #if !USE_PALETTE
+        if (e>250){
+          color = CRGB(170, 170, e); // blueish extra-bright spark
         } else {
-          // background, no energy
-          color = CRGB::Black;//(red_bg, green_bg, blue_bg);
+          #endif
+          if (e>0) {
+            #if USE_PALETTE
+            color = ColorFromPalette((*currentSystemPalette)->second,e);
+            #else
+            //energy to brightness is non-linear
+            byte eb = energymap[e>>3];
+            byte r = red_bias;
+            byte g = green_bias;
+            byte b = blue_bias;
+            increase(r, (eb*red_energy)>>8);
+            increase(g, (eb*green_energy)>>8);
+            increase(b, (eb*blue_energy)>>8);
+            color = CRGB(r, g, b);
+            #endif
+          } else {
+            // background, no energy
+            color = CRGB::Black;//(red_bg, green_bg, blue_bg);
+          }
+        #if !USE_PALETTE
         }
-//      }
-      ledMatrix.setPixel(x,y,color);
+        #endif
+        ledMatrix.setPixel(x,y,color);
+      }
     }
   }
-}
 
-//   for (int i=0; i<numLeds; i++) {
-//     int ei; // index into energy calculation buffer
-//     if (upside_down)
-//       ei = numLeds-i;
-//     else
-//       ei = i;
-//     uint16_t e = nextEnergy[ei];
-//     currentEnergy[ei] = e;
-//     if (e>250)
-//       leds[i] = CRGB(170, 170, e); // blueish extra-bright spark
-//     else {
-//       if (e>0) {
-//         // energy to brightness is non-linear
-//         byte eb = energymap[e>>3];
-//         byte r = red_bias;
-//         byte g = green_bias;
-//         byte b = blue_bias;
-//         increase(r, (eb*red_energy)>>8);
-//         increase(g, (eb*green_energy)>>8);
-//         increase(b, (eb*blue_energy)>>8);
-//         leds[i] = CRGB(r, g, b);
-//       }
-//       else {
-//         // background, no energy
-//         leds[i] = CRGB(red_bg, green_bg, blue_bg);
-//       }
-//     }
-//   }
-// }
 
-  void injectRandom()
-  {
+  void injectRandom(){
     // random flame energy at bottom row
     for (int i=0; i<ledsPerLevel; i++) {
       int p = ledMatrix.XY(i,0);

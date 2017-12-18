@@ -11,10 +11,10 @@ public:
   virtual void startEffect(){
     blendFactor = 2;
   }
-  virtual uint16_t frameRate(){return 100;}
+  virtual uint16_t frameRate(){return 1000/25;}
   virtual void frame(unsigned long now) {
     //Serial << "Frame: "<<endl;
-    ledMatrix.fadeToBlack(2);
+    ledMatrix.fadeToBlack(100);
     FLPoint s(0,line);
     FLPoint e(12,line);
     CRGB color = ColorFromPalette((*currentSystemPalette)->second,globalHue);
