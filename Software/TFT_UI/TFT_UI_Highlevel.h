@@ -13,18 +13,8 @@ TFT_UI_HIGHLEVEL
 
 TFTUI_NAMESPACE_BEGIN
 typedef void(*effectHandler)(void);
-// some datatype to map Names(Strings) palettes or Effects
-//typedef std::pair<const String,CRGBPalette16> PalettePair;
-//typedef std::vector<PalettePair*> PaletteList;
-
-// typedef std::pair<const String, effectHandler> EffectPair;
-// typedef std::vector<EffectPair*> EffectList;
 
 typedef std::vector<ValueEditor*> ActionList;
-
-// after the types we also need some declarations for those
-// extern PaletteList systemPalettes;
-// extern PaletteList::iterator currentSystemPalette;
 
 extern SimpleEffectList systemEffects;
 extern SimpleEffectList::iterator currentSystemEffect;

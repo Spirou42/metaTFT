@@ -17,6 +17,7 @@
 #include <deque>
 
 #include "FastLED.h"
+#include "FastLEDAddOns.h"
 #include "TFT_UI.h"
 
 /** TFT Configuration **/
@@ -80,6 +81,9 @@ extern CRGB leds[];
 // extern EffectList::iterator currentSystemEffect;
 //
 // extern ActionList actionList;
+
+extern PaletteList systemPalettes;
+extern PaletteList::iterator currentSystemPalette;
 
 extern int16_t numberOfBlobs;
 extern int16_t fadeOutAmount;

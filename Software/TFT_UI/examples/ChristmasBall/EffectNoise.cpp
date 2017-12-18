@@ -33,7 +33,6 @@ void EffectNoise::frame(unsigned long now){
       ledMatrix.setPixel(i,j,color);
     }
   }
-
   ihue+=1;
 }
 
