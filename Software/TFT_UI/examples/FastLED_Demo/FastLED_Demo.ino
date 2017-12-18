@@ -339,8 +339,8 @@ void setup() {
 
   // draw mask
   initUI();
-  programIndexWrapper.setValue(2);
-  paletteIndexWrapper.setValue(0);
+  programIndexWrapper.setValue(4);
+  paletteIndexWrapper.setValue(2);
   // initialize tasks
   taskQueue.scheduleFunction(processLEDEffects,NULL,"EFFC",0,1000/FRAMES_PER_SECOND);
   taskQueue.scheduleFunction(processUserEvents,NULL,"USER",0,100);
