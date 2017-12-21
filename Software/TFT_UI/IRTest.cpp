@@ -100,20 +100,20 @@ void  dumpRaw (decode_results *results)
 void  dumpCode (decode_results *results)
 {
   // Start declaration
-  Serial.print("unsigned int  ");          // variable type
-  Serial.print("rawData[");                // array name
-  Serial.print(results->rawlen - 1, DEC);  // array size
-  Serial.print("] = {");                   // Start declaration
-
-  // Dump data
-  for (int i = 1;  i < results->rawlen;  i++) {
-    Serial.print(results->rawbuf[i] * USECPERTICK, DEC);
-    if ( i < results->rawlen-1 ) Serial.print(","); // ',' not needed on last one
-    if (!(i & 1))  Serial.print(" ");
-  }
-
-  // End declaration
-  Serial.print("};");  //
+  // Serial.print("unsigned int  ");          // variable type
+  // Serial.print("rawData[");                // array name
+  // Serial.print(results->rawlen - 1, DEC);  // array size
+  // Serial.print("] = {");                   // Start declaration
+  //
+  // // Dump data
+  // for (int i = 1;  i < results->rawlen;  i++) {
+  //   Serial.print(results->rawbuf[i] * USECPERTICK, DEC);
+  //   if ( i < results->rawlen-1 ) Serial.print(","); // ',' not needed on last one
+  //   if (!(i & 1))  Serial.print(" ");
+  // }
+  //
+  // // End declaration
+  // Serial.print("};");  //
 
   // Comment
   Serial.print("  // ");

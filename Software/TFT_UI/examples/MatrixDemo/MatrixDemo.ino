@@ -9,15 +9,24 @@
 #include <FastLED.h>
 #include <FastLEDAddOns.h>
 #include <IRTest.h>
-#include "ChristmasBall.h"
+#include "MatrixDemo.h"
 #include "EffectLineBounce.h"
 #include "EffectTorch.h"
 #include "EffectNoise.h"
 
 #define USE_BACKBUFFER 1
-#define FLIPPED false
-#define SERPENTIME false
-#define ROTATED false
+
+#if USE_CYLINDERLAMP
+#warning CYLINDER
+  #define FLIPPED false
+  #define SERPENTIME false
+  #define ROTATED false
+#elif USE_CHRISTMASBALL
+#warning CHRISTMASBALL
+  #define FLIPPED     true
+  #define SERPENTIME  true
+  #define ROTATED     true
+#endif
 // queue for simple multitasking
 Queue taskQueue;
 
@@ -32,8 +41,10 @@ XYMatrix ledMatrix(MATRIX_WIDTH,MATRIX_HEIGHT,leds,
   #endif
   SERPENTIME,FLIPPED,ROTATED);
 
+void displayStartScreen(TFTDisplay* tft);
+
 // The TFT
-TFTDisplay tft = TFTDisplay(TFT_CS,TFT_DC,TFT_RST,TFT_MOSI,TFT_SCK,TFT_MISO,TFT_LED,3);
+TFTDisplay tft = TFTDisplay(TFT_CS,TFT_DC,TFT_RST,TFT_MOSI,TFT_SCK,TFT_MISO,TFT_LED,displayStartScreen,3);
 Input_IR IRReciever = Input_IR(IR_IN);
 
 
@@ -224,6 +235,25 @@ void initialiseLEDs(){
   FastLED.show();
 }
 
+
+void displayStartScreen(TFTDisplay* tft){
+  //tft->setFont(Arial_48_Bold);
+  tft->setTextSize(7);
+  tft->setTextColor(ILI9341_GREEN);
+  tft->setCursor(25,15);
+  #if USE_CYLINDERLAMP
+  *tft<<" FIRE"<<endl<<" PILLAR"<<endl;
+  #elif USE_CHRISTMASBALL
+  tft->setTextSize(5);
+  *tft<<"CHRISTMAS"<<endl<<"    BALL"<<endl;
+  #endif
+  tft->drawFastHLine(tft->getCursorX(),tft->getCursorY()+10,tft->width(),ILI9341_GREEN);
+  tft->setTextColor(ILI9341_YELLOW);
+  tft->setTextSize(2);
+  *tft<<endl;
+
+}
+
 void initialiseTFT(){
   tft.start();
   TFTBrightness.setValue(13);
@@ -274,7 +304,7 @@ void postFrameCallback(unsigned long now){
 
 void setup(){
   Serial.begin(115200);
-  //delay(3000);
+
   initialiseLEDs();
 
   //init LED backlight
@@ -282,6 +312,7 @@ void setup(){
   digitalWriteFast(TFT_LED,1);
 
   initialiseTFT();
+  delay(3000);
   // enable UI
   enableSwitches();
   enableEncoders();
@@ -290,12 +321,19 @@ void setup(){
   initUI();
   tft.fillScreen(ILI9341_BLACK);
 
+  /** process our userevents */
   taskQueue.scheduleFunction(TFT_UI::processUserEvents,NULL,"USER",0,100);
-  taskQueue.scheduleFunction(FastLEDAddOns::effectRunner,(void*)postFrameCallback,"EFCT",0, 1000/60);
+  // startup the IR receiver
+  taskQueue.scheduleFunction(TFT_UI::decodeIR,(void*)&IRReciever,"IRIP",0,100 );
+
+
+  // startup the renderer
   currentFrameRate = 1000/60;
+  taskQueue.scheduleFunction(FastLEDAddOns::effectRunner,(void*)postFrameCallback,"EFCT",0, 1000/60);
   #if USE_BACKBUFFER
   taskQueue.scheduleFunction(backbufferBlender,NULL,"BBLD",0,1000/120);
   #endif
+
 }
 
 void loop (){
@@ -313,21 +351,5 @@ void loop (){
     taskQueue.scheduleChangeFunction("EFCT", millis() , currentFrameRate);
 
   }
-  decode_results* irr =  IRReciever.decode();
-   if (irr) {
-     dumpInfo(irr);           // Output the results
-     //    //dumpRaw(irr);            // Output the results in RAW format
-    Serial << "------------"<< endl;
-    dumpCode(irr);           // Output the results as source code
-    Serial << "------------"<<endl;
-     //     Serial.println("");           // Blank line between entries
-     //     irrecv.resume();              // Prepare for the next value
-     //     Serial << "Palettes: "<<systemPalettes.size()<<endl;
-     //     void* p = &currentSystemPalette;
-     //     Serial.println( (long unsigned int)p);
-     //     Serial << "Current: "<<(*currentSystemPalette)->first<<endl;
-   }
-
-
   taskQueue.Run(millis());
 }

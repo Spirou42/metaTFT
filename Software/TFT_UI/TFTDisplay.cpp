@@ -128,15 +128,18 @@ uint16_t TFTDisplay::stringHeight(const char * str){
 
 void TFTDisplay::drawLogo()
 {
-  this->setTextSize(5);
-  this->setCursor(25,15);
-  this->setTextColor(ILI9341_GREEN);
-  *this<<"   meta"<<endl<<"  Display"<<endl;
-  this->drawFastHLine(this->getCursorX(),this->getCursorY()+10,this->width(),ILI9341_GREEN);
-  this->setTextColor(ILI9341_YELLOW);
-  this->setTextSize(2);
-  *this<<endl;
-  TFT_LogoEnd =0; //tft.cursor_y;
+  if(_startScreen){
+    _startScreen(this);
+  }else{
+    this->setTextSize(5);
+    this->setTextColor(ILI9341_GREEN);
+    this->setCursor(25,15);
+    *this<<"   meta"<<endl<<"  Display"<<endl;
+    this->drawFastHLine(this->getCursorX(),this->getCursorY()+10,this->width(),ILI9341_GREEN);
+    this->setTextColor(ILI9341_YELLOW);
+    this->setTextSize(2);
+    *this<<endl;
+  }
 }
 
 GraphicsContext::GraphicsContext(const GraphicsContext &gc){

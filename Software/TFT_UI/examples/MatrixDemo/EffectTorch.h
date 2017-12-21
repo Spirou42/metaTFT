@@ -1,7 +1,7 @@
 /**
 EffectTorch.h
 */
-#include "ChristmasBall.h"
+#include "MatrixDemo.h"
 
 #define numLeds NUM_LEDS
 #define ledsPerLevel MATRIX_WIDTH
@@ -19,13 +19,13 @@ public:
   byte spark_min = 220; // 0..255
   byte spark_max = 255; // 0..255
 
-  byte spark_tfr = 20; // 0..256 how much energy is transferred up for a spark per cycle
-  uint16_t spark_cap = 150; // 0..255: spark cells: how much energy is retained from previous cycle
+  byte spark_tfr = 40; // 0..256 how much energy is transferred up for a spark per cycle
+  uint16_t spark_cap = 195; // 0..255: spark cells: how much energy is retained from previous cycle
 
   uint16_t up_rad = 40; // up radiation
   uint16_t side_rad = 35; // sidewards radiation
-  uint16_t heat_cap = 0; // 0..255: passive cells: how much energy is retained from previous cycle
-
+  uint16_t heat_cap = 80; // 0..255: passive cells: how much energy is retained from previous cycle
+  bool usePalette = false;
   byte red_bg = 0;
   byte green_bg = 0;
   byte blue_bg = 0;
@@ -35,8 +35,6 @@ public:
   int red_energy = 180;
   int green_energy = 20; // 145;
   int blue_energy = 0;
-
-  byte upside_down = 0; // if set, flame (or rather: drop) animation is upside down. Text remains as-is
 
   byte currentEnergy[numLeds+1]; // current energy level
   byte nextEnergy[numLeds+1]; // next energy level
@@ -138,15 +136,12 @@ public:
         uint16_t e = nextEnergy[p];
         currentEnergy[p] = e;
         CRGB color;
-        #if !USE_PALETTE
-        if (e>250){
-          color = CRGB(170, 170, e); // blueish extra-bright spark
-        } else {
-          #endif
-          if (e>0) {
-            #if USE_PALETTE
-            color = ColorFromPalette((*currentSystemPalette)->second,e);
-            #else
+        if(usePalette){
+          color = ColorFromPalette((*currentSystemPalette)->second,e);
+        }else{
+          if (e>250){
+            color = CRGB(170, 170, e); // blueish extra-bright spark
+          } else if (e>0) {
             //energy to brightness is non-linear
             byte eb = energymap[e>>3];
             byte r = red_bias;
@@ -156,14 +151,11 @@ public:
             increase(g, (eb*green_energy)>>8);
             increase(b, (eb*blue_energy)>>8);
             color = CRGB(r, g, b);
-            #endif
           } else {
             // background, no energy
             color = CRGB::Black;//(red_bg, green_bg, blue_bg);
           }
-        #if !USE_PALETTE
         }
-        #endif
         ledMatrix.setPixel(x,y,color);
       }
     }

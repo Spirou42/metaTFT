@@ -14,6 +14,7 @@
 #include "ILI9341_t3.h"
 #include "FastLED.h"
 #include "Streaming.h"
+#include "TFT_UI_Internal.h"
 
  /** a collection of structs for basic geometry handling (int16_t)*/
 /**
@@ -71,12 +72,15 @@ inline Print& operator<<(Print& obj, GCRect &p){
 };
 
 
-
+class TFTDisplay;
 /** my display subclass */
+TFTUI_NAMESPACE_BEGIN
+typedef void(*startScreen)(TFTDisplay*) ;
+TFTUI_NAMESPACE_END
 class TFTDisplay : public ILI9341_t3 {
 public:
-  TFTDisplay(uint8_t _CS, uint8_t _DC, uint8_t _RST = 255, uint8_t _MOSI=11, uint8_t _SCLK=13, uint8_t _MISO=12, uint8_t bkg_pin=A14,uint8_t rotation = 3):
-  ILI9341_t3(_CS, _DC, _RST, _MOSI, _SCLK, _MISO),_backlight_pin(bkg_pin),defaultRotation(rotation),_luminance(80){
+  TFTDisplay(uint8_t _CS, uint8_t _DC, uint8_t _RST = 255, uint8_t _MOSI=11, uint8_t _SCLK=13, uint8_t _MISO=12, uint8_t bkg_pin=A14,TFT_UI::startScreen scr=NULL,uint8_t rotation = 3):
+  ILI9341_t3(_CS, _DC, _RST, _MOSI, _SCLK, _MISO),_backlight_pin(bkg_pin),defaultRotation(rotation),_luminance(80),_startScreen(scr){
     updateBacklight();}
 
   void start();
@@ -87,17 +91,18 @@ public:
   uint8_t getLuminance(){
     return _luminance;}
 
+  void setFont(const ILI9341_t3_font_t &f){ILI9341_t3::setFont(f);}
   virtual void drawLogo();
 
   GCSize stringSize(const char* str);
   uint16_t stringWidth(const char* str);
   uint16_t stringHeight(const char* str);
 protected:
-  int16_t   TFT_LogoEnd = 0;
   uint8_t _backlight_pin;
   uint8_t defaultRotation ;
 
   uint8_t _luminance ;                    //< valaue for backlight
+  TFT_UI::startScreen _startScreen;
 
   void updateBacklight();
   GCSize fontCharDimensions(unsigned int c);
