@@ -45,7 +45,8 @@
   #define COLOR_ORDER       BGR
   #define COLOR_CORRECTION  0xffeeff
   #define CLOCK_PIN         14
-  #define NUM_LEDS          130
+  //#define NUM_LEDS          130
+  #define NUM_LEDS          60
 #else
   #warning WS2812
   #define CHIPSET           WS2812

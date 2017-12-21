@@ -3,6 +3,8 @@
  The Demo sketch
  This Demo is intended for the teensy3.2 enviroment together with APA102 or WS2811/12 LED Stripes
  The configuration for PINS number of LEDS is Strip etc. are located in the FastLED_Demo.h file
+
+ The led layout is either linear or in a ring.
  **/
 
 #include <TFT_UI.h>
@@ -17,7 +19,7 @@
 #include "LEDEffects.h"
 #include "FastLED_Demo.h"
 
-#include "IRTest.h"
+#include <IRTest.h>
 
 using namespace std;
 // the LEDs frame buffer and the display instance

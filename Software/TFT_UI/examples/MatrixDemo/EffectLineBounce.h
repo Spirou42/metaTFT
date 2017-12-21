@@ -9,12 +9,13 @@ public:
   EffectLineBounce():Effect("LineBounce"),line(0),delayedFrame(0),step(1){};
 
   virtual void startEffect(){
-    blendFactor = 2;
+    blendFactor = 255;
   }
   virtual uint16_t frameRate(){return 1000/25;}
   virtual void frame(unsigned long now) {
     //Serial << "Frame: "<<endl;
-    ledMatrix.fadeToBlack(100);
+    //ledMatrix.fadeToBlack(100);
+    ledMatrix.fill(CRGB::Black);
     FLPoint s(0,line);
     FLPoint e(12,line);
     CRGB color = ColorFromPalette((*currentSystemPalette)->second,globalHue);
@@ -22,12 +23,13 @@ public:
     ledMatrix.flush();
 
     delayedFrame++;
+    int16_t upperLine = MATRIX_HEIGHT -1;
     if(delayedFrame > 5){
       delayedFrame = 0;
       line +=step;
       //line = line % 9;
-      if (line >=9){
-        line = 9;
+      if (line >=upperLine){
+        line = upperLine;
         step = -1;
       }else if (line <=0){
         step = 1;

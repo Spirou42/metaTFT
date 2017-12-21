@@ -1,21 +1,23 @@
 /**
   ChristmasBall simple APA102 Demo
 **/
+#define FASTLED_INTERNAL
 #include <TFT_UI.h>
 #include <TFT_UI_Highlevel.h>
 #include <Queue.h>
 #include <Streaming.h>
 #include <FastLED.h>
 #include <FastLEDAddOns.h>
+#include <IRTest.h>
 #include "ChristmasBall.h"
 #include "EffectLineBounce.h"
 #include "EffectTorch.h"
 #include "EffectNoise.h"
 
 #define USE_BACKBUFFER 1
-#define FLIPPED true
-#define SERPENTIME true
-#define ROTATED true
+#define FLIPPED false
+#define SERPENTIME false
+#define ROTATED false
 // queue for simple multitasking
 Queue taskQueue;
 
@@ -32,7 +34,7 @@ XYMatrix ledMatrix(MATRIX_WIDTH,MATRIX_HEIGHT,leds,
 
 // The TFT
 TFTDisplay tft = TFTDisplay(TFT_CS,TFT_DC,TFT_RST,TFT_MOSI,TFT_SCK,TFT_MISO,TFT_LED,3);
-
+Input_IR IRReciever = Input_IR(IR_IN);
 
 
 EffectLineBounce lineBounceEffect = EffectLineBounce();
@@ -41,11 +43,9 @@ EffectNoise noiseEffect=EffectNoise();
 
 EffectList initializeSystemEffects(){
   EffectList tmp;
+  tmp.push_back(&torchEffect);
   tmp.push_back(&lineBounceEffect);
   tmp.push_back(&noiseEffect);
-
-  tmp.push_back(&torchEffect);
-
   return tmp;
 }
 
@@ -220,7 +220,7 @@ void initialiseLEDs(){
   FastLED.clear(true);
   FastLED.show();
   FastLED.setBrightness( LED_BRIGHTNESS );
-  fill_solid(leds,NUM_LEDS,CRGB::Red);
+  fill_solid(leds,NUM_LEDS,CRGB::DarkOrange);
   FastLED.show();
 }
 
@@ -274,7 +274,7 @@ void postFrameCallback(unsigned long now){
 
 void setup(){
   Serial.begin(115200);
-  delay(3000);
+  //delay(3000);
   initialiseLEDs();
 
   //init LED backlight
@@ -313,6 +313,21 @@ void loop (){
     taskQueue.scheduleChangeFunction("EFCT", millis() , currentFrameRate);
 
   }
+  decode_results* irr =  IRReciever.decode();
+   if (irr) {
+     dumpInfo(irr);           // Output the results
+     //    //dumpRaw(irr);            // Output the results in RAW format
+    Serial << "------------"<< endl;
+    dumpCode(irr);           // Output the results as source code
+    Serial << "------------"<<endl;
+     //     Serial.println("");           // Blank line between entries
+     //     irrecv.resume();              // Prepare for the next value
+     //     Serial << "Palettes: "<<systemPalettes.size()<<endl;
+     //     void* p = &currentSystemPalette;
+     //     Serial.println( (long unsigned int)p);
+     //     Serial << "Current: "<<(*currentSystemPalette)->first<<endl;
+   }
+
 
   taskQueue.Run(millis());
 }

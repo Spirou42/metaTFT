@@ -10,17 +10,17 @@ EffectTorch.h
 class EffectTorch: public Effect {
 public:
   EffectTorch():Effect("Torch"){}
-  uint16_t cycle_wait = 1; // 0..255
+  uint16_t cycle_wait = 0; // 0..255
 
   byte flame_min = 20; // 0..255
   byte flame_max = 220; // 0..255
 
-  byte random_spark_probability = 1; // 0..100
+  byte random_spark_probability = 5; // 0..100
   byte spark_min = 220; // 0..255
   byte spark_max = 255; // 0..255
 
   byte spark_tfr = 20; // 0..256 how much energy is transferred up for a spark per cycle
-  uint16_t spark_cap = 200; // 0..255: spark cells: how much energy is retained from previous cycle
+  uint16_t spark_cap = 150; // 0..255: spark cells: how much energy is retained from previous cycle
 
   uint16_t up_rad = 40; // up radiation
   uint16_t side_rad = 35; // sidewards radiation
@@ -78,18 +78,6 @@ public:
     aMax = aMax - aMinOrMax + 1;
     r += rand() % aMax;
     return r;
-  }
-
-  void startEffect()
-  {
-    currentSystemPalette = systemPalettes.begin()+8;
-    blendFactor = 40;
-
-    for (int i=0; i<numLeds; i++) {
-      currentEnergy[i] = 0;
-      nextEnergy[i] = 0;
-      energyMode[i] = torch_passive;
-    }
   }
 
   void calcNextEnergy()
@@ -199,12 +187,22 @@ public:
     }
   }
 
+  void startEffect()
+  {
+    currentSystemPalette = systemPalettes.begin()+8;
+    blendFactor = 50;
+
+    for (int i=0; i<numLeds; i++) {
+      currentEnergy[i] = 0;
+      nextEnergy[i] = 0;
+      energyMode[i] = torch_passive;
+    }
+  }
   virtual void frame(unsigned long now) {
     injectRandom();
     calcNextEnergy();
     calcNextColors();
     ledMatrix.flush();
   }
-
-  virtual uint16_t frameRate(){return 1000/60;}
+  virtual uint16_t frameRate(){return 1000/30;}
 };

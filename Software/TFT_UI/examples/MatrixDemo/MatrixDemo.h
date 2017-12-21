@@ -19,6 +19,9 @@
 #include "TFT_UI.h"
 #include "TFT_UI_Highlevel.h"
 
+#define USE_CHRISMASBALL 0
+#define USE_CYLINDERLAMP 1
+
 /** TFT Configuration **/
 #define TFT_RST   2
 #define TFT_DC    9
@@ -27,6 +30,7 @@
 #define TFT_MOSI  11
 #define TFT_SCK   13
 #define TFT_LED   6
+#define IR_IN     5
 
 /** FastLED Configuration **/
 #define CHIPSET           APA102
@@ -34,11 +38,17 @@
 #define COLOR_CORRECTION  0xffeeff
 #define LED_PIN           8
 #define CLOCK_PIN         14
-#define NUM_LEDS          130
-#define LED_BRIGHTNESS    80
 
-#define MATRIX_WIDTH      13
-#define MATRIX_HEIGHT     10
+#define LED_BRIGHTNESS    80
+#if USE_CHRISMASBALL
+#endif
+
+#if USE_CYLINDERLAMP
+#define MATRIX_WIDTH      10
+#define MATRIX_HEIGHT     11
+#endif
+
+#define NUM_LEDS          (MATRIX_WIDTH*MATRIX_HEIGHT)
 
 extern XYMatrix ledMatrix;
 extern PaletteList systemPalettes;
