@@ -42,8 +42,9 @@
 #define IRC_61  0xFF4AB5
 #define IRC_62  0xFF52AD
 
-typdef enum _irCommand {
+TFTUI_NAMESPACE_BEGIN
+typedef enum _irCommand {
 
 }IRCommand_t;
-
+TFTUI_NAMESPACE_END
  #endif
