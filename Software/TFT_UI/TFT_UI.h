@@ -11,13 +11,12 @@
  #include <vector>
 
 
-// #include <deque>
-
 #include "GraphicTests.h"
 #include "Input_Encoder.hpp"
 #include "Input_Encoders.h"
 #include "Input_Switch.hpp"
 #include "Input_Switches.h"
+#include "Input_IRCodes_LEDLamp1.hpp"
 #include "Input_IR.hpp"
 #include "TFTDisplay.hpp"
 #include "UI_Views.hpp"

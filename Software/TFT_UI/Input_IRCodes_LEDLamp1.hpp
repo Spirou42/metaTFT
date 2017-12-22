@@ -14,6 +14,29 @@
  #ifndef __IRCODES_LEDLAMP1_H__
  #define __IRCODES_LEDLAMP1_H__
 
+ #include <Arduino.h>
+ #include <vector>
+TFTUI_NAMESPACE_BEGIN
+
+ typedef enum _irCommand {
+  IRCommand_None = 0,      // this is sysnonyme for no or not known IRCommand
+  IRCommand_On,           //ON
+  IRCommand_Off,          //OFF
+  IRCommand_Dimer,        //Dim up
+  IRCommand_Brighter,     //Dim down
+  IRCommand_Faster,       //Clock1
+  IRCommand_Slower,       //Clock2
+
+  IRCommand_Effect1,
+  IRCommand_Effect2,
+  IRCommand_Effect3,
+ }IRCommand_t;
+
+ typedef std::pair<uint64_t,IRCommand_t> IRCommandCodePair;
+ typedef std::vector<IRCommandCodePair> IRCodes;
+
+TFTUI_NAMESPACE_END
+
 #define IRC_00  0xFFA25D
 #define IRC_01  0xFF629D
 #define IRC_02  0xFFE21D
@@ -42,17 +65,5 @@
 #define IRC_61  0xFF4AB5
 #define IRC_62  0xFF52AD
 
-TFTUI_NAMESPACE_BEGIN
-typedef enum _irCommand {
- IRCommand_On,
- IRCommand_Off,
- IRCommand_Dimer,
- IRCommand_Brighter,
- IRCommand_Faster,
- IRCommand_Slower,
- IRCommand_Effect1,
- IRCommand_Effect2,
- IRCommand_Effect3
-}IRCommand_t;
-TFTUI_NAMESPACE_END
+
  #endif

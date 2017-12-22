@@ -85,6 +85,8 @@ PaletteList::iterator currentSystemPalette = systemPalettes.begin();
 
 EffectList FastLEDAddOns::systemEffectList = initializeSystemEffects();
 EffectList::iterator FastLEDAddOns::currentRunningEffect = systemEffectList.begin();
+TFT_UI::IRCodes TFT_UI::knownCodes = IRReciever.initDefaultCodes();
+
 // the UI
 metaList  SystemMenu;               ///<< The main Menu of the Application
 metaList  GlobalParameter;          ///<< all global Parameters
@@ -312,7 +314,7 @@ void setup(){
   digitalWriteFast(TFT_LED,1);
 
   initialiseTFT();
-  delay(3000);
+  //delay(3000);
   // enable UI
   enableSwitches();
   enableEncoders();
@@ -333,6 +335,7 @@ void setup(){
   #if USE_BACKBUFFER
   taskQueue.scheduleFunction(backbufferBlender,NULL,"BBLD",0,1000/120);
   #endif
+  Serial << TFT_UI::knownCodes.size()<<" IRCommands installed"<<endl;
 
 }
 
