@@ -2,7 +2,7 @@
  This file contains IR codes from received from the default 21 Button chinese RGB LED-Lamps
 
  Layout 3 x 7
-      ON          LMP        OFF
+      ON         LMP         OFF
      Flash      Clock1      Clock2
     smooth      Dim up     Dim down
       Red       green        Blue
@@ -44,7 +44,15 @@
 
 TFTUI_NAMESPACE_BEGIN
 typedef enum _irCommand {
-
+ IRCommand_On,
+ IRCommand_Off,
+ IRCommand_Dimer,
+ IRCommand_Brighter,
+ IRCommand_Faster,
+ IRCommand_Slower,
+ IRCommand_Effect1,
+ IRCommand_Effect2,
+ IRCommand_Effect3
 }IRCommand_t;
 TFTUI_NAMESPACE_END
  #endif
