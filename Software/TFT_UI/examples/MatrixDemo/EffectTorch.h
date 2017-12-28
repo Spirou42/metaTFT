@@ -219,11 +219,11 @@ public:
       nextEnergy[i] = 0;
       energyMode[i] = torch_passive;
     }
-    #if USE_RED_THEME
-    ledMatrix.setFlipped(false);
-    #elif USE_BLUE_THEME
-    ledMatrix.setFlipped(true);
-    #endif
+    // #if USE_RED_THEME
+    // ledMatrix.setFlipped(false);
+    // #elif USE_BLUE_THEME
+    // ledMatrix.setFlipped(false);
+    // #endif
   }
   virtual void frame(unsigned long now) {
     injectRandom();
