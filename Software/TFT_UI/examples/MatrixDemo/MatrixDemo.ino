@@ -54,8 +54,8 @@ EffectNoise noiseEffect=EffectNoise();
 
 EffectList initializeSystemEffects(){
   EffectList tmp;
-  tmp.push_back(&torchEffect);
   tmp.push_back(&lineBounceEffect);
+  tmp.push_back(&torchEffect);
   tmp.push_back(&noiseEffect);
   return tmp;
 }

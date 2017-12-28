@@ -6,7 +6,7 @@ EffectTorch.h
 #define numLeds NUM_LEDS
 #define ledsPerLevel MATRIX_WIDTH
 #define levels MATRIX_HEIGHT
-#define USE_BLUE_THEME 1
+#define USE_RED_THEME 1
 class EffectTorch: public Effect {
 public:
   EffectTorch():Effect("Torch"){}
