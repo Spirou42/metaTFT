@@ -39,7 +39,7 @@
 #define LED_PIN           8
 #define CLOCK_PIN         14
 
-#define LED_BRIGHTNESS    80
+#define LED_BRIGHTNESS    255
 
 #if USE_CHRISTMASBALL
   #define MATRIX_WIDTH      13

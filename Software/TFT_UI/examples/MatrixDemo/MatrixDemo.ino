@@ -13,6 +13,7 @@
 #include "EffectLineBounce.h"
 #include "EffectTorch.h"
 #include "EffectNoise.h"
+#include "EffectWave.h"
 
 #define USE_BACKBUFFER 1
 
@@ -51,32 +52,34 @@ Input_IR IRReciever = Input_IR(IR_IN);
 EffectLineBounce lineBounceEffect = EffectLineBounce();
 EffectTorch torchEffect = EffectTorch();
 EffectNoise noiseEffect=EffectNoise();
+EffectWave waveEffect=EffectWave();
 
 EffectList initializeSystemEffects(){
   EffectList tmp;
+  tmp.push_back(&waveEffect);
+  tmp.push_back(&noiseEffect);
   tmp.push_back(&lineBounceEffect);
   tmp.push_back(&torchEffect);
-  tmp.push_back(&noiseEffect);
   return tmp;
 }
 
 // A pair of routines to static initialise the Palette and Effects lists of pairs
 PaletteList initializeSystemPalettes(){
   PaletteList tmp;
-  tmp.push_back(new PalettePair("Rainbow",RainbowColors_p));
-  tmp.push_back(new PalettePair("Rainbow Stripes",RainbowStripeColors_p));
-  tmp.push_back(new PalettePair("Clouds",CloudColors_p));
-  tmp.push_back(new PalettePair("Ocean",OceanColors_p));
-  tmp.push_back(new PalettePair("Forest",ForestColors_p));
-  tmp.push_back(new PalettePair("Party",PartyColors_p));
-  tmp.push_back(new PalettePair("Lava",LavaColors_p));
-  tmp.push_back(new PalettePair("Heat",HeatColors_p));
-  tmp.push_back(new PalettePair("Arctic",arctic_gp));
-  tmp.push_back(new PalettePair("Temperature",temperature_gp));
-  tmp.push_back(new PalettePair("Colombia",colombia_gp));
-  tmp.push_back(new PalettePair("Cequal",cequal_gp));
-  tmp.push_back(new PalettePair("Sunset",Another_Sunset_gp));
-  tmp.push_back(new PalettePair("Yellow Sunset",Sunset_Yellow_gp));
+  tmp.push_back(new PalettePair("Rainbow",            Palette_t(RainbowColors_p,true)));
+  tmp.push_back(new PalettePair("Rainbow Stripes",    Palette_t(RainbowStripeColors_p,false)));
+  tmp.push_back(new PalettePair("Clouds",             Palette_t(CloudColors_p,false)));
+  tmp.push_back(new PalettePair("Ocean",              Palette_t(OceanColors_p,false)));
+  tmp.push_back(new PalettePair("Forest",             Palette_t(ForestColors_p,false)));
+  tmp.push_back(new PalettePair("Party",              Palette_t(PartyColors_p,true)));
+  tmp.push_back(new PalettePair("Lava",               Palette_t(LavaColors_p,false)));
+  tmp.push_back(new PalettePair("Heat",               Palette_t(HeatColors_p,true)));
+  tmp.push_back(new PalettePair("Arctic",             Palette_t(arctic_gp,true)));
+  tmp.push_back(new PalettePair("Temperature",        Palette_t(temperature_gp,false)));
+  tmp.push_back(new PalettePair("Colombia",           Palette_t(colombia_gp,false)));
+  tmp.push_back(new PalettePair("Cequal",             Palette_t(cequal_gp,true)));
+  tmp.push_back(new PalettePair("Sunset",             Palette_t(Another_Sunset_gp,false)));
+  tmp.push_back(new PalettePair("Yellow Sunset",      Palette_t(Sunset_Yellow_gp,false)));
   return tmp;
 }
 
@@ -134,20 +137,18 @@ void initSystemMenu(){
   SystemMenu.initView(&tft,GCRect(30,15,tft.width()/2,tft.height()-4));
   TFT_UI::initDefaultListVisual(SystemMenu);
   SystemMenu.setIsSelectList(false);
-  metaLabel* l = SystemMenu.addEntry( String("Parameter"));
+  metaLabel* l = SystemMenu.addEntry( String("System"));
   l->setAction(&globalParameterAction);
+
+  l = SystemMenu.addEntry(String("Brightness"));
+  l->setAction(&ledBrightnessAction);
+
 
   l=SystemMenu.addEntry(String("Effect"));
   l->setAction(&programAction);
 
   l=SystemMenu.addEntry( String("Palette"));
   l->setAction(&paletteAction);
-#if USE_BACKBUFFER
-  l = SystemMenu.addEntry(String("Blend Factor"));
-  l->setAction(&blendFactorAction);
-#endif
-  // l = SystemMenu.addEntry(String("Parameter"));
-  // l->setAction(&parameterAction);
 
   SystemMenu.sizeToFit();
   SystemMenu.layoutList();
@@ -161,14 +162,17 @@ void initGlobalParameterMenu(){
   metaLabel* l = GlobalParameter.addEntry( String("TFT Brightness"));
   l->setAction(&tftBrightnessAction);
 
-  l = GlobalParameter.addEntry(String("LED Brightness"));
-  l->setAction(&ledBrightnessAction);
-
   l=GlobalParameter.addEntry( String("Hue Speed"));
   l->setAction(&hueStepAction);
 
   l=GlobalParameter.addEntry(String("Hue Frames"));
   l->setAction(&hueDelayAction);
+
+  #if USE_BACKBUFFER
+    l = GlobalParameter.addEntry(String("Blend Factor"));
+    l->setAction(&blendFactorAction);
+  #endif
+
   GlobalParameter.sizeToFit();
   GlobalParameter.layoutList();
 
@@ -229,7 +233,7 @@ void initUI(){
 
 
 void initialiseLEDs(){
-  FastLED.addLeds<CHIPSET, LED_PIN, CLOCK_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(COLOR_CORRECTION);
+  FastLED.addLeds<CHIPSET, LED_PIN, CLOCK_PIN, COLOR_ORDER,DATA_RATE_MHZ(3)>(leds, NUM_LEDS).setCorrection(COLOR_CORRECTION);
   FastLED.clear(true);
   FastLED.show();
   FastLED.setBrightness( LED_BRIGHTNESS );
@@ -244,7 +248,7 @@ void displayStartScreen(TFTDisplay* tft){
   tft->setTextColor(ILI9341_GREEN);
   tft->setCursor(25,15);
   #if USE_CYLINDERLAMP
-  *tft<<" FIRE"<<endl<<" PILLAR"<<endl;
+  *tft<<" deep"<<endl<<"    NET"<<endl;
   #elif USE_CHRISTMASBALL
   tft->setTextSize(5);
   *tft<<"CHRISTMAS"<<endl<<"    BALL"<<endl;

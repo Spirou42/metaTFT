@@ -6,7 +6,7 @@
 class EffectLineBounce : public Effect {
 public:
 
-  EffectLineBounce():Effect("LineBounce"),line(0),delayedFrame(0),step(1){};
+  EffectLineBounce():Effect("Solid"),line(0),delayedFrame(0),step(1){};
 
   virtual void startEffect(){
     blendFactor = 6;
@@ -14,11 +14,11 @@ public:
   virtual uint16_t frameRate(){return 1000/30;}
   virtual void frame(unsigned long now) {
     //Serial << "Frame: "<<endl;
-    ledMatrix.fadeToBlack(0);
+    ledMatrix.fadeToBlack(1);
     //ledMatrix.fill(CRGB::Black);
     FLPoint s(0,line);
     FLPoint e(12,line);
-    CRGB color = ColorFromPalette((*currentSystemPalette)->second,globalHue);
+    CRGB color = ColorFromPalette((*currentSystemPalette)->second.palette,globalHue);
     ledMatrix.line(s,e,color);
     ledMatrix.flush();
 

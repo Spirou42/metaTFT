@@ -167,7 +167,7 @@ public:
         currentEnergy[p] = e;
         CRGB color;
         if(usePalette){
-          color = ColorFromPalette((*currentSystemPalette)->second,e+globalHue);
+          color = ColorFromPalette((*currentSystemPalette)->second.palette,e+globalHue);
         }else{
           if (e>250){
             color = CRGB(170, 170, e); // blueish extra-bright spark
