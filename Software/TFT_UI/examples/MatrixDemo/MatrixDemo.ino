@@ -13,7 +13,8 @@
 #include "EffectLineBounce.h"
 #include "EffectTorch.h"
 #include "EffectNoise.h"
-#include "EffectWave.h"
+#include "EffectLava.h"
+#include "EffectRain.h"
 
 #define USE_BACKBUFFER 1
 
@@ -52,11 +53,13 @@ Input_IR IRReciever = Input_IR(IR_IN);
 EffectLineBounce lineBounceEffect = EffectLineBounce();
 EffectTorch torchEffect = EffectTorch();
 EffectNoise noiseEffect=EffectNoise();
-EffectWave waveEffect=EffectWave();
+EffectLava lavaEffect=EffectLava();
+EffectRain rainEffect=EffectRain();
 
 EffectList initializeSystemEffects(){
   EffectList tmp;
-  tmp.push_back(&waveEffect);
+  tmp.push_back(&lavaEffect);
+  tmp.push_back(&rainEffect);
   tmp.push_back(&noiseEffect);
   tmp.push_back(&lineBounceEffect);
   tmp.push_back(&torchEffect);

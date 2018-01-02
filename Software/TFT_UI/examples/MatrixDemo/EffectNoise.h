@@ -11,7 +11,7 @@ public:
 
   virtual void startEffect(){
     blendFactor = 20;
-    currentSystemPalette = systemPalettes.begin()+2;
+    currentSystemPalette = systemPalettes.begin()+PALETTE_CLOUDS;
     x = random16();
     y = random16();
     z = random16();
