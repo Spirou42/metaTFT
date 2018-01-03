@@ -34,8 +34,15 @@ void EffectLava::applyHeat(){
   // heat travels upward with a constant rate
   for(uint8_t x=0;x<MATRIX_WIDTH;x++){
     for(uint8_t y=1;y<MATRIX_HEIGHT;y++){
-      uint8_t q= (tempMap[x][y-1]-tempMap[x][y])/3 + (tempMap[x][y-1])/10;
-      tempMap[x][y]= add(tempMap[x][y],q);
+      int16_t q= heatLosBase+(tempMap[x][y-1]-tempMap[x][y])/3;// + (tempMap[x][y-1])/10;
+      if (q>tempMap[x][y-1] || q<0){
+        q = tempMap[x][y-1];
+      }
+      // if(y == MATRIX_HEIGHT-1 && x == 0){
+      //   Serial << q<<endl;
+      // }
+
+      tempMap[x][y]= add(tempMap[x][y],(uint8_t)q);
       tempMap[x][y-1] = sub(tempMap[x][y-1],q);
     }
   }
@@ -44,7 +51,7 @@ void EffectLava::applyHeat(){
 void EffectLava::coolDown(){
   for(uint8_t y=0;y<MATRIX_HEIGHT;y++){
     for(uint8_t x=0;x<MATRIX_WIDTH;x++){
-      uint8_t heatLoss = (((y+1)/3) * tempMap[x][y])/256;
+      uint8_t heatLoss = (((y+1)/3) * tempMap[x][y])/512;
       tempMap[x][y] = sub(tempMap[x][y], heatLoss);
     }
   }

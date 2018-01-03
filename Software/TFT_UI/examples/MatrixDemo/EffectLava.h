@@ -22,8 +22,8 @@ protected:
   uint8_t lavaDensity = 127;
   uint8_t fluidDensity = 60;
   uint8_t tempMap[MATRIX_WIDTH][MATRIX_HEIGHT];
-  uint8_t bottomHeat = 50;
-  uint8_t heatLosBase = 6;
+  uint8_t bottomHeat = 100;
+  uint8_t heatLosBase = 2;
   };
 
 
