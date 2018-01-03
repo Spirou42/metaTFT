@@ -93,6 +93,8 @@ EffectList FastLEDAddOns::systemEffectList = initializeSystemEffects();
 EffectList::iterator FastLEDAddOns::currentRunningEffect = systemEffectList.begin();
 TFT_UI::IRCodes TFT_UI::knownCodes = IRReciever.initDefaultCodes();
 
+TFT_UI::ResponderStack labelList; ///< temorary storage for not used
+
 // the UI
 metaList  SystemMenu;               ///<< The main Menu of the Application
 metaList  GlobalParameter;          ///<< all global Parameters
@@ -163,7 +165,6 @@ void initSystemMenu(){
 
   EffectParameter.initView(&tft,GCRect(30,15,tft.width()/2,tft.height()-4));
   TFT_UI::initDefaultListVisual(EffectParameter);
-
 }
 
 void initGlobalParameterMenu(){
@@ -241,7 +242,6 @@ void initUI(){
   initEffectsMenu();
   initGlobalParameterMenu();
 }
-
 
 void initialiseLEDs(){
   FastLED.addLeds<CHIPSET, LED_PIN, CLOCK_PIN, COLOR_ORDER,DATA_RATE_MHZ(3)>(leds, NUM_LEDS).setCorrection(COLOR_CORRECTION);
@@ -346,7 +346,15 @@ void postFrameCallback(unsigned long now){
     }else{
       effectParameterLabel->removeFromSuperview();
       SystemMenu.sizeToFit();
+      tft.fillScreen(0);
       SystemMenu.layoutList();
+      TFT_UI::ResponderStack::iterator iter = TFT_UI::responderStack.begin();
+      while(iter !=TFT_UI::responderStack.end() ){
+        Serial << "Redraw"<<_HEX((unsigned long)*iter)<<endl;
+        (*iter)->setNeedsRedraw();
+        (*iter)->redraw();
+        iter++;
+      }
     }
     lastEffect = FastLEDAddOns::currentRunningEffect;
     dumpParameters(*FastLEDAddOns::currentRunningEffect);
@@ -355,7 +363,7 @@ void postFrameCallback(unsigned long now){
 
 void setup(){
   Serial.begin(115200);
-  delay(5000);
+  //delay(5000);
   initialiseLEDs();
 
   //init LED backlight

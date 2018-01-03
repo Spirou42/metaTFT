@@ -16,6 +16,10 @@
  *									metaView									*
  **********************************************/
 
+metaView::~metaView(){
+	_subViews.clear();
+}
+
 void metaView::initView(TFTDisplay* tft, GCRect frame){
 	initGraphicsContext(tft);
 	_frame = frame;

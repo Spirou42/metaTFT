@@ -73,6 +73,8 @@ class metaView : public GraphicsContext, public metaResponder{
   metaView(GCRect frame):_frame(frame),_outlineColor(0),_backgroundColor(0),_opaque(true),
   _drawsOutline(false),_needsRedraw(true),_needsLayout(true),_superView(NULL),_visualizeState(false),_state(Off){}
 
+  virtual ~metaView();
+
   virtual void initView(TFTDisplay* tft, GCRect frame);
   virtual void initView(TFTDisplay* tft, GCPoint origin, GCSize size);
   virtual void initView(TFTDisplay* tft, int16_t x, int16_t y, int16_t w, int16_t h);

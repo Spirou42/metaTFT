@@ -23,7 +23,6 @@ class EffectRain : public Effect {
    int16_t scale = 100;
    uint8_t noise[MAX_DIMENSION][MAX_DIMENSION];
    void fillnoise8();
-   ValueWrapper* _tempWrapper;
 };
 
 
