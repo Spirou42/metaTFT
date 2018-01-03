@@ -43,8 +43,9 @@ For an example have a look at TFTBrightnessWrapper below.
 */
 class ValueWrapper{
  public:
+  ValueWrapper():_value(NULL),_min(0),_max(0),_name(){};
   ValueWrapper(int16_t* val, int16_t min, int16_t max, String name):_value(val),_min(min),_max(max),_name(name){}
-
+  virtual ~ValueWrapper(){_value = NULL;}
   virtual int16_t getValue(){return *_value;}
   virtual void setValue(int16_t val){
     if(val < _min){
@@ -55,6 +56,7 @@ class ValueWrapper{
     *_value = val;
   }
 
+  virtual void setValueStore(int16_t* valStore){_value = valStore;}
   virtual int16_t getMinValue(){return _min;}
   virtual void setMinValue(int16_t newMin){_min = newMin;}
   virtual int16_t getMaxValue(){return _max;}
