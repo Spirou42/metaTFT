@@ -56,8 +56,12 @@ class ValueWrapper{
   }
 
   virtual int16_t getMinValue(){return _min;}
+  virtual void setMinValue(int16_t newMin){_min = newMin;}
   virtual int16_t getMaxValue(){return _max;}
+  virtual void setMaxValue(int16_t newMax){_max = newMax;}
   virtual String& getName(){return _name;}
+  virtual void setName(String& newName){_name = newName;}
+
   int16_t mapInto(GCSize source, GCSize target, int16_t input){
     float inp = (100.0/(source.h-source.w)) * (input -source.w);
     int16_t out = (target.h-target.w)*inp/100.0 + target.w;
