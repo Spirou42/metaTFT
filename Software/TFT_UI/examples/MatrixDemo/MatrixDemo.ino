@@ -13,7 +13,7 @@
 #include "EffectLineBounce.h"
 #include "EffectTorch.h"
 #include "EffectNoise.h"
-#include "EffectLava.h"
+//#include "EffectLava.h"
 #include "EffectRain.h"
 
 #define USE_BACKBUFFER 1
@@ -53,12 +53,12 @@ Input_IR IRReciever = Input_IR(IR_IN);
 EffectLineBounce lineBounceEffect = EffectLineBounce();
 EffectTorch torchEffect = EffectTorch();
 EffectNoise noiseEffect=EffectNoise();
-EffectLava lavaEffect=EffectLava();
+//EffectLava lavaEffect=EffectLava();
 EffectRain rainEffect=EffectRain();
 
 EffectList initializeSystemEffects(){
   EffectList tmp;
-  tmp.push_back(&lavaEffect);
+  //tmp.push_back(&lavaEffect);
   tmp.push_back(&rainEffect);
   tmp.push_back(&noiseEffect);
   tmp.push_back(&lineBounceEffect);
@@ -128,11 +128,11 @@ ValueEditor blendFactorAction(&ValueView,&blendFactorWrapper);
 PaletteIndexWrapper paletteIndexWrapper(&systemPalettes,&currentSystemPalette);
 ValueEditor paletteAction(&PalettesMenu,&paletteIndexWrapper);
 
-
 EffectProgramWrapper programIndexWrapper(&FastLEDAddOns::systemEffectList,&FastLEDAddOns::currentRunningEffect);
 ValueEditor programAction(&EffectsMenu,&programIndexWrapper);
 
 ValueEditor globalParameterAction(&GlobalParameter,NULL);
+
 
 void initSystemMenu(){
   // visual them definition for a single list entry
@@ -145,7 +145,6 @@ void initSystemMenu(){
 
   l = SystemMenu.addEntry(String("Brightness"));
   l->setAction(&ledBrightnessAction);
-
 
   l=SystemMenu.addEntry(String("Effect"));
   l->setAction(&programAction);
