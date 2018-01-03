@@ -98,6 +98,7 @@ metaList  SystemMenu;               ///<< The main Menu of the Application
 metaList  GlobalParameter;          ///<< all global Parameters
 metaList  PalettesMenu;             ///<< Selection List for Palettes
 metaList  EffectsMenu;              ///<< our Effects
+metaList  EffectParameter;          ///< the public parameters of the current running effect
 metaValue ValueView;                ///<< View used for numerical value changes
 
 // a couple of global parameters the action wrappers are defined in TFT_UI
@@ -133,10 +134,12 @@ ValueEditor programAction(&EffectsMenu,&programIndexWrapper);
 
 ValueEditor globalParameterAction(&GlobalParameter,NULL);
 
+ValueEditor effectParameterAction(&EffectParameter,NULL);
+
+metaLabel* effectParameterLabel;
 
 void initSystemMenu(){
   // visual them definition for a single list entry
-
   SystemMenu.initView(&tft,GCRect(30,15,tft.width()/2,tft.height()-4));
   TFT_UI::initDefaultListVisual(SystemMenu);
   SystemMenu.setIsSelectList(false);
@@ -152,8 +155,14 @@ void initSystemMenu(){
   l=SystemMenu.addEntry( String("Palette"));
   l->setAction(&paletteAction);
 
+  effectParameterLabel = SystemMenu.addEntry(String("Effect Para"));
+  effectParameterLabel->setAction(&effectParameterAction);
+
   SystemMenu.sizeToFit();
   SystemMenu.layoutList();
+
+  EffectParameter.initView(&tft,GCRect(30,15,tft.width()/2,tft.height()-4));
+  TFT_UI::initDefaultListVisual(EffectParameter);
 
 }
 
@@ -297,9 +306,27 @@ int backbufferBlender(unsigned long now, void *data){
   return 0;
 }
 #endif
+
+void dumpParameters(Effect* currentEffect)
+{
+  Serial<<"Name: "<<currentEffect->name()<<endl;
+  for(size_t k = 0;k<currentEffect->numberOfParameters();k++){
+    Serial<<"Parameter: "<<currentEffect->parameterNameAt(k)<<"\t";
+    ValueWrapper* vw = currentEffect->parameterAt(k);
+    if(vw){
+        Serial << vw->getValue()<<"\t("<<vw->getMinValue()<<", "<<vw->getMaxValue()<<")"<<endl;
+    }else{
+      Serial << endl;
+    }
+  }
+  Serial << "----"<<endl;
+}
+
 int16_t currentFrameRate;
 void postFrameCallback(unsigned long now){
   static int hueDelay = 0;
+  static EffectList::iterator lastEffect;
+
   int16_t hFD = hueStepWrapper.frameDelay() + hueFrameDelay*10;
   int16_t hueStep = hueStepWrapper.hueStep();
   if(hueDelay>=hFD) {
@@ -308,11 +335,27 @@ void postFrameCallback(unsigned long now){
   }else{
     hueDelay ++;
   }
+  if(lastEffect != FastLEDAddOns::currentRunningEffect){
+    Effect *p = (*FastLEDAddOns::currentRunningEffect);
+    if(p->numberOfParameters()){
+      if(!effectParameterLabel->getSuperview()){
+        SystemMenu.addSubview(effectParameterLabel);
+        SystemMenu.sizeToFit();
+        SystemMenu.layoutList();
+      }
+    }else{
+      effectParameterLabel->removeFromSuperview();
+      SystemMenu.sizeToFit();
+      SystemMenu.layoutList();
+    }
+    lastEffect = FastLEDAddOns::currentRunningEffect;
+    dumpParameters(*FastLEDAddOns::currentRunningEffect);
+  }
 }
 
 void setup(){
   Serial.begin(115200);
-
+  delay(5000);
   initialiseLEDs();
 
   //init LED backlight
