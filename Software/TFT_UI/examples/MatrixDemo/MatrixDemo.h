@@ -51,6 +51,8 @@
 
 #define NUM_LEDS          (MATRIX_WIDTH*MATRIX_HEIGHT)
 
+
+
 extern XYMatrix ledMatrix;
 extern PaletteList systemPalettes;
 extern PaletteList::iterator currentSystemPalette;
@@ -61,6 +63,8 @@ extern EffectList::iterator currentRunningEffect;
 extern int16_t blendFactor;
 extern uint8_t globalHue;
 extern CRGB leds[];
+
+void displayStartScreen(TFTDisplay* tft);
 
 #ifndef MATRIX_HEIGHT
 #error You have to declare either USE_CHRISTMASBALL or USE_CYLINDERLAMP

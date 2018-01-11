@@ -15,6 +15,8 @@
 #include "EffectNoise.h"
 //#include "EffectLava.h"
 #include "EffectRain.h"
+#include "UIHelper.h"
+
 
 #define USE_BACKBUFFER 1
 
@@ -29,10 +31,15 @@
   #define SERPENTIME  true
   #define ROTATED     true
 #endif
+
+/**
+  Setup global variables and infrastructure
+*/
+
 // queue for simple multitasking
 Queue taskQueue;
 
-// the buffer and backbuffer for the LEDS
+// LED buffers and the matrix mapping object
 CRGB leds[NUM_LEDS+1];
 CRGB backBuffer[NUM_LEDS+1];
 XYMatrix ledMatrix(MATRIX_WIDTH,MATRIX_HEIGHT,leds,
@@ -43,59 +50,33 @@ XYMatrix ledMatrix(MATRIX_WIDTH,MATRIX_HEIGHT,leds,
   #endif
   SERPENTIME,FLIPPED,ROTATED);
 
-void displayStartScreen(TFTDisplay* tft);
-
-// The TFT
+// the TFT and IR receiver
 TFTDisplay tft = TFTDisplay(TFT_CS,TFT_DC,TFT_RST,TFT_MOSI,TFT_SCK,TFT_MISO,TFT_LED,displayStartScreen,3);
 Input_IR IRReciever = Input_IR(IR_IN);
 
-
+// LED Effects
 EffectLineBounce lineBounceEffect = EffectLineBounce();
 EffectTorch torchEffect = EffectTorch();
 EffectNoise noiseEffect=EffectNoise();
 //EffectLava lavaEffect=EffectLava();
 EffectRain rainEffect=EffectRain();
 
-EffectList initializeSystemEffects(){
-  EffectList tmp;
-  //tmp.push_back(&lavaEffect);
-  tmp.push_back(&rainEffect);
-  tmp.push_back(&noiseEffect);
-  tmp.push_back(&lineBounceEffect);
-  tmp.push_back(&torchEffect);
-  return tmp;
-}
 
-// A pair of routines to static initialise the Palette and Effects lists of pairs
-PaletteList initializeSystemPalettes(){
-  PaletteList tmp;
-  tmp.push_back(new PalettePair("Rainbow",            Palette_t(RainbowColors_p,true)));
-  tmp.push_back(new PalettePair("Rainbow Stripes",    Palette_t(RainbowStripeColors_p,false)));
-  tmp.push_back(new PalettePair("Clouds",             Palette_t(CloudColors_p,false)));
-  tmp.push_back(new PalettePair("Ocean",              Palette_t(OceanColors_p,false)));
-  tmp.push_back(new PalettePair("Forest",             Palette_t(ForestColors_p,false)));
-  tmp.push_back(new PalettePair("Party",              Palette_t(PartyColors_p,true)));
-  tmp.push_back(new PalettePair("Lava",               Palette_t(LavaColors_p,false)));
-  tmp.push_back(new PalettePair("Heat",               Palette_t(HeatColors_p,true)));
-  tmp.push_back(new PalettePair("Arctic",             Palette_t(arctic_gp,true)));
-  tmp.push_back(new PalettePair("Temperature",        Palette_t(temperature_gp,false)));
-  tmp.push_back(new PalettePair("Colombia",           Palette_t(colombia_gp,false)));
-  tmp.push_back(new PalettePair("Cequal",             Palette_t(cequal_gp,true)));
-  tmp.push_back(new PalettePair("Sunset",             Palette_t(Another_Sunset_gp,false)));
-  tmp.push_back(new PalettePair("Yellow Sunset",      Palette_t(Sunset_Yellow_gp,false)));
-  return tmp;
-}
-
+// The global palettes
 PaletteList systemPalettes = initializeSystemPalettes();
 PaletteList::iterator currentSystemPalette = systemPalettes.begin();
 
+// The Effects k
 EffectList FastLEDAddOns::systemEffectList = initializeSystemEffects();
 EffectList::iterator FastLEDAddOns::currentRunningEffect = systemEffectList.begin();
+
+// The IRCodes
 TFT_UI::IRCodes TFT_UI::knownCodes = IRReciever.initDefaultCodes();
 
-TFT_UI::ResponderStack labelList; ///< temorary storage for not used
+// Storage for not used list entries
+std::vector<metaLabel*> labelList; ///< temorary storage for not used
 
-// the UI
+// the Lists and editors
 metaList  SystemMenu;               ///<< The main Menu of the Application
 metaList  GlobalParameter;          ///<< all global Parameters
 metaList  PalettesMenu;             ///<< Selection List for Palettes
@@ -140,6 +121,9 @@ ValueEditor effectParameterAction(&EffectParameter,NULL);
 
 metaLabel* effectParameterLabel;
 
+/**
+Initialise the UI
+*/
 void initSystemMenu(){
   // visual them definition for a single list entry
   SystemMenu.initView(&tft,GCRect(30,15,tft.width()/2,tft.height()-4));
@@ -243,15 +227,6 @@ void initUI(){
   initGlobalParameterMenu();
 }
 
-void initialiseLEDs(){
-  FastLED.addLeds<CHIPSET, LED_PIN, CLOCK_PIN, COLOR_ORDER,DATA_RATE_MHZ(3)>(leds, NUM_LEDS).setCorrection(COLOR_CORRECTION);
-  FastLED.clear(true);
-  FastLED.show();
-  FastLED.setBrightness( LED_BRIGHTNESS );
-  fill_solid(leds,NUM_LEDS,CRGB::DarkOrange);
-  FastLED.show();
-}
-
 
 void displayStartScreen(TFTDisplay* tft){
   //tft->setFont(Arial_48_Bold);
@@ -275,6 +250,17 @@ void initialiseTFT(){
   tft.start();
   TFTBrightness.setValue(13);
 }
+
+void initialiseLEDs(){
+  FastLED.addLeds<CHIPSET, LED_PIN, CLOCK_PIN, COLOR_ORDER,DATA_RATE_MHZ(3)>(leds, NUM_LEDS).setCorrection(COLOR_CORRECTION);
+  FastLED.clear(true);
+  FastLED.show();
+  FastLED.setBrightness( LED_BRIGHTNESS );
+  fill_solid(leds,NUM_LEDS,CRGB::DarkOrange);
+  FastLED.show();
+}
+
+
 
 #if USE_BACKBUFFER
 int backbufferBlender(unsigned long now, void *data){
@@ -322,6 +308,55 @@ void dumpParameters(Effect* currentEffect)
   Serial << "----"<<endl;
 }
 
+void setupParameters(){
+  //Serial << "Setup ParameterList"<<endl;
+  // cleanup the former parameterlist
+  vector<metaView*>::iterator iter = EffectParameter._subViews.begin();
+  //Serial << "got iter"<<endl;
+  vector<metaView*> tmpList;
+  //Serial << "got tempList"<<endl;
+  while(iter != EffectParameter._subViews.end()){
+    //Serial << "get ";
+      metaLabel *currentView = (metaLabel*)(*iter++);
+    //  Serial << "view ";
+      labelList.push_back(currentView);
+    //  Serial << "push ";
+      tmpList.push_back(currentView);
+    //  Serial << " push" ;
+    //  Serial << "Remove marked "<<_HEX((unsigned long)currentView)<<endl;
+  }
+  //Serial << "End of cleanup"<<endl;
+  iter = tmpList.begin();
+  while(iter != tmpList.end()){
+    (*iter++)->removeFromSuperview();
+    //Serial << "Removed"<<endl;
+  }
+  Serial << "End of removal"<<endl;
+  // buildUp List
+  Effect *p = (*FastLEDAddOns::currentRunningEffect);
+  //Serial << "Got effect "<<p->name()<<endl;
+  for(size_t k = 0;k<p->numberOfParameters();k++){
+    metaLabel *currentView = NULL;
+    if(labelList.size()){
+      currentView = labelList.back();
+      //Serial << "Recycle "<<_HEX((unsigned long)currentView)<<endl;
+      labelList.pop_back();
+      currentView->setLabel(p->parameterNameAt(k));
+      EffectParameter.addSubview(currentView);
+      ValueEditor *valEdit = currentView->getAction();
+      valEdit->setValue(p->parameterAt(k));
+    }else{
+    //  Serial << "Add new "<<p->parameterNameAt(k)<<endl;
+      currentView = EffectParameter.addEntry(p->parameterNameAt(k));
+      ValueEditor * valEdit = new ValueEditor(&ValueView,p->parameterAt(k));
+      currentView->setAction(valEdit);
+    }
+  }
+  EffectParameter.layoutList();
+  EffectParameter.sizeToFit();
+  //Serial << "Finally the final finish"<<endl;
+}
+
 int16_t currentFrameRate;
 void postFrameCallback(unsigned long now){
   static int hueDelay = 0;
@@ -336,6 +371,7 @@ void postFrameCallback(unsigned long now){
     hueDelay ++;
   }
   if(lastEffect != FastLEDAddOns::currentRunningEffect){
+    Serial <<"Switch detected"<<endl;
     Effect *p = (*FastLEDAddOns::currentRunningEffect);
     if(p->numberOfParameters()){
       if(!effectParameterLabel->getSuperview()){
@@ -343,6 +379,7 @@ void postFrameCallback(unsigned long now){
         SystemMenu.sizeToFit();
         SystemMenu.layoutList();
       }
+      setupParameters();
     }else{
       effectParameterLabel->removeFromSuperview();
       SystemMenu.sizeToFit();
@@ -363,7 +400,7 @@ void postFrameCallback(unsigned long now){
 
 void setup(){
   Serial.begin(115200);
-  //delay(5000);
+  delay(3000);
   initialiseLEDs();
 
   //init LED backlight

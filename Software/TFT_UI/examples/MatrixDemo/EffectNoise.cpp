@@ -2,7 +2,15 @@
 */
 
 #include "EffectNoise.h"
+#include "MatrixDemo.h"
+void EffectNoise::startEffect(){
+  blendFactor = 20;
+  currentSystemPalette = systemPalettes.begin()+PALETTE_CLOUDS;
+  x = random16();
+  y = random16();
+  z = random16();
 
+}
 
 void EffectNoise::frame(unsigned long now){
   fillnoise8();

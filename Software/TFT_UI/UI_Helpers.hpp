@@ -110,6 +110,7 @@ class ValueEditor{
    }
    metaView* getEditor(){return _editor;}
    ValueWrapper* getValue(){return _value;}
+   void setValue(ValueWrapper* wrapper){_value = wrapper;}
   protected:
    metaView* _editor;                               /// this is the next responder
    ValueWrapper *_value;                          /// pointer to a concrete int16_t

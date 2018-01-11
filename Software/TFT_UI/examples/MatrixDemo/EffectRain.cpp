@@ -4,11 +4,12 @@ __EFFECT_RAIN_H__*/
 #include "EffectRain.h"
 
 void EffectRain::startEffect(){
+  Serial << "rain started"<<endl;
   blendFactor=20;
   if(_parameters.empty()){
-    ValueWrapper *k = new ValueWrapper(&speed, 0, 100,"Speed");
+    ValueWrapper *k = new ValueWrapper(&speed, 0, 100,"Noise Speed");
     addParameter(k);
-    k = new ValueWrapper(&scale,1, 300, "Scale");
+    k = new ValueWrapper(&scale,1, 300, "Noise Scale");
     addParameter(k);
   }
 }
@@ -33,7 +34,7 @@ void EffectRain::fillnoise8() {
     }
   }
 
-//  z += speed;
+  z += speed/3;
 
   // apply slow drift to X and Y, just for visual variation.
   x += speed/2;

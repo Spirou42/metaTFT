@@ -9,14 +9,7 @@ public:
   EffectNoise():Effect("Clouds"){}
   virtual uint16_t frameRate(){return 1000/10;}
 
-  virtual void startEffect(){
-    blendFactor = 20;
-    currentSystemPalette = systemPalettes.begin()+PALETTE_CLOUDS;
-    x = random16();
-    y = random16();
-    z = random16();
-
-  }
+  virtual void startEffect();
 
   virtual void frame(unsigned long now);
 protected:
