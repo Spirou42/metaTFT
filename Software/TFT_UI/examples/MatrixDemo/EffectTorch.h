@@ -170,7 +170,7 @@ public:
           color = ColorFromPalette((*currentSystemPalette)->second.palette,e+globalHue);
         }else{
           if (e>250){
-            color = CRGB(170, 170, e); // blueish extra-bright spark
+            color = CRGB(250, 200, 2); // blueish extra-bright spark
           } else if (e>0) {
             //energy to brightness is non-linear
             byte eb = energymap[e>>3];

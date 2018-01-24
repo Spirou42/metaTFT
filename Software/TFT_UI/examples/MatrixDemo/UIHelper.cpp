@@ -13,11 +13,11 @@ extern int16_t tftBrightness, ledBrightness, hueStep, hueFrameDelay;
 
 EffectList initializeSystemEffects(){
   EffectList tmp;
-  //tmp.push_back(&lavaEffect);
   tmp.push_back(&rainEffect);
   tmp.push_back(&noiseEffect);
   tmp.push_back(&lineBounceEffect);
   tmp.push_back(&torchEffect);
+  tmp.push_back(&lavaEffect);
   return tmp;
 }
 

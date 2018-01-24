@@ -9,7 +9,7 @@ typedef struct _lavaBlob{
 class EffectLava:public Effect{
   public:
   EffectLava():Effect("Lava"){}
-  virtual uint16_t frameRate(){return 1000/10;}
+  virtual uint16_t frameRate(){return 1000/60;}
   virtual void startEffect();
   virtual void frame(unsigned long now);
 
@@ -17,6 +17,7 @@ protected:
   void applyHeat();
   void coolDown();
   void mapHeatToBackground();
+  void displayTopHeat();
   uint8_t add(uint8_t, uint8_t);
   uint8_t sub(uint8_t, uint8_t);
   uint8_t lavaDensity = 127;

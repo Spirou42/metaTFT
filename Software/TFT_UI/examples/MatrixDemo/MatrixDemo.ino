@@ -13,7 +13,7 @@
 #include "EffectLineBounce.h"
 #include "EffectTorch.h"
 #include "EffectNoise.h"
-//#include "EffectLava.h"
+#include "EffectLava.h"
 #include "EffectRain.h"
 #include "UIHelper.h"
 
@@ -58,7 +58,7 @@ Input_IR IRReciever = Input_IR(IR_IN);
 EffectLineBounce lineBounceEffect = EffectLineBounce();
 EffectTorch torchEffect = EffectTorch();
 EffectNoise noiseEffect=EffectNoise();
-//EffectLava lavaEffect=EffectLava();
+EffectLava lavaEffect=EffectLava();
 EffectRain rainEffect=EffectRain();
 
 

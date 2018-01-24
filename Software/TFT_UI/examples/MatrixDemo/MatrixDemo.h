@@ -8,12 +8,12 @@
 
 //#define FASTLED_ALLOW_INTERRUPTS 0
 
-#include <stack>
-#include <deque>
-#include <vector>
-#include <tuple>
-#include <list>
-#include <deque>
+//#include <stack>
+//#include <deque>
+//#include <vector>
+//#include <tuple>
+//#include <list>
+//#include <deque>
 
 #include "FastLED.h"
 #include "TFT_UI.h"
