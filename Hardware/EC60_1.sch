@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.5.0">
+<eagle version="8.6.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
+<setting keepoldvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
 <grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
@@ -11,6 +12,16 @@
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
 <layer number="3" name="Route3" color="4" fill="3" visible="no" active="no"/>
+<layer number="4" name="Route4" color="1" fill="4" visible="no" active="no"/>
+<layer number="5" name="Route5" color="4" fill="4" visible="no" active="no"/>
+<layer number="6" name="Route6" color="1" fill="8" visible="no" active="no"/>
+<layer number="7" name="Route7" color="4" fill="8" visible="no" active="no"/>
+<layer number="8" name="Route8" color="1" fill="2" visible="no" active="no"/>
+<layer number="9" name="Route9" color="4" fill="2" visible="no" active="no"/>
+<layer number="10" name="Route10" color="1" fill="7" visible="no" active="no"/>
+<layer number="11" name="Route11" color="4" fill="7" visible="no" active="no"/>
+<layer number="12" name="Route12" color="1" fill="5" visible="no" active="no"/>
+<layer number="13" name="Route13" color="4" fill="5" visible="no" active="no"/>
 <layer number="14" name="Route14" color="1" fill="6" visible="no" active="no"/>
 <layer number="15" name="Route15" color="4" fill="6" visible="no" active="no"/>
 <layer number="16" name="Bottom" color="1" fill="1" visible="no" active="no"/>
@@ -89,27 +100,33 @@
 &lt;/ul&gt;
 &lt;/p&gt;</description>
 <libraries>
-<library name="ALPS-EC60A">
+<library name="ALPS-EC60A" urn="urn:adsk.eagle:library:1567918">
 <packages>
-<package name="EC60A">
+<package name="EC60A" urn="urn:adsk.eagle:footprint:1567920/1" library_version="2">
 <description>&lt;h1&gt;EC60A&lt;/h1&gt;
 First Try mit dem EC60A outline</description>
 <circle x="0" y="0" radius="31.45" width="0.3" layer="21"/>
+<circle x="0" y="0" radius="21.4" width="0.3" layer="21"/>
 <hole x="0" y="26.5" drill="3.1"/>
 <hole x="0" y="-26.5" drill="3.1"/>
 <hole x="-15.9" y="27.54" drill="3.5"/>
 <hole x="-22.486" y="-22.486" drill="3.5"/>
 <hole x="27.54" y="-15.9" drill="3.5"/>
+<hole x="30.219" y="-9.239" drill="1.7"/>
 <pad name="A" x="29.141" y="11.095" drill="1" diameter="1.778"/>
 <pad name="C" x="30.198" y="8.829" drill="1" diameter="1.778"/>
 <pad name="B" x="31.254" y="6.564" drill="1" diameter="1.778"/>
-<hole x="30.219" y="-9.239" drill="1.7"/>
-<circle x="0" y="0" radius="21.4" width="0.3" layer="21"/>
 <text x="0" y="0" size="1.27" layer="21" align="bottom-center">&gt;NAME</text>
 </package>
 </packages>
+<packages3d>
+<package3d name="EC60A" urn="urn:adsk.eagle:package:1567921/2" type="model" library_version="2">
+<description>EC60A
+First Try mit dem EC60A outline</description>
+</package3d>
+</packages3d>
 <symbols>
-<symbol name="EC60A">
+<symbol name="EC60A" urn="urn:adsk.eagle:symbol:1567919/1" library_version="2">
 <pin name="C" x="-15.24" y="0" visible="pad" length="middle" direction="pas"/>
 <pin name="A" x="5.08" y="2.54" visible="pad" length="middle" direction="pas" rot="R180"/>
 <pin name="B" x="5.08" y="-2.54" visible="pad" length="middle" direction="pas" rot="R180"/>
@@ -125,7 +142,7 @@ First Try mit dem EC60A outline</description>
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="EC60A">
+<deviceset name="EC60A" urn="urn:adsk.eagle:component:1567922/2" library_version="2">
 <gates>
 <gate name="G$1" symbol="EC60A" x="20.32" y="-5.08"/>
 </gates>
@@ -136,6 +153,9 @@ First Try mit dem EC60A outline</description>
 <connect gate="G$1" pin="B" pad="B"/>
 <connect gate="G$1" pin="C" pad="C"/>
 </connects>
+<package3dinstances>
+<package3dinstance package3d_urn="urn:adsk.eagle:package:1567921/2"/>
+</package3dinstances>
 <technologies>
 <technology name=""/>
 </technologies>
@@ -299,36 +319,10 @@ DIN A4, landscape with location and doc. field</description>
 </deviceset>
 </devicesets>
 </library>
-<library name="jt-con-micromatch">
+<library name="microMatch" urn="urn:adsk.eagle:library:353375">
 <description>AMP Micromatch connectors by Jason Tribbeck</description>
 <packages>
-<package name="AMP-188275-10">
-<wire x1="13.0175" y1="-2.54" x2="12.065" y2="-2.54" width="0.127" layer="21"/>
-<wire x1="12.065" y1="-2.54" x2="-0.635" y2="-2.54" width="0.127" layer="51"/>
-<wire x1="-0.635" y1="-2.54" x2="-1.5875" y2="-2.54" width="0.127" layer="21"/>
-<wire x1="-1.5875" y1="-2.54" x2="-1.5875" y2="-1.5875" width="0.127" layer="21"/>
-<wire x1="-1.5875" y1="1.5875" x2="-1.5875" y2="2.54" width="0.127" layer="21"/>
-<wire x1="-1.5875" y1="2.54" x2="-0.635" y2="2.54" width="0.127" layer="21"/>
-<wire x1="-0.635" y1="2.54" x2="12.065" y2="2.54" width="0.127" layer="51"/>
-<wire x1="12.065" y1="2.54" x2="13.0175" y2="2.54" width="0.127" layer="21"/>
-<wire x1="13.0175" y1="2.54" x2="13.0175" y2="-2.54" width="0.127" layer="21"/>
-<wire x1="-1.5875" y1="-1.5875" x2="-0.9525" y2="-1.5875" width="0.127" layer="21"/>
-<wire x1="-0.9525" y1="-1.5875" x2="-0.9525" y2="1.5875" width="0.127" layer="21"/>
-<wire x1="-0.9525" y1="1.5875" x2="-1.5875" y2="1.5875" width="0.127" layer="21"/>
-<smd name="1" x="0" y="2.54" dx="1" dy="3.5" layer="1"/>
-<smd name="2" x="1.27" y="-2.54" dx="1" dy="3.5" layer="1"/>
-<smd name="3" x="2.54" y="2.54" dx="1" dy="3.5" layer="1"/>
-<smd name="4" x="3.81" y="-2.54" dx="1" dy="3.5" layer="1"/>
-<smd name="5" x="5.08" y="2.54" dx="1" dy="3.5" layer="1"/>
-<smd name="6" x="6.35" y="-2.54" dx="1" dy="3.5" layer="1"/>
-<smd name="7" x="7.62" y="2.54" dx="1" dy="3.5" layer="1"/>
-<smd name="8" x="8.89" y="-2.54" dx="1" dy="3.5" layer="1"/>
-<smd name="9" x="10.16" y="2.54" dx="1" dy="3.5" layer="1"/>
-<smd name="10" x="11.43" y="-2.54" dx="1" dy="3.5" layer="1"/>
-<text x="-2.055" y="-2.5" size="1.27" layer="25" rot="R90">&gt;NAME</text>
-<text x="14.485" y="-2.5" size="1.27" layer="27" rot="R90">&gt;VALUE</text>
-</package>
-<package name="AMP-215079-10">
+<package name="AMP-215079-10" urn="urn:adsk.eagle:footprint:353381/1" library_version="4">
 <wire x1="-1.555" y1="2.5" x2="12.985" y2="2.5" width="0.127" layer="21"/>
 <wire x1="12.985" y1="2.5" x2="12.985" y2="1.5" width="0.127" layer="21"/>
 <wire x1="12.985" y1="-1.5" x2="12.985" y2="-2.5" width="0.127" layer="21"/>
@@ -361,9 +355,41 @@ DIN A4, landscape with location and doc. field</description>
 <text x="-1.055" y="-4" size="1.27" layer="27">&gt;VALUE</text>
 <hole x="-1.62" y="0.905" drill="1.5"/>
 </package>
+<package name="AMP-188275-10" urn="urn:adsk.eagle:footprint:353380/1" library_version="4">
+<wire x1="13.0175" y1="-2.54" x2="12.065" y2="-2.54" width="0.127" layer="21"/>
+<wire x1="12.065" y1="-2.54" x2="-0.635" y2="-2.54" width="0.127" layer="51"/>
+<wire x1="-0.635" y1="-2.54" x2="-1.5875" y2="-2.54" width="0.127" layer="21"/>
+<wire x1="-1.5875" y1="-2.54" x2="-1.5875" y2="-1.5875" width="0.127" layer="21"/>
+<wire x1="-1.5875" y1="1.5875" x2="-1.5875" y2="2.54" width="0.127" layer="21"/>
+<wire x1="-1.5875" y1="2.54" x2="-0.635" y2="2.54" width="0.127" layer="21"/>
+<wire x1="-0.635" y1="2.54" x2="12.065" y2="2.54" width="0.127" layer="51"/>
+<wire x1="12.065" y1="2.54" x2="13.0175" y2="2.54" width="0.127" layer="21"/>
+<wire x1="13.0175" y1="2.54" x2="13.0175" y2="-2.54" width="0.127" layer="21"/>
+<wire x1="-1.5875" y1="-1.5875" x2="-0.9525" y2="-1.5875" width="0.127" layer="21"/>
+<wire x1="-0.9525" y1="-1.5875" x2="-0.9525" y2="1.5875" width="0.127" layer="21"/>
+<wire x1="-0.9525" y1="1.5875" x2="-1.5875" y2="1.5875" width="0.127" layer="21"/>
+<smd name="1" x="0" y="2.54" dx="1" dy="3.5" layer="1"/>
+<smd name="2" x="1.27" y="-2.54" dx="1" dy="3.5" layer="1"/>
+<smd name="3" x="2.54" y="2.54" dx="1" dy="3.5" layer="1"/>
+<smd name="4" x="3.81" y="-2.54" dx="1" dy="3.5" layer="1"/>
+<smd name="5" x="5.08" y="2.54" dx="1" dy="3.5" layer="1"/>
+<smd name="6" x="6.35" y="-2.54" dx="1" dy="3.5" layer="1"/>
+<smd name="7" x="7.62" y="2.54" dx="1" dy="3.5" layer="1"/>
+<smd name="8" x="8.89" y="-2.54" dx="1" dy="3.5" layer="1"/>
+<smd name="9" x="10.16" y="2.54" dx="1" dy="3.5" layer="1"/>
+<smd name="10" x="11.43" y="-2.54" dx="1" dy="3.5" layer="1"/>
+<text x="-2.055" y="-2.5" size="1.27" layer="25" rot="R90">&gt;NAME</text>
+<text x="14.485" y="-2.5" size="1.27" layer="27" rot="R90">&gt;VALUE</text>
+</package>
 </packages>
+<packages3d>
+<package3d name="AMP-215079-10" urn="urn:adsk.eagle:package:353401/2" type="model" library_version="4">
+</package3d>
+<package3d name="AMP-188275-10" urn="urn:adsk.eagle:package:353402/1" type="box" library_version="4">
+</package3d>
+</packages3d>
 <symbols>
-<symbol name="CON-10">
+<symbol name="CON-10" urn="urn:adsk.eagle:symbol:353379/1" library_version="4">
 <wire x1="-2.54" y1="12.7" x2="2.54" y2="12.7" width="0.254" layer="94"/>
 <wire x1="2.54" y1="12.7" x2="2.54" y2="10.16" width="0.254" layer="94"/>
 <wire x1="2.54" y1="10.16" x2="2.54" y2="7.62" width="0.254" layer="94"/>
@@ -403,7 +429,7 @@ DIN A4, landscape with location and doc. field</description>
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="MMATCH-10-*" prefix="SK" uservalue="yes">
+<deviceset name="MMATCH-10-*" urn="urn:adsk.eagle:component:353414/2" prefix="SK" uservalue="yes" library_version="4">
 <description>AMP Micromatch 10-pin</description>
 <gates>
 <gate name="G$1" symbol="CON-10" x="0" y="0"/>
@@ -422,6 +448,9 @@ DIN A4, landscape with location and doc. field</description>
 <connect gate="G$1" pin="8" pad="8"/>
 <connect gate="G$1" pin="9" pad="9"/>
 </connects>
+<package3dinstances>
+<package3dinstance package3d_urn="urn:adsk.eagle:package:353402/1"/>
+</package3dinstances>
 <technologies>
 <technology name=""/>
 </technologies>
@@ -439,6 +468,9 @@ DIN A4, landscape with location and doc. field</description>
 <connect gate="G$1" pin="8" pad="8"/>
 <connect gate="G$1" pin="9" pad="9"/>
 </connects>
+<package3dinstances>
+<package3dinstance package3d_urn="urn:adsk.eagle:package:353401/2"/>
+</package3dinstances>
 <technologies>
 <technology name=""/>
 </technologies>
@@ -459,11 +491,11 @@ DIN A4, landscape with location and doc. field</description>
 </class>
 </classes>
 <parts>
-<part name="U$1" library="ALPS-EC60A" deviceset="EC60A" device=""/>
+<part name="U$1" library="ALPS-EC60A" library_urn="urn:adsk.eagle:library:1567918" deviceset="EC60A" device="" package3d_urn="urn:adsk.eagle:package:1567921/2"/>
 <part name="FRAME1" library="frames" deviceset="A4L-LOC" device="" value="Encoder"/>
 <part name="JP1" library="pinhead" deviceset="PINHD-1X3" device="" value="K1"/>
 <part name="JP2" library="pinhead" deviceset="PINHD-1X3" device="" value="K2"/>
-<part name="SK1" library="jt-con-micromatch" deviceset="MMATCH-10-*" device="PTH" value="Keys"/>
+<part name="SK1" library="microMatch" library_urn="urn:adsk.eagle:library:353375" deviceset="MMATCH-10-*" device="PTH" package3d_urn="urn:adsk.eagle:package:353401/2" value="Keys"/>
 </parts>
 <sheets>
 <sheet>
@@ -596,4 +628,21 @@ DIN A4, landscape with location and doc. field</description>
 </errors>
 </schematic>
 </drawing>
+<compatibility>
+<note version="8.2" severity="warning">
+Since Version 8.2, EAGLE supports online libraries. The ids
+of those online libraries will not be understood (or retained)
+with this version.
+</note>
+<note version="8.3" severity="warning">
+Since Version 8.3, EAGLE supports URNs for individual library
+assets (packages, symbols, and devices). The URNs of those assets
+will not be understood (or retained) with this version.
+</note>
+<note version="8.3" severity="warning">
+Since Version 8.3, EAGLE supports the association of 3D packages
+with devices in libraries, schematics, and board files. Those 3D
+packages will not be understood (or retained) with this version.
+</note>
+</compatibility>
 </eagle>

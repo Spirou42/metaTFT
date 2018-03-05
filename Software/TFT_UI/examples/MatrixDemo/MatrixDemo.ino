@@ -252,7 +252,7 @@ void initialiseTFT(){
 }
 
 void initialiseLEDs(){
-  FastLED.addLeds<CHIPSET, LED_PIN, CLOCK_PIN, COLOR_ORDER,DATA_RATE_MHZ(3)>(leds, NUM_LEDS).setCorrection(COLOR_CORRECTION);
+  FastLED.addLeds<CHIPSET, LED_PIN, CLOCK_PIN, COLOR_ORDER,DATA_RATE_MHZ(1)>(leds, NUM_LEDS).setCorrection(COLOR_CORRECTION);
   FastLED.clear(true);
   FastLED.show();
   FastLED.setBrightness( LED_BRIGHTNESS );

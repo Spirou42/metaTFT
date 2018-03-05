@@ -2,3 +2,5 @@
 .DS_Store
 
 Software/.DS_Store
+*.b#1
+*.s#1
